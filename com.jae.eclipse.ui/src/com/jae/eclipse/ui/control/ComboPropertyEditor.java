@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import com.jae.eclipse.ui.base.AbstractPropertyEditor;
-import com.jae.eclipse.ui.event.ValueChangeEvent;
 
 /**
  * @author hongshuiqiao
@@ -37,31 +36,6 @@ public class ComboPropertyEditor extends AbstractPropertyEditor {
 		if(readOnly)
 			newStyle = newStyle|SWT.READ_ONLY;
 		Combo combo = new Combo(parent, newStyle);
-		combo.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-//				validate();
-				fireValuechanged(new ValueChangeEvent(ComboPropertyEditor.this, null, null));
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-//				validate();
-				fireValuechanged(new ValueChangeEvent(ComboPropertyEditor.this, null, null));
-			}
-		});
-		
-		if(!readOnly){
-			combo.addModifyListener(new ModifyListener() {
-				
-				@Override
-				public void modifyText(ModifyEvent e) {
-//					validate();
-					fireValuechanged(new ValueChangeEvent(ComboPropertyEditor.this, null, null));
-				}
-			});
-		}
 		
 		if(!items.isEmpty())
 			combo.setItems(items.toArray(new String[items.size()]));
@@ -92,6 +66,35 @@ public class ComboPropertyEditor extends AbstractPropertyEditor {
 	}
 
 	@Override
+	public void afterBuild(Control parent) {
+		super.afterBuild(parent);
+		Combo combo = getCombo();
+		combo.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				fireValueChangeEvent();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
+		
+		if(!readOnly){
+			combo.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					fireValueChangeEvent();
+				}
+			});
+		}
+
+	}
+	
+	@Override
 	protected Object doGetValue() {
 		Combo combo = getCombo();
 		String item = combo.getText();
@@ -115,14 +118,17 @@ public class ComboPropertyEditor extends AbstractPropertyEditor {
 		String item = null;
 		if(!this.itemMap.isEmpty()){
 			for (String key : this.items) {
-				if(value.equals(this.itemMap.get(key)))
+				if(value.equals(this.itemMap.get(key))){
 					item = key;
+					break;
+				}
 			}
 		}else{
 			item = value.toString();
 		}
 		
-		combo.setText(item);
+		if(null != item)
+			combo.setText(item);
 	}
 
 }

@@ -10,9 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
-import com.jae.eclipse.ui.IPropertyEditor;
 import com.jae.eclipse.ui.base.AbstractPropertyEditor;
-import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.util.StringUtil;
 
 /**
@@ -46,9 +44,7 @@ public class StringPropertyEditor extends AbstractPropertyEditor {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				IPropertyEditor editor = StringPropertyEditor.this;
-				fireValuechanged(new ValueChangeEvent(editor, null, null));
-//				validate();
+				fireValueChangeEvent();
 			}
 		});
 	}

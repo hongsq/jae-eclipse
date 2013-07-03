@@ -28,6 +28,7 @@ import com.jae.eclipse.ui.IValidator;
 import com.jae.eclipse.ui.event.ILinkAction;
 import com.jae.eclipse.ui.event.IValuechangeListener;
 import com.jae.eclipse.ui.event.LinkEvent;
+import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.event.ValueEventContainer;
 import com.jae.eclipse.ui.impl.CompoundMessageCaller;
@@ -41,7 +42,7 @@ import com.jae.eclipse.ui.util.UIUtil;
  *
  */
 @SuppressWarnings("deprecation")
-public abstract class AbstractPropertyEditor extends ValueEventContainer implements IPropertyEditor, IValuechangeListener, IControlCreator {
+public abstract class AbstractPropertyEditor extends ValueEventContainer implements IPropertyEditor, IControlCreator {
 	private boolean enable=true;
 	private boolean useLabel=true;
 	private boolean required=false;
@@ -52,7 +53,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	private Control labelControl;
 	private DecoratedField decoratedField;
 	// 用来在控件上显示'*'，表示必填
-	private FieldDecoration requiredFieldDecoration;
+//	private FieldDecoration requiredFieldDecoration;
 	// 用来在控件上显示警告信息
 	private FieldDecoration warnFieldDecoration;
 	// 用来在控件上显示错误信息
@@ -64,6 +65,10 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	private PropertyMessageCaller propertyMessageCaller;
 	private Object editElement;
 	private List<IValidator> validators = new ArrayList<IValidator>();
+	private Object oldValue;
+	private boolean fireFlag = true;
+	//自身的变化是否触发自己的验证（一般如果加入到一个容器中，自身的变化会触发整个容器的验证，不需要再重复验证自己）
+	private boolean validateFlag = true;
 
 	public boolean isEnable() {
 		return enable;
@@ -97,12 +102,6 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.required = required;
 	}
 
-	@Override
-	public void valuechanged(ValueChangeEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	public String getLabel() {
 		return label;
 	}
@@ -130,6 +129,16 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	@Override
 	public boolean isLinkLabel() {
 		return null != this.linkAction;
+	}
+	
+	protected void fireValueChangeEvent(){
+		if(!fireFlag)
+			return;
+		
+		Object newValue = getValue();
+		ValueChangeEvent valueChangeEvent = new ValueChangeEvent(this, this.oldValue, newValue);
+		fireValuechanged(valueChangeEvent);
+		this.oldValue = newValue;
 	}
 	
 	public void addValidator(IValidator validator){
@@ -180,15 +189,18 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	
 	@Override
 	public void setValue(Object value) {
-		Object oldValue = this.doGetValue();
+		Object oldValue = this.getValue();
 		if(null != value && value.equals(oldValue))
 			return;
 		
 		if(null == value && null == oldValue)
 			return;
 		
+		//UI是单线程 的，不需要sync
+		fireFlag = false;
 		doSetValue(value);
-		fireValuechanged(new ValueChangeEvent(this, oldValue, value));
+		fireFlag = true;
+		fireValueChangeEvent();
 	}
 	
 	@Override
@@ -217,6 +229,18 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 				}
 			});
 		}
+		
+		this.addValuechangeListener(new IValuechangeListener() {
+			
+			@Override
+			public void valuechanged(ValueChangeEvent event) {
+				if(!validateFlag)
+					return;
+				
+				ValidateEvent validateEvent = new ValidateEvent(event.getSource());
+				validate(validateEvent);
+			}
+		});
 //		
 //		this.editControl.addFocusListener(new FocusListener() {
 //			@Override
@@ -231,9 +255,18 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 //		});
 	}
 	
+	public boolean isValidateFlag() {
+		return validateFlag;
+	}
+
+	public void setValidateFlag(boolean validateFlag) {
+		this.validateFlag = validateFlag;
+	}
+
 	@Override
-	public boolean validate() {
-		this.propertyMessageCaller.clear();
+	public boolean validate(ValidateEvent event) {
+		if(null != this.propertyMessageCaller)
+			this.propertyMessageCaller.clear();
 		
 		for (IValidator validator : this.validators) {
 			if(!validator.validate(this.messageCaller, this))
@@ -291,11 +324,13 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	protected void buildFieldDecoration() {
 		FieldDecorationRegistry fieldDecorationRegistry = FieldDecorationRegistry.getDefault();
 
-		this.requiredFieldDecoration = fieldDecorationRegistry.getFieldDecoration(FieldDecorationRegistry.DEC_REQUIRED);
-
-		// 加这个内容是为了占位
-		this.decoratedField.addFieldDecoration(this.requiredFieldDecoration, SWT.BOTTOM | SWT.LEFT, false);
-		this.decoratedField.hideDecoration(this.requiredFieldDecoration);
+//		// 加这个内容是为了占位
+//		this.requiredFieldDecoration = fieldDecorationRegistry.getFieldDecoration(FieldDecorationRegistry.DEC_REQUIRED);
+//		this.decoratedField.addFieldDecoration(this.requiredFieldDecoration, SWT.CENTER | SWT.LEFT, false);
+//		if(this.required)
+//			this.decoratedField.showDecoration(this.requiredFieldDecoration);
+//		else
+//			this.decoratedField.hideDecoration(this.requiredFieldDecoration);
 
 		Image warnImage = fieldDecorationRegistry.getFieldDecoration(FieldDecorationRegistry.DEC_WARNING).getImage();
 		this.warnFieldDecoration = new FieldDecoration(warnImage, "");

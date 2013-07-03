@@ -20,6 +20,7 @@ import com.jae.eclipse.ui.util.StringUtil;
  * @author hongshuiqiao
  *
  */
+@SuppressWarnings("deprecation")
 public class PropertyMessageCaller implements IMessageCaller {
 	private AbstractPropertyEditor propertyEditor;
 	private boolean hasError=false;
@@ -31,9 +32,13 @@ public class PropertyMessageCaller implements IMessageCaller {
 	}
 	
 	protected void build(){
-		final FieldDecoration fieldDecoration = this.propertyEditor.getErrorFieldDecoration();
-		this.propertyEditor.getDecoratedField().addFieldDecoration(fieldDecoration, SWT.TOP | SWT.LEFT, false);
-		this.propertyEditor.getDecoratedField().hideDecoration(fieldDecoration);
+		final FieldDecoration errorFieldDecoration = this.propertyEditor.getErrorFieldDecoration();
+		this.propertyEditor.getDecoratedField().addFieldDecoration(errorFieldDecoration, SWT.TOP | SWT.LEFT, false);
+		this.propertyEditor.getDecoratedField().hideDecoration(errorFieldDecoration);
+		
+		FieldDecoration warnFieldDecoration = this.propertyEditor.getWarnFieldDecoration();
+		this.propertyEditor.getDecoratedField().addFieldDecoration(warnFieldDecoration, SWT.BOTTOM | SWT.LEFT, false);
+		this.propertyEditor.getDecoratedField().hideDecoration(warnFieldDecoration);
 
 		if (null != this.propertyEditor.getEditControl()) {
 			this.propertyEditor.getEditControl().addFocusListener(
@@ -42,8 +47,8 @@ public class PropertyMessageCaller implements IMessageCaller {
 							AbstractPropertyEditor propertyEditor = PropertyMessageCaller.this.propertyEditor;
 
 							if (propertyEditor.getEditControl().isFocusControl()) {
-								if (!StringUtil.isEmpty(fieldDecoration.getDescription())) {
-									propertyEditor.getDecoratedField().showHoverText(fieldDecoration.getDescription());
+								if (!StringUtil.isEmpty(errorFieldDecoration.getDescription())) {
+									propertyEditor.getDecoratedField().showHoverText(errorFieldDecoration.getDescription());
 								}
 							}
 						}
@@ -64,8 +69,8 @@ public class PropertyMessageCaller implements IMessageCaller {
 						public void mouseHover(MouseEvent e) {
 							AbstractPropertyEditor propertyEditor = PropertyMessageCaller.this.propertyEditor;
 
-							if (!StringUtil.isEmpty(fieldDecoration.getDescription())) {
-								propertyEditor.getDecoratedField().showHoverText(fieldDecoration.getDescription());
+							if (!StringUtil.isEmpty(errorFieldDecoration.getDescription())) {
+								propertyEditor.getDecoratedField().showHoverText(errorFieldDecoration.getDescription());
 							}
 						}
 					});
@@ -114,7 +119,8 @@ public class PropertyMessageCaller implements IMessageCaller {
 		this.propertyEditor.getDecoratedField().hideDecoration(this.propertyEditor.getErrorFieldDecoration());
 		this.propertyEditor.getErrorFieldDecoration().setDescription(null);
 		this.propertyEditor.getWarnFieldDecoration().setDescription(null);
-		
+		Control editorControl = this.propertyEditor.getEditControl();
+		if (null != editorControl) editorControl.setToolTipText(null);
 		// this.propertyEditor.getDecoratedField().hideDecoration(this.propertyEditor.getAssitantFieldDecoration());
 		this.propertyEditor.getDecoratedField().hideHover();
 	}
