@@ -20,6 +20,9 @@ import com.jae.eclipse.ui.IValidator;
 import com.jae.eclipse.ui.ObjectEditor;
 import com.jae.eclipse.ui.control.ComboPropertyEditor;
 import com.jae.eclipse.ui.control.StringPropertyEditor;
+import com.jae.eclipse.ui.event.ValidateEvent;
+import com.jae.eclipse.ui.factory.ObjectEditorControlFactory;
+import com.jae.eclipse.ui.impl.ControlFactoryDialog;
 import com.jae.eclipse.ui.impl.PropertyComposite;
 import com.jae.eclipse.ui.util.StringUtil;
 
@@ -30,6 +33,15 @@ import com.jae.eclipse.ui.util.StringUtil;
 public class UIExample {
 	
 	protected static void createUI(Shell shell) {
+		ObjectEditor objectEditor = createObjectEditor();
+		PropertyComposite composite = new PropertyComposite(shell, SWT.NONE, objectEditor);
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		objectEditor.load();
+		objectEditor.validate(new ValidateEvent(objectEditor));
+	}
+
+	private static ObjectEditor createObjectEditor() {
 		ObjectEditor objectEditor = new ObjectEditor();
 
 		StringPropertyEditor editor = new StringPropertyEditor();
@@ -44,6 +56,13 @@ public class UIExample {
 				boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
 				if(isEmpty)
 					messageCaller.error("²»ÄÜÎª¿Õ£¡");
+				
+				if("a".equals(editor.getValue()))
+					messageCaller.warn("test warning");
+				
+				if("ab".equals(editor.getValue()))
+					messageCaller.info("test info");
+				
 				return !isEmpty;
 			}
 		});
@@ -93,11 +112,8 @@ public class UIExample {
 		map.put("abc", "abc");
 //		map.put("efg", "efg");
 		
-		objectEditor.setEditElement(map);
-		PropertyComposite composite = new PropertyComposite(shell, SWT.NONE, objectEditor);
-		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		objectEditor.validate();
+		objectEditor.setValue(map);
+		return objectEditor;
 	}
 
 	/**
@@ -122,12 +138,38 @@ public class UIExample {
 //		shell.pack();
 		shell.open();
 
+		createDialog(shell);
+		
 		while(!shell.isDisposed()){
 			if(!display.readAndDispatch())
 				display.sleep();
 		}
 		
 		display.dispose();
+	}
+
+	private static void createDialog(Shell shell) {
+		Map map = new HashMap();
+		map.put("abc", "abc");
+		map.put("efg", "efg");
+		map.put("combo", 11);
+		ObjectEditorControlFactory factory = new ObjectEditorControlFactory(createObjectEditor());
+		factory.setValue(map);
+		
+		factory.getUIDescription().setWinTitle("winTitle");
+		factory.getUIDescription().setTitle("title");
+		factory.getUIDescription().setDescription("description");
+		factory.getUIDescription().setInitHeight(500);
+		factory.getUIDescription().setInitWidth(500);
+		
+		ControlFactoryDialog dialog = new ControlFactoryDialog(shell, factory);
+		
+		dialog.setResizable(false);
+		
+		dialog.open();
+		
+		Map result = (Map) factory.getValue();
+		System.out.println(result.get("combo"));
 	}
 
 }

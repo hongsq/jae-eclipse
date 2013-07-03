@@ -9,9 +9,12 @@ import java.util.List;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import com.jae.eclipse.ui.base.AbstractPropertyEditor;
+import com.jae.eclipse.ui.event.IValueEventContainer;
 import com.jae.eclipse.ui.event.IValuechangeListener;
+import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
-import com.jae.eclipse.ui.impl.CompoundMessageCaller;
+import com.jae.eclipse.ui.event.ValueEventContainer;
 import com.jae.eclipse.ui.util.LayoutUtil;
 
 /**
@@ -19,11 +22,14 @@ import com.jae.eclipse.ui.util.LayoutUtil;
  * @author hongshuiqiao
  *
  */
-public class ObjectEditor implements IStore, ILoadable, IValidatable, IAdaptable, IValuechangeListener {
+public class ObjectEditor extends ValueEventContainer implements IUIDescElement, IStore, ILoadable, IValueEventContainer, IValidatable, IAdaptable, IValuechangeListener {
+	private UIDescription uiDescription = new UIDescription();
 	private List<IPropertyEditor> editors = new ArrayList<IPropertyEditor>();
 	private GridLayout layout = LayoutUtil.createCompactGridLayout(2);
-	private Object editElement;
-	private CompoundMessageCaller messageCaller = new CompoundMessageCaller();
+	private Object value;
+	private IMessageCaller messageCaller;
+	//自身的变化是否触发自己的验证（一般如果加入到一个容器中，自身的变化会触发整个容器的验证，不需要再重复验证自己）
+	private boolean validateFlag = true;
 	
 	public void addPropertyEditor(IPropertyEditor editor){
 		editors.add(editor);
@@ -42,12 +48,20 @@ public class ObjectEditor implements IStore, ILoadable, IValidatable, IAdaptable
 		}
 	}
 	
-	public Object getEditElement() {
-		return editElement;
+	public IMessageCaller getMessageCaller() {
+		return messageCaller;
 	}
 
-	public void setEditElement(Object editElement) {
-		this.editElement = editElement;
+	public void setMessageCaller(IMessageCaller messageCaller) {
+		this.messageCaller = messageCaller;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+
+	public void setValue(Object value) {
+		this.value = value;
 	}
 
 	public GridLayout getLayout() {
@@ -62,9 +76,6 @@ public class ObjectEditor implements IStore, ILoadable, IValidatable, IAdaptable
 	}
 	
 	protected void afterBuild(Composite parent) {
-		for (IPropertyEditor editor : this.editors) {
-			editor.load();
-		}
 	}
 	
 	/**
@@ -75,8 +86,11 @@ public class ObjectEditor implements IStore, ILoadable, IValidatable, IAdaptable
 		beforeBuild(parent);
 		
 		for (IPropertyEditor editor : this.editors) {
-			editor.setEditElement(this.editElement);
+			editor.setEditElement(this.value);
 			editor.setMessageCaller(this.messageCaller);
+			if (editor instanceof AbstractPropertyEditor) {
+				((AbstractPropertyEditor) editor).setValidateFlag(false);
+			}
 			
 			editor.beforeBuild(parent);
 		}
@@ -93,10 +107,12 @@ public class ObjectEditor implements IStore, ILoadable, IValidatable, IAdaptable
 	}
 
 	@Override
-	public boolean validate() {
+	public boolean validate(ValidateEvent event) {
 		boolean flag = true;
+		if(null != this.messageCaller)
+			this.messageCaller.clear();
 		for (IPropertyEditor editor : this.editors) {
-			flag = editor.validate() && flag;
+			flag = editor.validate(event) && flag;
 		}
 		return flag;
 	}
@@ -125,8 +141,30 @@ public class ObjectEditor implements IStore, ILoadable, IValidatable, IAdaptable
 		}
 	}
 
+	public boolean isValidateFlag() {
+		return validateFlag;
+	}
+
+	public void setValidateFlag(boolean validateFlag) {
+		this.validateFlag = validateFlag;
+	}
+
 	@Override
 	public void valuechanged(ValueChangeEvent event) {
-		validate();
+		if(validateFlag){
+			ValidateEvent validateEvent = new ValidateEvent(event.getSource());
+			validate(validateEvent);
+		}
+		this.fireValuechanged(event);
+	}
+
+	@Override
+	public UIDescription getUIDescription() {
+		return this.uiDescription;
+	}
+
+	@Override
+	public void setUIDescription(UIDescription uiDescription) {
+		this.uiDescription = uiDescription;
 	}
 }
