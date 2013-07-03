@@ -12,7 +12,7 @@ import com.jae.eclipse.ui.event.ValidateEvent;
  */
 public interface IValidatable {
 	/**
-	 * 值变化时触发验证
+	 * 鍊煎彉鍖栨椂瑙﹀彂楠岃瘉
 	 * @param event
 	 * @return
 	 */

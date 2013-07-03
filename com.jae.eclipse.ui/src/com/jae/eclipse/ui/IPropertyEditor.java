@@ -11,14 +11,14 @@ import com.jae.eclipse.ui.event.IValueEventContainer;
 
 
 /**
- * ÊôĞÔ±à¼­Æ÷
+ * å±æ€§ç¼–è¾‘å™¨
  * @author hongshuiqiao
  *
  */
 public interface IPropertyEditor extends IStore, ILoadable, IValidatable, IAdaptable, IValueEventContainer {
 	
 	/**
-	 * ´´½¨¿Ø¼ş
+	 * åˆ›å»ºæ§ä»¶
 	 * @param parent
 	 */
 	public void build(Composite parent);
@@ -28,25 +28,25 @@ public interface IPropertyEditor extends IStore, ILoadable, IValidatable, IAdapt
 	public void afterBuild(Control parent);
 	
 	/**
-	 * ·µ»Ø¿Ø¼şµÄÏÔÊ¾±êÇ©Ãû
+	 * è¿”å›æ§ä»¶çš„æ˜¾ç¤ºæ ‡ç­¾å
 	 * @return
 	 */
 	public String getLabel();
 	
 	/**
-	 * ·µ»Ø¿Ø¼ş±à¼­µÄÊôĞÔÃû
+	 * è¿”å›æ§ä»¶ç¼–è¾‘çš„å±æ€§å
 	 * @return
 	 */
 	public String getPropertyName();
 	
 	/**
-	 * ·µ»Ø¿Ø¼ş±à¼­µÄÖµ
+	 * è¿”å›æ§ä»¶ç¼–è¾‘çš„å€¼
 	 * @return
 	 */
 	public Object getValue();
 	
 	/**
-	 * ÉèÖÃ¿Ø¼ş±à¼­µÄÖµ
+	 * è®¾ç½®æ§ä»¶ç¼–è¾‘çš„å€¼
 	 * @param value
 	 */
 	public void setValue(Object value);
@@ -60,37 +60,37 @@ public interface IPropertyEditor extends IStore, ILoadable, IValidatable, IAdapt
 	public void setMessageCaller(IMessageCaller messageCaller);
 	
 	/**
-	 * ¿Ø¼şÊÇ·ñ¿ÉÓÃ
+	 * æ§ä»¶æ˜¯å¦å¯ç”¨
 	 * @return
 	 */
 	public boolean isEnable();
 	
 	/**
-	 * ÉèÖÃ¿Ø¼ş¿ÉÓÃ×´Ì¬
+	 * è®¾ç½®æ§ä»¶å¯ç”¨çŠ¶æ€
 	 * @param enable
 	 */
 	public void setEnable(boolean enable);
 	
 	/**
-	 * ÊÇ·ñÊ¹ÓÃlabel
+	 * æ˜¯å¦ä½¿ç”¨label
 	 * @return
 	 */
 	public boolean isUseLabel();
 	
 	/**
-	 * ÊÇ·ñÊÇlinkÀàĞÍµÄlabel
+	 * æ˜¯å¦æ˜¯linkç±»å‹çš„label
 	 * @return
 	 */
 	public boolean isLinkLabel();
 	
 	/**
-	 * ÉèÖÃlink²Ù×÷
+	 * è®¾ç½®linkæ“ä½œ
 	 * @param action
 	 */
 	public void setLinkAction(ILinkAction action);
 	
 	/**
-	 * ÊÇ·ñÊÇ±ØÌîÏî
+	 * æ˜¯å¦æ˜¯å¿…å¡«é¡¹
 	 * @return
 	 */
 	public boolean isRequired();

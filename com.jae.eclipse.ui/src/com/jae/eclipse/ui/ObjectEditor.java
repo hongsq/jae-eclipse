@@ -18,7 +18,7 @@ import com.jae.eclipse.ui.event.ValueEventContainer;
 import com.jae.eclipse.ui.util.LayoutUtil;
 
 /**
- * ¶ÔÏó±à¼­Æ÷
+ * å¯¹è±¡ç¼–è¾‘å™¨
  * @author hongshuiqiao
  *
  */
@@ -28,7 +28,7 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 	private GridLayout layout = LayoutUtil.createCompactGridLayout(2);
 	private Object value;
 	private IMessageCaller messageCaller;
-	//×ÔÉíµÄ±ä»¯ÊÇ·ñ´¥·¢×Ô¼ºµÄÑéÖ¤£¨Ò»°ãÈç¹û¼ÓÈëµ½Ò»¸öÈİÆ÷ÖĞ£¬×ÔÉíµÄ±ä»¯»á´¥·¢Õû¸öÈİÆ÷µÄÑéÖ¤£¬²»ĞèÒªÔÙÖØ¸´ÑéÖ¤×Ô¼º£©
+	//è‡ªèº«çš„å˜åŒ–æ˜¯å¦è§¦å‘è‡ªå·±çš„éªŒè¯ï¼ˆä¸€èˆ¬å¦‚æœåŠ å…¥åˆ°ä¸€ä¸ªå®¹å™¨ä¸­ï¼Œè‡ªèº«çš„å˜åŒ–ä¼šè§¦å‘æ•´ä¸ªå®¹å™¨çš„éªŒè¯ï¼Œä¸éœ€è¦å†é‡å¤éªŒè¯è‡ªå·±ï¼‰
 	private boolean validateFlag = true;
 	
 	public void addPropertyEditor(IPropertyEditor editor){
@@ -79,7 +79,7 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 	}
 	
 	/**
-	 * ´´½¨¿Ø¼ş
+	 * åˆ›å»ºæ§ä»¶
 	 * @param parent
 	 */
 	public void build(Composite parent){

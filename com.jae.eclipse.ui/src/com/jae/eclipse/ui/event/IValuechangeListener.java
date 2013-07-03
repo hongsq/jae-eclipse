@@ -10,7 +10,7 @@ package com.jae.eclipse.ui.event;
 public interface IValuechangeListener {
 
 	/**
-	 * ֵ�ı�
+	 * 值改变
 	 * @param event
 	 */
 	public void valuechanged(ValueChangeEvent event);

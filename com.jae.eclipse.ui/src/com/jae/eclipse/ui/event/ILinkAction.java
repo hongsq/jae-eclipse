@@ -9,7 +9,7 @@ package com.jae.eclipse.ui.event;
  */
 public interface ILinkAction {
 	/**
-	 * ´¥·¢Á´½Ó
+	 * è§¦å‘é“¾æ¥
 	 * @param event
 	 */
 	public void linkActivated(LinkEvent event);

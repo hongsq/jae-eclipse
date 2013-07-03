@@ -52,13 +52,13 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	private Control editControl;
 	private Control labelControl;
 	private DecoratedField decoratedField;
-	// ÓÃÀ´ÔÚ¿Ø¼şÉÏÏÔÊ¾'*'£¬±íÊ¾±ØÌî
+	// ç”¨æ¥åœ¨æ§ä»¶ä¸Šæ˜¾ç¤º'*'ï¼Œè¡¨ç¤ºå¿…å¡«
 //	private FieldDecoration requiredFieldDecoration;
-	// ÓÃÀ´ÔÚ¿Ø¼şÉÏÏÔÊ¾¾¯¸æĞÅÏ¢
+	// ç”¨æ¥åœ¨æ§ä»¶ä¸Šæ˜¾ç¤ºè­¦å‘Šä¿¡æ¯
 	private FieldDecoration warnFieldDecoration;
-	// ÓÃÀ´ÔÚ¿Ø¼şÉÏÏÔÊ¾´íÎóĞÅÏ¢
+	// ç”¨æ¥åœ¨æ§ä»¶ä¸Šæ˜¾ç¤ºé”™è¯¯ä¿¡æ¯
 	private FieldDecoration errorFieldDecoration;
-	// ÓÃÀ´ÔÚ¿Ø¼şÉÏÏÔÊ¾´úÂëÌáÊ¾ĞÅÏ¢
+	// ç”¨æ¥åœ¨æ§ä»¶ä¸Šæ˜¾ç¤ºä»£ç æç¤ºä¿¡æ¯
 	private FieldDecoration assitantFieldDecoration;
 	private GridData editLayoutData=new GridData(GridData.FILL_BOTH);
 	private CompoundMessageCaller messageCaller = new CompoundMessageCaller();
@@ -67,7 +67,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	private List<IValidator> validators = new ArrayList<IValidator>();
 	private Object oldValue;
 	private boolean fireFlag = true;
-	//×ÔÉíµÄ±ä»¯ÊÇ·ñ´¥·¢×Ô¼ºµÄÑéÖ¤£¨Ò»°ãÈç¹û¼ÓÈëµ½Ò»¸öÈİÆ÷ÖĞ£¬×ÔÉíµÄ±ä»¯»á´¥·¢Õû¸öÈİÆ÷µÄÑéÖ¤£¬²»ĞèÒªÔÙÖØ¸´ÑéÖ¤×Ô¼º£©
+	//è‡ªèº«çš„å˜åŒ–æ˜¯å¦è§¦å‘è‡ªå·±çš„éªŒè¯ï¼ˆä¸€èˆ¬å¦‚æœåŠ å…¥åˆ°ä¸€ä¸ªå®¹å™¨ä¸­ï¼Œè‡ªèº«çš„å˜åŒ–ä¼šè§¦å‘æ•´ä¸ªå®¹å™¨çš„éªŒè¯ï¼Œä¸éœ€è¦å†é‡å¤éªŒè¯è‡ªå·±ï¼‰
 	private boolean validateFlag = true;
 
 	public boolean isEnable() {
@@ -196,7 +196,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		if(null == value && null == oldValue)
 			return;
 		
-		//UIÊÇµ¥Ïß³Ì µÄ£¬²»ĞèÒªsync
+		//UIæ˜¯å•çº¿ç¨‹ çš„ï¼Œä¸éœ€è¦sync
 		fireFlag = false;
 		doSetValue(value);
 		fireFlag = true;
@@ -324,7 +324,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	protected void buildFieldDecoration() {
 		FieldDecorationRegistry fieldDecorationRegistry = FieldDecorationRegistry.getDefault();
 
-//		// ¼ÓÕâ¸öÄÚÈİÊÇÎªÁËÕ¼Î»
+//		// åŠ è¿™ä¸ªå†…å®¹æ˜¯ä¸ºäº†å ä½
 //		this.requiredFieldDecoration = fieldDecorationRegistry.getFieldDecoration(FieldDecorationRegistry.DEC_REQUIRED);
 //		this.decoratedField.addFieldDecoration(this.requiredFieldDecoration, SWT.CENTER | SWT.LEFT, false);
 //		if(this.required)
@@ -363,7 +363,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	}
 
 	/**
-	 * ±êÇ©¿Ø¼ş¿ÉÄÜÊÇÆÕÍ¨µÄLabelÒ²¿ÉÄÜÊÇ³¬Á´½Ó
+	 * æ ‡ç­¾æ§ä»¶å¯èƒ½æ˜¯æ™®é€šçš„Labelä¹Ÿå¯èƒ½æ˜¯è¶…é“¾æ¥
 	 * @param parent
 	 * @return
 	 */

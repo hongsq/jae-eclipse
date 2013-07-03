@@ -4,36 +4,36 @@
 package com.jae.eclipse.ui;
 
 /**
- * 用于输出各种message
+ * 鐢ㄤ簬杈撳嚭鍚勭message
  * @author hongshuiqiao
  *
  */
 public interface IMessageCaller {
 	/**
-	 * 输出错误信息
+	 * 杈撳嚭閿欒淇℃伅
 	 * @param message
 	 */
 	public void error(String message);
 	
 	/**
-	 * 输出提示信息
+	 * 杈撳嚭鎻愮ず淇℃伅
 	 * @param message
 	 */
 	public void info(String message);
 	
 	/**
-	 * 输出警告信息
+	 * 杈撳嚭璀﹀憡淇℃伅
 	 * @param message
 	 */
 	public void warn(String message);
 	
 	/**
-	 * 清除旧的信息
+	 * 娓呴櫎鏃х殑淇℃伅
 	 */
 	public void clear();
 	
 	/**
-	 * 是否包含错误
+	 * 鏄惁鍖呭惈閿欒
 	 * @return
 	 */
 	public boolean hasError();

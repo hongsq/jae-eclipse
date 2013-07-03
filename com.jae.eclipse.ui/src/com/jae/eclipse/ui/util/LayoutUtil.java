@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 public class LayoutUtil {
 
 	/**
-	 * ´´½¨Ò»¸öÉÏÏÂ¼ä¸ôºÍ¿Ø¼þ¼ä¸ô¶¼Îª0µÄGridLayout¡£<BR>
+	 * åˆ›å»ºä¸€ä¸ªä¸Šä¸‹é—´éš”å’ŒæŽ§ä»¶é—´éš”éƒ½ä¸º0çš„GridLayoutã€‚<BR>
 	 * 
 	 * @param columnCount
 	 * @return

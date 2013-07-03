@@ -8,7 +8,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 /**
- * SWT×ÊÔ´µÄÍ³Ò»Èë¿Ú£¬±ãÓÚ×ÊÔ´µÄ¸´ÓÃ¼°Í³Ò»Ïú»Ù
+ * SWTèµ„æºçš„ç»Ÿä¸€å…¥å£ï¼Œä¾¿äºèµ„æºçš„å¤ç”¨åŠç»Ÿä¸€é”€æ¯
  * @author hongshuiqiao
  *
  */

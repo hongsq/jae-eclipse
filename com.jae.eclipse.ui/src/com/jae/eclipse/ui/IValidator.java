@@ -4,13 +4,13 @@
 package com.jae.eclipse.ui;
 
 /**
- * ÑéÖ¤Æ÷
+ * éªŒè¯å™¨
  * @author hongshuiqiao
  *
  */
 public interface IValidator {
 	/**
-	 * ÑéÖ¤Æ÷µÄÑéÖ¤Âß¼­
+	 * éªŒè¯å™¨çš„éªŒè¯é€»è¾‘
 	 * @param messageCaller
 	 * @param adaptable
 	 * @return

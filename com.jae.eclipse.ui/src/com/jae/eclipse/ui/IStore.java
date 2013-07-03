@@ -4,13 +4,13 @@
 package com.jae.eclipse.ui;
 
 /**
- * ´æ´¢½Ó¿Ú
+ * å­˜å‚¨æ¥å£
  * @author hongshuiqiao
  *
  */
 public interface IStore {
 	/**
-	 * ½«UI±à¼­µÄÖµ±£´æµ½¶ÔÏóÖĞ
+	 * å°†UIç¼–è¾‘çš„å€¼ä¿å­˜åˆ°å¯¹è±¡ä¸­
 	 */
 	public void save();
 }

@@ -9,7 +9,7 @@ import java.util.Map;
 import com.jae.eclipse.ui.exception.PropertyException;
 
 /**
- * ²Ù×÷¶ÔÏó
+ * æ“ä½œå¯¹è±¡
  * @author hongshuiqiao
  *
  */

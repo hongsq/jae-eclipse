@@ -9,7 +9,7 @@ package com.jae.eclipse.navigator.jaeapp.model;
  */
 public interface INameElement {
 	/**
-	 * ·µ»ØÃû³Æ
+	 * è¿”å›åç§°
 	 * @return
 	 */
 	public String getName();

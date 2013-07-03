@@ -16,7 +16,7 @@ import com.jae.eclipse.ui.base.AbstractPropertyEditor;
 import com.jae.eclipse.ui.util.StringUtil;
 
 /**
- * ÊôÐÔ±à¼­Æ÷µÄmessagecaller
+ * å±žæ€§ç¼–è¾‘å™¨çš„messagecaller
  * @author hongshuiqiao
  *
  */

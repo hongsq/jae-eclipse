@@ -25,7 +25,7 @@ public interface IControlFactory extends IUIDescElement, IValueEventContainer, I
 	public void setValue(Object value);
 	
 	/**
-	 * ´´½¨¿Ø¼þ
+	 * åˆ›å»ºæŽ§ä»¶
 	 * @param parent
 	 * @return
 	 */

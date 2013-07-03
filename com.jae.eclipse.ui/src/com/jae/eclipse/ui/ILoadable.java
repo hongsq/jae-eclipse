@@ -4,14 +4,14 @@
 package com.jae.eclipse.ui;
 
 /**
- * ¼ÓÔØ½Ó¿Ú
+ * åŠ è½½æ¥å£
  * @author hongshuiqiao
  *
  */
 public interface ILoadable {
 
 	/**
-	 * ´Ó¶ÔÏóÖĞ¼ÓÔØÊı¾İµ½UIÉÏÏÔÊ¾
+	 * ä»å¯¹è±¡ä¸­åŠ è½½æ•°æ®åˆ°UIä¸Šæ˜¾ç¤º
 	 */
 	public void load();
 }

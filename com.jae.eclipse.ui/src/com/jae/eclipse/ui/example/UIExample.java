@@ -55,7 +55,7 @@ public class UIExample {
 				IPropertyEditor editor = adaptable.getAdapter(IPropertyEditor.class);
 				boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
 				if(isEmpty)
-					messageCaller.error("²»ÄÜÎª¿Õ£¡");
+					messageCaller.error("ä¸èƒ½ä¸ºç©ºï¼");
 				
 				if("a".equals(editor.getValue()))
 					messageCaller.warn("test warning");
@@ -79,7 +79,7 @@ public class UIExample {
 				IPropertyEditor editor = adaptable.getAdapter(IPropertyEditor.class);
 				boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
 				if(isEmpty)
-					messageCaller.error("²»ÄÜÎª¿Õ£¡");
+					messageCaller.error("ä¸èƒ½ä¸ºç©ºï¼");
 				return !isEmpty;
 			}
 		});
@@ -102,7 +102,7 @@ public class UIExample {
 				IPropertyEditor editor = adaptable.getAdapter(IPropertyEditor.class);
 				boolean isEmpty = (null==editor.getValue());
 				if(isEmpty)
-					messageCaller.error("²»ÄÜÎª¿Õ£¡");
+					messageCaller.error("ä¸èƒ½ä¸ºç©ºï¼");
 				return !isEmpty;
 			}
 		});
