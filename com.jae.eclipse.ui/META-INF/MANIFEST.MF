@@ -17,3 +17,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor;bundle-version="3.8.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Export-Package: com.jae.eclipse.ui,
+ com.jae.eclipse.ui.control,
+ com.jae.eclipse.ui.event,
+ com.jae.eclipse.ui.exception,
+ com.jae.eclipse.ui.factory,
+ com.jae.eclipse.ui.factory.base,
+ com.jae.eclipse.ui.impl,
+ com.jae.eclipse.ui.util
