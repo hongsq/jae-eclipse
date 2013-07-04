@@ -121,6 +121,11 @@ public class PropertyMessageCaller implements IMessageCaller {
 		this.propertyEditor.getWarnFieldDecoration().setDescription(null);
 		Control editorControl = this.propertyEditor.getEditControl();
 		if (null != editorControl) editorControl.setToolTipText(null);
+		
+		String toolTip = this.propertyEditor.getToolTip();
+		if(!StringUtil.isEmpty(toolTip))
+			this.propertyEditor.setToolTip(toolTip);
+		
 		// this.propertyEditor.getDecoratedField().hideDecoration(this.propertyEditor.getAssitantFieldDecoration());
 		this.propertyEditor.getDecoratedField().hideHover();
 	}

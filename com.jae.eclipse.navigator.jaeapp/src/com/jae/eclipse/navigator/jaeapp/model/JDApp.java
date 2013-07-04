@@ -7,21 +7,27 @@ package com.jae.eclipse.navigator.jaeapp.model;
  * @author hongshuiqiao
  *
  */
-public class JDApp implements INameElement {
-	private String name;
+public class JDApp extends AbstractJDModel {
+	private User user;
 	private String repositoryURL;
 
 	public JDApp(String name) {
 		super();
-		this.name = name;
+		this.setName(name);
 	}
 
-	public String getName() {
-		return name;
+	public JDApp(User user, String name) {
+		super();
+		this.user = user;
+		this.setName(name);
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public String getRepositoryURL() {

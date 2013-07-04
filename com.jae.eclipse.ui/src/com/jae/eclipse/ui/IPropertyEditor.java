@@ -15,7 +15,10 @@ import com.jae.eclipse.ui.event.IValueEventContainer;
  * @author hongshuiqiao
  *
  */
-public interface IPropertyEditor extends IStore, ILoadable, IValidatable, IAdaptable, IValueEventContainer {
+public interface IPropertyEditor extends IStore, ILoadable, IValidatable, IValueEventContainer {
+	public String getToolTip();
+	
+	public void setToolTip(String toolTip);
 	
 	/**
 	 * 创建控件

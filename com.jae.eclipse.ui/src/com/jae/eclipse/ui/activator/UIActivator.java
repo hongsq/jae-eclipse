@@ -3,6 +3,8 @@ package com.jae.eclipse.ui.activator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.jae.eclipse.ui.util.SWTResourceUtil;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -34,6 +36,8 @@ public class UIActivator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		SWTResourceUtil.shutdown();
+		
 		plugin = null;
 		super.stop(context);
 	}

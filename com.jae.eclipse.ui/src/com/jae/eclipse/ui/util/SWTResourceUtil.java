@@ -7,6 +7,7 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Resource;
 /**
  * SWT资源的统一入口，便于资源的复用及统一销毁
  * @author hongshuiqiao
@@ -39,7 +40,7 @@ public class SWTResourceUtil {
 	}
 
 	public static Image getImage(Object imageDescriptor){
-		return imageTable.get(imageDescriptor);
+		return checkResource(imageTable, imageDescriptor);
 	}
 	
 	public static void regeditImage(Object imageDescriptor, Image image){
@@ -47,7 +48,7 @@ public class SWTResourceUtil {
 	}
 	
 	public static Color getColor(Object colorDescriptor){
-		return colorTable.get(colorDescriptor);
+		return checkResource(colorTable, colorDescriptor);
 	}
 	
 	public static void regeditColor(Object colorDescriptor, Color color){
@@ -55,10 +56,25 @@ public class SWTResourceUtil {
 	}
 	
 	public static Font getFont(Object fontDescriptor){
-		return fontTable.get(fontDescriptor);
+		return checkResource(fontTable, fontDescriptor);
 	}
 	
 	public static void regeditFont(Object fontDescriptor, Font font){
 		fontTable.put(fontDescriptor, font);
+	}
+	
+	protected static <T extends Resource> T checkResource(Map<Object, T> resourceTable, Object descriptor){
+		T resource = resourceTable.get(descriptor);
+		
+		if(null == resource){
+			return null;
+		}
+		
+		if(resource.isDisposed()){
+			resourceTable.remove(descriptor);
+			return null;
+		}
+		
+		return resource;
 	}
 }

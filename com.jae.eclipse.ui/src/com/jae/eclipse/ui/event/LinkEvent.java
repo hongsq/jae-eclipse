@@ -3,7 +3,6 @@
  */
 package com.jae.eclipse.ui.event;
 
-import com.jae.eclipse.ui.IAdaptable;
 
 /**
  * @author hongshuiqiao
@@ -11,7 +10,7 @@ import com.jae.eclipse.ui.IAdaptable;
  */
 public class LinkEvent {
 	private Object source;
-	private IAdaptable adaptable;
+	private Object data;
 
 	public LinkEvent(Object source) {
 		super();
@@ -22,15 +21,11 @@ public class LinkEvent {
 		return source;
 	}
 
-	public void setSource(Object source) {
-		this.source = source;
+	public Object getData() {
+		return data;
 	}
 
-	public IAdaptable getAdaptable() {
-		return adaptable;
-	}
-
-	public void setAdaptable(IAdaptable adaptable) {
-		this.adaptable = adaptable;
+	public void setData(Object data) {
+		this.data = data;
 	}
 }

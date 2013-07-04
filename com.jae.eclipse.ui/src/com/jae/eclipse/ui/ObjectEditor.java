@@ -22,7 +22,7 @@ import com.jae.eclipse.ui.util.LayoutUtil;
  * @author hongshuiqiao
  *
  */
-public class ObjectEditor extends ValueEventContainer implements IUIDescElement, IStore, ILoadable, IValueEventContainer, IValidatable, IAdaptable, IValuechangeListener {
+public class ObjectEditor extends ValueEventContainer implements IUIDescElement, IStore, ILoadable, IValueEventContainer, IValidatable, IValuechangeListener {
 	private UIDescription uiDescription = new UIDescription();
 	private List<IPropertyEditor> editors = new ArrayList<IPropertyEditor>();
 	private GridLayout layout = LayoutUtil.createCompactGridLayout(2);
@@ -115,16 +115,6 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 			flag = editor.validate(event) && flag;
 		}
 		return flag;
-	}
-
-	@Override
-	public <T> T getAdapter(Class<T> adapterClass) {
-		if(adapterClass == ObjectEditor.class)
-			return adapterClass.cast(this);
-		if(adapterClass == IMessageCaller.class)
-			return adapterClass.cast(this.messageCaller);
-		
-		return null;
 	}
 
 	@Override

@@ -10,22 +10,13 @@ import java.util.List;
  * @author hongshuiqiao
  *
  */
-public class User implements INameElement {
-	private String name;
+public class User extends AbstractJDModel {
 	private String password;
 	private List<JDApp> apps = new ArrayList<JDApp>();
 	
 	public User(String name) {
 		super();
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+		this.setName(name);
 	}
 
 	public String getPassword() {

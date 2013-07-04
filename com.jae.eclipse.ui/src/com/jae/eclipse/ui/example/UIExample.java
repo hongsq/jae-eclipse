@@ -13,9 +13,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import com.jae.eclipse.ui.IAdaptable;
 import com.jae.eclipse.ui.IMessageCaller;
-import com.jae.eclipse.ui.IPropertyEditor;
 import com.jae.eclipse.ui.IValidator;
 import com.jae.eclipse.ui.ObjectEditor;
 import com.jae.eclipse.ui.control.ComboPropertyEditor;
@@ -44,69 +42,71 @@ public class UIExample {
 	private static ObjectEditor createObjectEditor() {
 		ObjectEditor objectEditor = new ObjectEditor();
 
-		StringPropertyEditor editor = new StringPropertyEditor();
-		editor.setLabel("label:");
-		editor.setPropertyName("abc");
-		editor.setRequired(true);
-		editor.addValidator(new IValidator() {
-			
-			@Override
-			public boolean validate(IMessageCaller messageCaller, IAdaptable adaptable) {
-				IPropertyEditor editor = adaptable.getAdapter(IPropertyEditor.class);
-				boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
-				if(isEmpty)
-					messageCaller.error("不能为空！");
-				
-				if("a".equals(editor.getValue()))
-					messageCaller.warn("test warning");
-				
-				if("ab".equals(editor.getValue()))
-					messageCaller.info("test info");
-				
-				return !isEmpty;
-			}
-		});
-		objectEditor.addPropertyEditor(editor);
+		{
+			final StringPropertyEditor editor = new StringPropertyEditor();
+			editor.setLabel("label:");
+			editor.setPropertyName("abc");
+			editor.setRequired(true);
+			editor.addValidator(new IValidator() {
+				@Override
+				public boolean validate(IMessageCaller messageCaller, Object validateObject) {
+					boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
+					if(isEmpty)
+						messageCaller.error("不能为空！");
+					
+					if("a".equals(editor.getValue()))
+						messageCaller.warn("test warning");
+					
+					if("ab".equals(editor.getValue()))
+						messageCaller.info("test info");
+					
+					return !isEmpty;
+				}
+			});
+			objectEditor.addPropertyEditor(editor);
+		}
 		
-		editor = new StringPropertyEditor();
-		editor.setLabel("label:");
-		editor.setPropertyName("efg");
-		editor.setRequired(true);
-		editor.addValidator(new IValidator() {
-			
-			@Override
-			public boolean validate(IMessageCaller messageCaller, IAdaptable adaptable) {
-				IPropertyEditor editor = adaptable.getAdapter(IPropertyEditor.class);
-				boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
-				if(isEmpty)
-					messageCaller.error("不能为空！");
-				return !isEmpty;
-			}
-		});
-		objectEditor.addPropertyEditor(editor);
+		{
+			final StringPropertyEditor editor = new StringPropertyEditor();
+			editor.setLabel("label:");
+			editor.setPropertyName("efg");
+			editor.setRequired(true);
+			editor.addValidator(new IValidator() {
+				
+				@Override
+				public boolean validate(IMessageCaller messageCaller, Object validateObject) {
+					boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
+					if(isEmpty)
+						messageCaller.error("不能为空！");
+					return !isEmpty;
+				}
+			});
+			objectEditor.addPropertyEditor(editor);
+		}
 		
-		ComboPropertyEditor comboEditor = new ComboPropertyEditor();
-		comboEditor.setLabel("combo:");
-		comboEditor.setPropertyName("combo");
-//		comboEditor.setComboItems(new String[]{"","aa", "bb"});
-		Map<String,Object> itemMap = new LinkedHashMap<>();
-		itemMap.put("aa", 11);
-		itemMap.put("bb", 22);
-		itemMap.put("cc", 33);
-		comboEditor.setComboItems(itemMap);
-		
-		comboEditor.addValidator(new IValidator() {
+		{
+			final ComboPropertyEditor comboEditor = new ComboPropertyEditor();
+			comboEditor.setLabel("combo:");
+			comboEditor.setPropertyName("combo");
+//			comboEditor.setComboItems(new String[]{"","aa", "bb"});
+			Map<String,Object> itemMap = new LinkedHashMap<>();
+			itemMap.put("aa", 11);
+			itemMap.put("bb", 22);
+			itemMap.put("cc", 33);
+			comboEditor.setComboItems(itemMap);
 			
-			@Override
-			public boolean validate(IMessageCaller messageCaller, IAdaptable adaptable) {
-				IPropertyEditor editor = adaptable.getAdapter(IPropertyEditor.class);
-				boolean isEmpty = (null==editor.getValue());
-				if(isEmpty)
-					messageCaller.error("不能为空！");
-				return !isEmpty;
-			}
-		});
-		objectEditor.addPropertyEditor(comboEditor);
+			comboEditor.addValidator(new IValidator() {
+				
+				@Override
+				public boolean validate(IMessageCaller messageCaller, Object validateObject) {
+					boolean isEmpty = (null==comboEditor.getValue());
+					if(isEmpty)
+						messageCaller.error("不能为空！");
+					return !isEmpty;
+				}
+			});
+			objectEditor.addPropertyEditor(comboEditor);
+		}
 		
 		Map map = new HashMap();
 		map.put("abc", "abc");

@@ -69,6 +69,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	private boolean fireFlag = true;
 	//自身的变化是否触发自己的验证（一般如果加入到一个容器中，自身的变化会触发整个容器的验证，不需要再重复验证自己）
 	private boolean validateFlag = true;
+	private String toolTip;
 
 	public boolean isEnable() {
 		return enable;
@@ -76,6 +77,14 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 
 	public void setEnable(boolean enable) {
 		this.enable = enable;
+	}
+
+	public String getToolTip() {
+		return toolTip;
+	}
+
+	public void setToolTip(String toolTip) {
+		this.toolTip = toolTip;
 	}
 
 	public Object getEditElement() {
@@ -151,18 +160,6 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	
 	public void clearValidators(){
 		this.validators.clear();
-	}
-	
-	@Override
-	public <T> T getAdapter(Class<T> adapterClass) {
-		if(adapterClass == IPropertyEditor.class)
-			return adapterClass.cast(this);
-		if(adapterClass == ILinkAction.class)
-			return adapterClass.cast(this.linkAction);
-		if(adapterClass == IMessageCaller.class)
-			return adapterClass.cast(this.messageCaller);
-		
-		return null;
 	}
 	
 	@Override
@@ -314,6 +311,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.decoratedField = new DecoratedField(topComposite, SWT.NONE, this);
 		this.decoratedField.getLayoutControl().setLayoutData(this.editLayoutData);
 		this.editControl = this.decoratedField.getControl();
+		this.editControl.setToolTipText(this.toolTip);
 		
 		this.buildFieldDecoration();
 		

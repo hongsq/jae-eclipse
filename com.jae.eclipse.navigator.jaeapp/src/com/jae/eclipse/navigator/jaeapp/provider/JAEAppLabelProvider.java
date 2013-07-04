@@ -3,12 +3,14 @@
  */
 package com.jae.eclipse.navigator.jaeapp.provider;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMemento;
@@ -17,6 +19,9 @@ import org.eclipse.ui.model.IWorkbenchAdapter2;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.ICommonLabelProvider;
 
+import com.jae.eclipse.navigator.jaeapp.model.IDescriptionElement;
+import com.jae.eclipse.navigator.jaeapp.model.INameElement;
+import com.jae.eclipse.navigator.jaeapp.util.JAEAppUtil;
 import com.jae.eclipse.ui.util.SWTResourceUtil;
 
 /**
@@ -34,8 +39,37 @@ public class JAEAppLabelProvider extends LabelProvider implements IColorProvider
 	}
 
 	@Override
-	public String getDescription(Object anElement) {
+	public Image getImage(Object element) {
+		IWorkbenchAdapter adapter = JAEAppUtil.getWorkbenchAdapter(element);
+		if(null != adapter){
+			ImageDescriptor image = adapter.getImageDescriptor(element);
+			if(null != image)
+				return image.createImage(true);
+		}
+		
 		return null;
+	}
+
+	@Override
+	public String getText(Object element) {
+		IWorkbenchAdapter adapter = JAEAppUtil.getWorkbenchAdapter(element);
+		if(null != adapter){
+			return adapter.getLabel(element);
+		}
+		
+		return "";
+	}
+
+	@Override
+	public String getDescription(Object anElement) {
+		if (anElement instanceof IDescriptionElement) {
+			return ((IDescriptionElement) anElement).getDescription();
+		}
+		
+		if (anElement instanceof INameElement) {
+			return ((INameElement) anElement).getName();
+		}
+		return "";
 	}
 
 	@Override
@@ -44,7 +78,7 @@ public class JAEAppLabelProvider extends LabelProvider implements IColorProvider
 
 	@Override
 	public Font getFont(Object element) {
-		IWorkbenchAdapter2 adapter = getAdapter2(element);
+		IWorkbenchAdapter2 adapter = JAEAppUtil.getWorkbenchAdapter2(element);
 		if (adapter == null) {
 			return null;
 		}
@@ -79,7 +113,7 @@ public class JAEAppLabelProvider extends LabelProvider implements IColorProvider
 	 * @return
 	 */
 	protected Color getColor(Object element, boolean foreground) {
-		IWorkbenchAdapter2 adapter = getAdapter2(element);
+		IWorkbenchAdapter2 adapter = JAEAppUtil.getWorkbenchAdapter2(element);
 		if (adapter == null) {
 			return null;
 		}
@@ -94,41 +128,5 @@ public class JAEAppLabelProvider extends LabelProvider implements IColorProvider
 			SWTResourceUtil.regeditColor(descriptor, color);
 		}
 		return color;
-	}
-	
-	/**
-	 * Returns the implementation of IWorkbenchAdapter for the given
-	 * object.
-	 * @param element the object to look up.
-	 * @return IWorkbenchAdapter or<code>null</code> if the adapter is not defined or the
-	 * object is not adaptable.
-	 */
-	protected IWorkbenchAdapter getAdapter(Object element) {
-		IWorkbenchAdapter adapter = (IWorkbenchAdapter) ExpressionAdapterManager.getInstance().getAdapter(element, IWorkbenchAdapter.class);
-
-		if (null == adapter) {
-			adapter = (IWorkbenchAdapter) AdapterUtil.getAdapter(element, IWorkbenchAdapter.class);
-		}
-		if (null == adapter) {
-			return InternalWorkbenchAdapter.getInstance();
-		} else {
-			return adapter;
-		}
-	}
-	
-	/**
-	 * Returns the implementation of IWorkbenchAdapter2 for the given
-	 * object.
-	 * @param o the object to look up.
-	 * @return IWorkbenchAdapter2 or<code>null</code> if the adapter is not defined or the
-	 * object is not adaptable.
-	 */
-	protected final IWorkbenchAdapter2 getAdapter2(Object o) {
-		IWorkbenchAdapter2 adapter = (IWorkbenchAdapter2) AdapterUtil.getAdapter(o, IWorkbenchAdapter2.class);
-		if (null == adapter) {
-			return InternalWorkbenchAdapter.getInstance();
-		} else {
-			return adapter;
-		}
 	}
 }

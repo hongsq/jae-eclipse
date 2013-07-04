@@ -3,7 +3,6 @@
  */
 package com.jae.eclipse.ui.event;
 
-import com.jae.eclipse.ui.IAdaptable;
 
 /**
  * @author hongshuiqiao
@@ -13,7 +12,7 @@ public class ValueChangeEvent {
 	private Object oldValue;
 	private Object newValue;
 	private Object source;
-	private IAdaptable adaptable;
+	private Object data;
 
 	public ValueChangeEvent(Object source, Object oldValue, Object newValue) {
 		super();
@@ -42,15 +41,11 @@ public class ValueChangeEvent {
 		return source;
 	}
 
-	public void setSource(Object source) {
-		this.source = source;
+	public Object getData() {
+		return data;
 	}
 
-	public IAdaptable getAdaptable() {
-		return adaptable;
-	}
-
-	public void setAdaptable(IAdaptable adaptable) {
-		this.adaptable = adaptable;
+	public void setData(Object data) {
+		this.data = data;
 	}
 }

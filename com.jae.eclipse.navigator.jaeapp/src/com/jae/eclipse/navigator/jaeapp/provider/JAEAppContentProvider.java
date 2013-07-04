@@ -3,49 +3,57 @@
  */
 package com.jae.eclipse.navigator.jaeapp.provider;
 
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.ui.model.IWorkbenchAdapter;
+
+import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;
+import com.jae.eclipse.navigator.jaeapp.util.JAEAppUtil;
 
 /**
  * @author hongshuiqiao
  *
  */
 public class JAEAppContentProvider implements ITreeContentProvider {
-
+	
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getChildren(inputElement);
 	}
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		// TODO Auto-generated method stub
-		return null;
+		if (parentElement instanceof IWorkspaceRoot) {
+			return JAEAppHelper.getUsers();
+		}
+		
+		IWorkbenchAdapter adapter = JAEAppUtil.getWorkbenchAdapter(parentElement);
+		return adapter.getChildren(parentElement);
 	}
 
 	@Override
 	public Object getParent(Object element) {
-		// TODO Auto-generated method stub
-		return null;
+		IWorkbenchAdapter adapter = JAEAppUtil.getWorkbenchAdapter(element);
+		return adapter.getParent(element);
 	}
 
 	@Override
 	public boolean hasChildren(Object element) {
-		// TODO Auto-generated method stub
-		return false;
+		if (element instanceof IWorkspaceRoot) {
+			return true;
+		}
+		
+		IWorkbenchAdapter adapter = JAEAppUtil.getWorkbenchAdapter(element);
+		return adapter.getChildren(element).length>0;
 	}
 
 }

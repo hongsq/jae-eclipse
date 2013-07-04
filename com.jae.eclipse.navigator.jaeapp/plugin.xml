@@ -84,5 +84,29 @@
             </or></possibleChildren>
       </navigatorContent>
    </extension>
+   <extension
+         point="com.jae.eclipse.ui.imageRepository">
+      <image
+            id="com.jae.eclipse.navigator.jaeapp.model.User"
+            image="icons/user.gif">
+      </image>
+      <image
+            id="com.jae.eclipse.navigator.jaeapp.model.JDApp"
+            image="icons/jdapp.gif">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="com.jae.eclipse.navigator.jaeapp.model.User"
+            class="com.jae.eclipse.navigator.jaeapp.adapter.factory.WorkbenchAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter">
+         </adapter>
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter2">
+         </adapter>
+      </factory>
+   </extension>
 
 </plugin>
