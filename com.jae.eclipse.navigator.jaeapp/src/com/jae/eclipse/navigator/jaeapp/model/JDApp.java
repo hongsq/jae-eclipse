@@ -3,31 +3,17 @@
  */
 package com.jae.eclipse.navigator.jaeapp.model;
 
+import com.jae.eclipse.navigator.jaeapp.util.RemoteResourceUtil;
+
 /**
  * @author hongshuiqiao
  *
  */
-public class JDApp extends AbstractJDModel {
-	private User user;
+public class JDApp extends AbstractJDElement {
 	private String repositoryURL;
 
-	public JDApp(String name) {
-		super();
-		this.setName(name);
-	}
-
 	public JDApp(User user, String name) {
-		super();
-		this.user = user;
-		this.setName(name);
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
+		super(user, name);
 	}
 
 	public String getRepositoryURL() {
@@ -36,5 +22,9 @@ public class JDApp extends AbstractJDModel {
 
 	public void setRepositoryURL(String repositoryURL) {
 		this.repositoryURL = repositoryURL;
+	}
+	
+	public RemoteResource getRemoteResource(String path){
+		return RemoteResourceUtil.getRemoteResource(this, null, path);
 	}
 }

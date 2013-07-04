@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jae.eclipse.navigator.jaeapp.model.JDApp;
+import com.jae.eclipse.navigator.jaeapp.model.RemoteFile;
+import com.jae.eclipse.navigator.jaeapp.model.RemoteFolder;
 import com.jae.eclipse.navigator.jaeapp.model.User;
 
 /**
@@ -25,10 +27,27 @@ public class JAEAppHelper {
 			
 			for (int j = 0; j < 2; j++) {
 				JDApp app = new JDApp(user, "app"+i+j);
-				app.setDescription("description-app"+i+j);
 				app.setRepositoryURL("repositoryURL"+i+j);
+				app.setDescription(app.getRepositoryURL());
 				
-				user.addJDApp(app);
+				for (int k = 0; k < 5; k++) {
+					if(k%2==0){
+						RemoteFolder folder = new RemoteFolder(app, null, "folder"+k);
+						
+						for (int l = 0; l < 5; l++) {
+							RemoteFile file = new RemoteFile(app, folder, "file"+k+l);
+							folder.addChild(file);
+						}
+						
+						app.addChild(folder);
+					}else{
+						RemoteFile file = new RemoteFile(app, null, "file"+k);
+						app.addChild(file);
+					}
+				}
+				
+				
+				user.addChild(app);
 			}
 			
 			users.add(user);
