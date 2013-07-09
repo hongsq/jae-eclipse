@@ -18,4 +18,10 @@ public class RemoteFolder extends RemoteResource {
 	public RemoteResource getRemoteResource(String path){
 		return RemoteResourceUtil.getRemoteResource(this.getApp(), this, path);
 	}
+
+	@Override
+	protected void doLoadChildren() {
+		// TODO Auto-generated method stub
+		
+	}
 }

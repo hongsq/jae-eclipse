@@ -23,7 +23,7 @@
          <popupMenu
                id="com.jae.eclipse.navigator.jaeapp.view#PopupMenu">
             <insertionPoint
-                  name="group.new">
+                  name="group.common">
             </insertionPoint>
             <insertionPoint
                   name="group.edit"
@@ -38,7 +38,7 @@
             viewerId="com.jae.eclipse.navigator.jaeapp.view">
          <includes>
             <actionExtension
-                  pattern="com.jae.eclipse.navigator.jaeapp.view.action.*">
+                  pattern="com.jae.eclipse.navigator.jaeapp.action.*">
             </actionExtension>
          </includes>
       </viewerActionBinding>
@@ -83,6 +83,36 @@
                </instanceof>
             </or></possibleChildren>
       </navigatorContent>
+      <actionProvider
+            class="com.jae.eclipse.navigator.jaeapp.action.provider.UserOperationActionProvider"
+            id="com.jae.eclipse.navigator.jaeapp.action.UserOperationActionProvider">
+         <enablement>
+            <or>
+               <and>
+                  <instanceof
+                        value="com.jae.eclipse.navigator.jaeapp.model.User">
+                  </instanceof></and>
+               <and>
+                  <instanceof
+                        value="org.eclipse.core.resources.IWorkspaceRoot">
+                  </instanceof>
+               </and>
+            </or>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="com.jae.eclipse.navigator.jaeapp.action.provider.JDAppActionProvider"
+            id="com.jae.eclipse.navigator.jaeapp.action.JDAppActionProvider">
+         <enablement>
+            <or>
+               <and>
+                  <instanceof
+                        value="com.jae.eclipse.navigator.jaeapp.model.JDApp">
+                  </instanceof>
+               </and>
+            </or>
+         </enablement>
+      </actionProvider>
    </extension>
    <extension
          point="com.jae.eclipse.ui.imageRepository">
@@ -101,6 +131,38 @@
       <image
             id="com.jae.eclipse.navigator.jaeapp.model.RemoteFolder"
             image="icons/remote_folder.gif">
+      </image>
+      <image
+            id="add"
+            image="icons/action/add.gif">
+      </image>
+      <image
+            id="remove"
+            image="icons/action/remove.gif">
+      </image>
+      <image
+            id="edit"
+            image="icons/action/edit.gif">
+      </image>
+      <image
+            id="user.action.add"
+            image="icons/action/user_add.gif">
+      </image>
+      <image
+            id="user.action.remove"
+            image="icons/action/user_remove.gif">
+      </image>
+      <image
+            id="user.action.edit"
+            image="icons/action/user_edit.gif">
+      </image>
+      <image
+            id="jdapp.action.edit"
+            image="icons/action/jdapp_edit.gif">
+      </image>
+      <image
+            id="jdapp.action.import"
+            image="icons/action/jdapp_import_code.gif">
       </image>
    </extension>
    <extension

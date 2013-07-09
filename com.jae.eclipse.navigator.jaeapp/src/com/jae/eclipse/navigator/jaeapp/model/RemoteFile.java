@@ -13,4 +13,10 @@ public class RemoteFile extends RemoteResource {
 		super(app, parent, name);
 	}
 
+	@Override
+	protected void doLoadChildren() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

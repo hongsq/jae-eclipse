@@ -4,7 +4,7 @@ package com.jae.eclipse.navigator.jaeapp.model;
  *
  * @param <E>
  */
-public interface IJDElement extends INameElement, IDescriptionElement, IImageElement {
+public interface IJDElement extends INameElement, IDisplayNameElement, IDescriptionElement, IImageElement {
 	
 	public IJDElement getParent();
 	

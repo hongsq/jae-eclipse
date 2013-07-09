@@ -3,6 +3,7 @@
  */
 package com.jae.eclipse.ui.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -19,6 +20,19 @@ import com.jae.eclipse.ui.exception.PropertyException;
  */
 public class ObjectUtil {
 
+	public static Field getField(Class<?> instanceClass, String fieldName, boolean onlyPublic) throws NoSuchFieldException, SecurityException{
+		if(onlyPublic)
+			return instanceClass.getField(fieldName);
+		
+		Field[] fields = instanceClass.getDeclaredFields();
+		for (Field field : fields) {
+			if(fieldName.equals(field.getName()))
+				return field;
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * 返回父类所带的泛型的具体类型
 	 * @param instance
@@ -56,9 +70,11 @@ public class ObjectUtil {
 			Map map = (Map) instance;
 			map.put(propertyName, value);
 		}else{
-			String methodName = "set"+Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+			String setMethodName = "set"+Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+			String getMethodName = "get"+Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
 			try {
-				Method setMethod = getPublicMethod(instance.getClass(), methodName, value.getClass());
+				Method getMethod = getPublicMethod(instance.getClass(), getMethodName);
+				Method setMethod = getPublicMethod(instance.getClass(), setMethodName, getMethod.getReturnType());
 				setMethod.invoke(instance, value);
 			} catch (Exception e) {
 				throw new RuntimeException(e);

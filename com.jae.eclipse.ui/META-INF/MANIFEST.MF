@@ -18,6 +18,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.jae.eclipse.ui,
+ com.jae.eclipse.ui.base,
  com.jae.eclipse.ui.control,
  com.jae.eclipse.ui.event,
  com.jae.eclipse.ui.exception,
@@ -26,4 +27,5 @@ Export-Package: com.jae.eclipse.ui,
  com.jae.eclipse.ui.factory.base,
  com.jae.eclipse.ui.impl,
  com.jae.eclipse.ui.resource,
- com.jae.eclipse.ui.util
+ com.jae.eclipse.ui.util,
+ com.jae.eclipse.ui.validator

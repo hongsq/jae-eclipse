@@ -27,4 +27,10 @@ public class JDApp extends AbstractJDElement {
 	public RemoteResource getRemoteResource(String path){
 		return RemoteResourceUtil.getRemoteResource(this, null, path);
 	}
+
+	@Override
+	protected void doLoadChildren() {
+		// TODO Auto-generated method stub
+		
+	}
 }

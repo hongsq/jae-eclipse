@@ -14,9 +14,11 @@ import java.util.List;
 public abstract class AbstractJDElement implements IJDElement {
 	private IJDElement parent;
 	private String name;
+	private String displayName;
 	private String description;
 	private String imageID;
 	private List<IJDElement> children = new ArrayList<IJDElement>();
+	private boolean loaded=false;
 
 	public AbstractJDElement(IJDElement parent, String name) {
 		this.parent = parent;
@@ -33,8 +35,16 @@ public abstract class AbstractJDElement implements IJDElement {
 		return name;
 	}
 
-	void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	public String getDescription() {
@@ -54,11 +64,33 @@ public abstract class AbstractJDElement implements IJDElement {
 	}
 	
 	public IJDElement[] getChildren(){
+		load();
+		
 		return this.children.toArray(new IJDElement[this.children.size()]);
+	}
+	
+	public boolean isLoaded() {
+		return loaded;
+	}
+	
+	protected synchronized void load(){
+		if(!loaded){
+			doLoadChildren();
+			loaded = true;
+		}
+	}
+	
+	protected abstract void doLoadChildren();
+
+	public synchronized void refresh(){
+		loaded = false;
+		this.children.clear();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public <T extends IJDElement> T[] getChildren(Class<T> childType){
+		load();
+		
 		List<T> list = new ArrayList<T>();
 		for (IJDElement child : this.children) {
 			if(childType.isAssignableFrom(child.getClass()))
