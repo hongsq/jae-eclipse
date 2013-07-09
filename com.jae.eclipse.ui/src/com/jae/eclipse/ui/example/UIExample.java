@@ -28,6 +28,7 @@ import com.jae.eclipse.ui.util.StringUtil;
  * @author hongshuiqiao
  *
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class UIExample {
 	
 	protected static void createUI(Shell shell) {
