@@ -5,13 +5,12 @@ package com.jae.eclipse.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
+
 
 /**
  * @author Hongsq
@@ -68,8 +67,8 @@ public class JsonHelper {
 	 * @param json
 	 * @return
 	 */
-	public static Map<?, ?> toJavaObject(String json) {
-		return toJavaObject(json, HashMap.class);
+	public static Object toJavaObject(String json) {
+		return toJavaObject(json, null);
 	}
 	
 	/**
@@ -80,7 +79,15 @@ public class JsonHelper {
 	 */
 	public static <T> T toJavaObject(String json, Class<T> cls) {
 		JSONObject jsonObject = JSONObject.fromObject(json, config);
-		return cls.cast(JSONObject.toBean(jsonObject, cls));
+		
+		Object bean = null;
+		
+		if(null == cls)
+			bean = JSONObject.toBean(jsonObject);
+		else
+			bean = JSONObject.toBean(jsonObject, cls);
+		
+		return cls.cast(bean);
 	}
 	
 	/**
@@ -88,29 +95,28 @@ public class JsonHelper {
 	 * @param json
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
-	public static List<HashMap> toJavaList(String json) {
-		return toJavaList(json, HashMap.class);
+	public static List<Object> toJavaList(String json) {
+		return toJavaList(json, null);
 	}
 	
 	public static <T> List<T> toJavaList(String json, Class<T> elementClass) {
 		return new ArrayList<T>(toJavaCollection(json, elementClass));
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static Collection<HashMap> toJavaCollection(String json) {
-		return toJavaCollection(json, HashMap.class);
+	public static Collection<Object> toJavaCollection(String json) {
+		return toJavaCollection(json, null);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Collection<T> toJavaCollection(String json, Class<T> elementClass) {
 		JSONArray jsonArray = JSONArray.fromObject(json, config);
+		if(null == elementClass)
+			return JSONArray.toCollection(jsonArray);
 		return JSONArray.toCollection(jsonArray, elementClass);
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static Map[] toJavaArray(String json){
-		return toJavaArray(json, HashMap.class);
+	public static Object[] toJavaArray(String json){
+		return toJavaArray(json, null);
 	}
 	
 	/**
@@ -122,6 +128,8 @@ public class JsonHelper {
 	@SuppressWarnings("unchecked")
 	public static <T> T[] toJavaArray(String json, Class<T> elementClass) {
 		JSONArray jsonArray = JSONArray.fromObject(json, config);
+		if(null == elementClass)
+			return (T[]) JSONArray.toArray(jsonArray);
 		return (T[]) JSONArray.toArray(jsonArray, elementClass);
 	}
 }

@@ -3,16 +3,25 @@
  */
 package com.jae.eclipse.core.util;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -21,6 +30,8 @@ import org.apache.http.util.EntityUtils;
  * 
  */
 public class JDCOperator {
+	private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
+	private final static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HHmmss");
 	private String url = "http://api.jd-app.com";
 	private String accessKey;
 	private String secretKey;
@@ -75,28 +86,70 @@ public class JDCOperator {
 		String accessKey = "9f7ce80405f240938743875e332d9aa4";
 		String secretKey = "65428cb05e764b4f90d95f3b8f3d53e10UFtzrPf";
 		JDCOperator operator = new JDCOperator(accessKey, secretKey);
-		System.out.println(operator.handle("get", "apps"));
+		
+//		operator.setUrl("http://127.0.0.1:8888");
+
+//		operator.handle("get", "info");
+//		operator.handle("get", "apps/hongsq/instances");
+//		operator.handle("get", "apps/hongsq/instances/0/files");
+		operator.handle("get", "apps/hongsq/instances/0/files/logs/stderr.log");
+		
+//		File warFile = new File("C:/Users/Administrator/git/jae_hongsq/hello-java-1.0.war");
+//		operator.handleWithFile("post", "apps/hongsq/application", warFile);
+		
 	}
 
-	public String handle(String httpMethodName, String path) {
+	public String handleWithString(String httpMethodName, String path, String requestBody){
+		StringEntity entity=null;
+		try {
+			entity = new StringEntity(requestBody);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return handle(httpMethodName, path, "application/json", entity);
+	}
+	
+	public String handleWithFile(String httpMethodName, String path, File file){
+//		FileEntity entity = new FileEntity(file);
+		MultipartEntity entity = new MultipartEntity();
+		try {
+			FileBody filePart = new FileBody(file);
+			entity.addPart("_method",new StringBody(httpMethodName));
+			entity.addPart("application",filePart);
+			entity.addPart("resources",new StringBody("[]"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return handle(httpMethodName, path, entity.getContentType().getValue(), entity);
+	}
+	
+	public String handle(String httpMethodName, String path){
+		String contentType = "application/json";
+		return handle(httpMethodName, path, contentType, null);
+	}
+	
+	public String handle(String httpMethodName, String path, String contentType, HttpEntity requestEntity) {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		try {
-			HttpUriRequest httpMethod = new HttpGet(url+"/"+path);
+			String uri = url+"/"+path;
+			HttpUriRequest httpMethod = new HttpGet(uri);
 			if("POST".equalsIgnoreCase(httpMethodName)){
-				httpMethod = new HttpPost(url);
+				httpMethod = new HttpPost(uri);
 			}else if("PUT".equalsIgnoreCase(httpMethodName)){
-				httpMethod = new HttpPut(url);
+				httpMethod = new HttpPut(uri);
 			}else if("DELETE".equalsIgnoreCase(httpMethodName)){
-				httpMethod = new HttpDelete(url);
+				httpMethod = new HttpDelete(uri);
 			}
 
-			String contentType = "application/json";
-			httpMethod.setHeader("Accept", contentType);
+//			httpMethod.setHeader("Accept", accept);
 			httpMethod.setHeader("Accept-Encoding", "gzip, deflate");
 			httpMethod.setHeader("Authorization", accessKey);
 			httpMethod.setHeader("Version", version);
-			String date = "20130705T094918Z";// new SimpleDateFormat("yyyyMMdd z").format(new Date());
-			System.out.println(date);// "20130705T091132Z"
+			Date currentDateTime = new Date();
+			String date = DATE_FORMAT.format(currentDateTime)+"T"+TIME_FORMAT.format(currentDateTime)+"Z";
+//			String date = "20130711T172431Z";
+//			System.out.println(date);// "20130705T091132Z"
 
 			httpMethod.setHeader("Date", date);
 			httpMethod.setHeader("Access-Key-Id", accessKey);
@@ -104,16 +157,21 @@ public class JDCOperator {
 			httpMethod.setHeader("Content-Type", contentType);
 			
 			String contentMD5 = "";
+//			if(null != requestEntity){
+//				requestEntity.toString();
+//			}
 			String signature = generateSignature(httpMethodName, contentMD5, contentType, date, path);
 			httpMethod.setHeader("Signature", signature);
 
 //			httpMethod.setHeader("User-Agent", "Ruby");
+			if(null != requestEntity && (httpMethod instanceof HttpEntityEnclosingRequest))
+				((HttpEntityEnclosingRequest)httpMethod).setEntity(requestEntity);
 
 			HttpResponse response = httpclient.execute(httpMethod);
-			HttpEntity entity = response.getEntity();
+			HttpEntity responseEntity = response.getEntity();
 
 			System.out.println("get: " + response.getStatusLine());
-			String entityString = EntityUtils.toString(entity, Consts.UTF_8);
+			String entityString = EntityUtils.toString(responseEntity, Consts.UTF_8);
 			
 //			System.out.println("cookies:");
 //			List<Cookie> cookies = httpclient.getCookieStore().getCookies();
@@ -124,7 +182,12 @@ public class JDCOperator {
 //					System.out.println("- " + cookies.get(i).toString());
 //				}
 //			}
-			EntityUtils.consume(entity);
+			EntityUtils.consume(responseEntity);
+			
+			System.out.println(entityString);
+			
+			if(response.getStatusLine().getStatusCode() != 200)
+				throw new RuntimeException(response.getStatusLine().toString());
 			
 			return entityString;
 		} catch (IOException e) {

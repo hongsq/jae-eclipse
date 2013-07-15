@@ -130,8 +130,8 @@ public class DataEncryptUtil {
 			String key = DataEncryptUtil.initMacKey(KEY_MAC_MD5);
 			System.err.println("Mac密钥:\n" + key);
 ////			DataEncryptUtil.encryptHMAC(inputData, key);
-//			BigInteger mac = new BigInteger(DataEncryptUtil.encryptHMAC(KEY_MAC_MD5, inputData, key));
-//			System.err.println("HMAC:\n" + mac.toString(16));
+			BigInteger mac = new BigInteger(DataEncryptUtil.encryptHMAC(KEY_MAC_MD5, inputData, key.getBytes("UTF-8")));
+			System.err.println("HMAC:\n" + mac.toString(16));
 
 			BigInteger md5 = new BigInteger(DataEncryptUtil.encryptMD5(inputData));
 			System.err.println("MD5:\n" + md5.toString(16));
