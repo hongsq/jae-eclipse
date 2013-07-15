@@ -46,9 +46,11 @@ public abstract class AbstractWorkbenchAdapter extends WorkbenchAdapter {
 		if (object instanceof IImageElement) {
 			IImageElement element = (IImageElement) object;
 			imageID = element.getImageID();
-		}else{
-			imageID = object.getClass().getName();
 		}
+		
+		if(null == imageID)
+			imageID = object.getClass().getName();
+		
 		ImageDescriptor image = ImageRepositoryManager.getImageDescriptor(imageID);
 		return image;
 	}

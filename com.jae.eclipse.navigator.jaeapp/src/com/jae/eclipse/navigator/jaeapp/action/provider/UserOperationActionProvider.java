@@ -45,18 +45,16 @@ public class UserOperationActionProvider extends CommonActionProvider {
 	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
-		IMenuManager menuManager = actionBars.getMenuManager();
-		
 		NavigatorUtil.insertContributionItemBefore(toolBarManager, "FRAME_ACTION_GROUP_ID", new GroupMarker("group.user"));
-		NavigatorUtil.insertContributionItemBefore(menuManager, "additions", new GroupMarker("group.user"));
-		
 		NavigatorUtil.appendAction2Group(toolBarManager, "group.user", this.addUserAction);
 		NavigatorUtil.appendAction2Group(toolBarManager, "group.user", this.editUserAction);
 		NavigatorUtil.appendAction2Group(toolBarManager, "group.user", this.deleteUserAction);
 		
-		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.addUserAction);
-		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.editUserAction);
-		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.deleteUserAction);
+//		IMenuManager menuManager = actionBars.getMenuManager();
+//		NavigatorUtil.insertContributionItemBefore(menuManager, "additions", new GroupMarker("group.user"));
+//		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.addUserAction);
+//		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.editUserAction);
+//		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.deleteUserAction);
 	}
 	
 	

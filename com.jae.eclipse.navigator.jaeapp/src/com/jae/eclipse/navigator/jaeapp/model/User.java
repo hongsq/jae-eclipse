@@ -4,11 +4,13 @@
 package com.jae.eclipse.navigator.jaeapp.model;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import com.jae.eclipse.core.util.JDCOperator;
-import com.jae.eclipse.core.util.JsonHelper;
+import org.cloudfoundry.client.lib.CloudFoundryOperations;
+import org.cloudfoundry.client.lib.domain.CloudApplication;
+import org.cloudfoundry.client.lib.domain.CloudApplication.AppState;
+
+import com.jae.eclipse.cloudfoundry.util.CloudFoundryHelper;
 
 
 /**
@@ -41,26 +43,31 @@ public class User extends AbstractJDElement {
 
 	@Override
 	protected void doLoad() {
-		JDCOperator operator = new JDCOperator(accessKey, secretKey);
+		CloudFoundryOperations operator = getCloudFoundryOperations();
 		
-		String info = operator.handle("get", "info");
-		Map<?, ?> infoMap = JsonHelper.toJavaObject(info, HashMap.class);
-		
-		this.setName((String) infoMap.get("user"));
-		this.setDisplayName(this.getName());
-		
-		String appsResult = operator.handle("get", "apps");
-		
-		Map<?, ?>[] maps = JsonHelper.toJavaArray(appsResult, HashMap.class);
-		for (Map<?, ?> map : maps) {
-			String appName = (String) map.get("name");
-			if(null != appName){
-				JDApp app = new JDApp(this, appName);
-				String repositoryURL = MessageFormat.format("https://code.jd.com/{0}/jae_{1}.git", this.getName(), appName);
-				app.setRepositoryURL(repositoryURL);
-				app.setDisplayName(appName+" - "+repositoryURL);
-				this.addChild(app);
+		List<CloudApplication> apps = operator.getApplications();
+		if(null != apps){
+			for (CloudApplication cloudApplication : apps) {
+				String appName = cloudApplication.getName();
+				if(null != appName){
+					JDApp app = new JDApp(this, appName);
+					String repositoryURL = MessageFormat.format("https://code.jd.com/{0}/jae_{1}.git", this.getName(), appName);
+					app.setRepositoryURL(repositoryURL);
+//					app.setDisplayName(appName+" - "+repositoryURL);
+					
+					if(AppState.STOPPED != cloudApplication.getState())
+						app.setStarted(true);
+
+					app.setModel(cloudApplication.getStaging().getFramework());
+					app.setImageID("jdapp.model."+app.getModel());
+					
+					this.addChild(app);
+				}
 			}
 		}
+	}
+
+	public CloudFoundryOperations getCloudFoundryOperations() {
+		return CloudFoundryHelper.getCloudFoundryClient(accessKey, secretKey);
 	}
 }

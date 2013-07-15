@@ -16,6 +16,8 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.io.IOUtils;
+import org.cloudfoundry.client.lib.CloudFoundryOperations;
+import org.cloudfoundry.client.lib.domain.CloudInfo;
 import org.eclipse.core.runtime.Platform;
 
 import com.jae.eclipse.core.util.JsonHelper;
@@ -56,6 +58,12 @@ public class JAEAppHelper {
 						user.setAccessKey((String) userBean.get("accessKey"));
 						user.setSecretKey((String) userBean.get("secretKey"));
 						users.add(user);
+						
+						CloudFoundryOperations operator = user.getCloudFoundryOperations();
+						CloudInfo info = operator.getCloudInfo();
+						
+						user.setName(info.getUser());
+						user.setDisplayName(user.getName());
 						
 //						Object appObjects = userBean.get("apps");
 //						if(null != appObjects && appObjects.getClass().isArray()){

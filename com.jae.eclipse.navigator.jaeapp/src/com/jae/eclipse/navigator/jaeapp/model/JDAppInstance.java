@@ -11,40 +11,44 @@ import com.jae.eclipse.navigator.jaeapp.util.JDModelUtil;
 import com.jae.eclipse.navigator.jaeapp.util.RemoteResourceUtil;
 
 /**
+ * 应用的实例
  * @author hongshuiqiao
  *
  */
-public class RemoteFolder extends RemoteResource {
+public class JDAppInstance extends AbstractJDElement {
+	private int instanceIndex;
 
-	public RemoteFolder(IJDElement parent, String name) {
+	public JDAppInstance(IJDElement parent, String name) {
 		super(parent, name);
-		this.setImageID("folder");
+	}
+
+	public int getInstanceIndex() {
+		return instanceIndex;
+	}
+
+	public void setInstanceIndex(int instanceIndex) {
+		this.instanceIndex = instanceIndex;
 	}
 
 	public RemoteResource getRemoteResource(String path){
 		return RemoteResourceUtil.getRemoteResource(this, path);
-	}
-
-	public RemoteResource[] getSubResources(){
-		return this.getChildren(RemoteResource.class);
 	}
 	
 	@Override
 	protected void doLoad() {
 		User user = JDModelUtil.getParentElement(this, User.class);
 		JDApp app = JDModelUtil.getParentElement(this, JDApp.class);
-		JDAppInstance instance = JDModelUtil.getParentElement(this, JDAppInstance.class);
 		
 		CloudFoundryOperations operator = user.getCloudFoundryOperations();
 		
+		String rootPath = "";//根路径
 		String blob = null;
 		try {
-			blob = operator.getFile(app.getName(), instance.getInstanceIndex(), this.getPath());
+			blob = operator.getFile(app.getName(), this.instanceIndex, rootPath);
 		} catch (Exception e) {
 			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "错误", "获取远程资源时出错，请稍后再试");
 			throw e;
 		}
-		
 		String[] files = blob.split("\n");
 		for (int i = 0; i < files.length; i++) {
 			String[] content = files[i].split("\\s+");
@@ -61,6 +65,6 @@ public class RemoteFolder extends RemoteResource {
 				this.addChild(resource);
 			}
 		}
-	
 	}
+
 }

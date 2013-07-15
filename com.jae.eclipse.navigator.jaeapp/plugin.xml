@@ -134,7 +134,7 @@
             image="icons/user.gif">
       </image>
       <image
-            id="com.jae.eclipse.navigator.jaeapp.model.JDApp"
+            id="com.jae.eclipse.navigator.jaeapp.model.JDAppInstance"
             image="icons/jdapp.gif">
       </image>
       <image
@@ -220,6 +220,18 @@
       <image
             id="jdapp.model.django"
             image="icons/appmodel/icon-python-django.gif">
+      </image>
+      <image
+            id="file"
+            image="icons/file.gif">
+      </image>
+      <image
+            id="folder"
+            image="icons/folder.gif">
+      </image>
+      <image
+            id="jdapp.action.deploy"
+            image="icons/action/deploy.gif">
       </image>
    </extension>
    <extension

@@ -5,6 +5,7 @@ package com.jae.eclipse.navigator.jaeapp.action;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 
 import com.jae.eclipse.navigator.jaeapp.model.AbstractJDElement;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
@@ -33,6 +34,7 @@ public class RefreshAction extends AbstractJDAction {
 		for (Object element : elements) {
 			AbstractJDElement jdElement = (AbstractJDElement) element;
 			jdElement.refresh();
+			((TreeViewer)viewer).collapseToLevel(element, 1);
 			viewer.refresh(element);
 		}
 	}

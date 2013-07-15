@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.cloudfoundry.client.lib.rest.LoggingRestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
@@ -70,9 +72,19 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		if(needUseZip(response)){
 			InputStream in = new GZIPInputStream(response.getBody());
 			
-			String result = IOUtils.toString(in);
+			Charset charset = getContentTypeCharset(response.getHeaders().getContentType());
+			
+			String result = IOUtils.toString(in, charset.name());
 //			System.out.println(result);
 			return (T)new ResponseEntity<>(result, response.getStatusCode());
+			
+			
+//			T result = responseExtractor.extractData(response);
+//			
+//			
+//			IOUtils.toString(new GZIPInputStream(new ByteArrayInputStream(new ByteArrayHttpMessageConverter().read(byte[].class, response))));
+//			
+//			return result;
 		}else{
 			return responseExtractor.extractData(response);
 		}
@@ -185,4 +197,12 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		
 		return null;
 	}
+	
+	private Charset getContentTypeCharset(MediaType contentType) {
+	    if ((contentType != null) && (contentType.getCharSet() != null)) {
+	      return contentType.getCharSet();
+	    }
+
+	    return Charset.defaultCharset();
+	  }
 }

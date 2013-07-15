@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Cloudfoundry
 Bundle-SymbolicName: com.jae.eclipse.cloudfoundry
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.0
 Bundle-Activator: com.jae.eclipse.cloudfoundry.Activator
 Bundle-Vendor: JAE
 Require-Bundle: org.eclipse.core.runtime,
@@ -10,3 +10,5 @@ Require-Bundle: org.eclipse.core.runtime,
  com.jae.eclipse.library;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Export-Package: com.jae.eclipse.cloudfoundry.client,
+ com.jae.eclipse.cloudfoundry.util

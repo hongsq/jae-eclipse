@@ -38,14 +38,12 @@ public class JDCommonActionProvider extends CommonActionProvider {
 	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
-		IMenuManager menuManager = actionBars.getMenuManager();
-		
 		NavigatorUtil.insertContributionItemBefore(toolBarManager, "FRAME_ACTION_GROUP_ID", new GroupMarker("group.common"));
-		NavigatorUtil.insertContributionItemBefore(menuManager, "additions", new GroupMarker("group.common"));
-		
 		NavigatorUtil.appendAction2Group(toolBarManager, "group.common", this.refreshAction);
 		
-		NavigatorUtil.appendAction2Group(menuManager, "group.common", this.refreshAction);
+//		IMenuManager menuManager = actionBars.getMenuManager();
+//		NavigatorUtil.insertContributionItemBefore(menuManager, "additions", new GroupMarker("group.common"));
+//		NavigatorUtil.appendAction2Group(menuManager, "group.common", this.refreshAction);
 	}
 	
 }

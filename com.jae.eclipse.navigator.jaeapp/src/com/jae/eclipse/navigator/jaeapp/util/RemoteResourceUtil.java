@@ -5,7 +5,7 @@ package com.jae.eclipse.navigator.jaeapp.util;
 
 import com.jae.eclipse.core.util.StringUtil;
 import com.jae.eclipse.navigator.jaeapp.model.IJDElement;
-import com.jae.eclipse.navigator.jaeapp.model.JDApp;
+import com.jae.eclipse.navigator.jaeapp.model.JDAppInstance;
 import com.jae.eclipse.navigator.jaeapp.model.RemoteFolder;
 import com.jae.eclipse.navigator.jaeapp.model.RemoteResource;
 
@@ -15,34 +15,38 @@ import com.jae.eclipse.navigator.jaeapp.model.RemoteResource;
  */
 public class RemoteResourceUtil {
 
-	public static RemoteResource getRemoteResource(JDApp app, RemoteFolder parent, String path){
+	public static RemoteResource getRemoteResource(RemoteFolder parentFolder, String path){
+		return doGetRemoteResource(parentFolder, path);
+	}
+	
+	public static RemoteResource getRemoteResource(JDAppInstance app, String path){
+		return doGetRemoteResource(app, path);
+	}
+	
+	private static RemoteResource doGetRemoteResource(IJDElement parent, String path){
 		if(null == path)
 			return null;
 		
-		if(null == parent && null == app)
+		if(null == parent)
 			return null;
 		
 		String realPath = path.replaceAll("[\\]", "/");
 		while(realPath.startsWith("/"))
 			realPath = realPath.substring(1);
 		
-		IJDElement realParent = parent;
-		if(null == realParent)
-			realParent = app;
-		
 		if(realPath.contains("/")){
 			int index = realPath.indexOf("/");
 			String subResouceName = realPath.substring(0, index);
 			String lastPath = realPath.substring(index+1);
-			RemoteResource subResource = getRemoteResourceByName(realParent, subResouceName);
-			if (subResource instanceof RemoteFolder) {
+			RemoteResource subResource = getRemoteResourceByName(parent, subResouceName);
+			if (null != subResource && (subResource instanceof RemoteFolder)) {
 				RemoteFolder subFolder = (RemoteFolder) subResource;
-				return getRemoteResource(app, subFolder, lastPath);
+				return getRemoteResource(subFolder, lastPath);
 			}else{
 				return null;
 			}
 		}else{
-			return getRemoteResourceByName(realParent, realPath);
+			return getRemoteResourceByName(parent, realPath);
 		}
 	}
 	

@@ -3,7 +3,6 @@
  */
 package com.jae.eclipse.cloudfoundry.test;
 
-import java.io.File;
 import java.net.URL;
 import java.util.List;
 
@@ -24,9 +23,12 @@ public class Test {
 	 */
 	public static void main(String[] args) throws Exception {
 		URL url = new URL("http://api.jd-app.com");
-		String email = "hongshuiqiao@jd.com";
-		String password = "hongshuiqiao";
-		CloudCredentials credentials = new CloudCredentials(email, password);
+//		String email = "hongshuiqiao@jd.com";
+//		String password = "hongshuiqiao";
+//		String version = "0.1.1";
+		String accessKey = "9f7ce80405f240938743875e332d9aa4";
+		String secretKey = "65428cb05e764b4f90d95f3b8f3d53e10UFtzrPf";
+		CloudCredentials credentials = new CloudCredentials(accessKey+"|"+secretKey);
 		CloudFoundryClientExt client = new CloudFoundryClientExt(credentials, url);
 
 //		File warFile = new File("C:/Users/Administrator/git/jae_hongsq/hello-java-1.0.war");

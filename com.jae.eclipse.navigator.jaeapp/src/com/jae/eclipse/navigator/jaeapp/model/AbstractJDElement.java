@@ -23,6 +23,7 @@ public abstract class AbstractJDElement implements IJDElement {
 	public AbstractJDElement(IJDElement parent, String name) {
 		this.parent = parent;
 		this.name = name;
+		this.displayName = this.name;//默认显示名称与名称一样
 		this.setImageID(this.getClass().getName());
 	}
 	
@@ -75,8 +76,12 @@ public abstract class AbstractJDElement implements IJDElement {
 	
 	protected synchronized void load(){
 		if(!loaded){
-			doLoad();
-			loaded = true;
+			try {
+				doLoad();
+				loaded = true;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
