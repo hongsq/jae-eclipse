@@ -7,22 +7,35 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.jae.eclipse.core.util.StringUtil;
 import com.jae.eclipse.ui.IMessageCaller;
+import com.jae.eclipse.ui.IPropertyEditor;
 import com.jae.eclipse.ui.IValidator;
 import com.jae.eclipse.ui.ObjectEditor;
+import com.jae.eclipse.ui.control.BooleanPropertyEditor;
 import com.jae.eclipse.ui.control.ComboPropertyEditor;
+import com.jae.eclipse.ui.control.DirectorySelectionPropertyEditor;
+import com.jae.eclipse.ui.control.FileSelectionPropertyEditor;
 import com.jae.eclipse.ui.control.StringPropertyEditor;
+import com.jae.eclipse.ui.event.IValuechangeListener;
 import com.jae.eclipse.ui.event.ValidateEvent;
+import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.factory.ObjectEditorControlFactory;
 import com.jae.eclipse.ui.impl.ControlFactoryDialog;
 import com.jae.eclipse.ui.impl.PropertyComposite;
-import com.jae.eclipse.ui.util.StringUtil;
+import com.jae.eclipse.ui.validator.NotEmptyValidator;
 
 /**
  * @author hongshuiqiao
@@ -31,21 +44,23 @@ import com.jae.eclipse.ui.util.StringUtil;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class UIExample {
 	
-	protected static void createUI(Shell shell) {
+	protected static Control createUI(Composite parent) {
 		ObjectEditor objectEditor = createObjectEditor();
-		PropertyComposite composite = new PropertyComposite(shell, SWT.NONE, objectEditor);
-		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		PropertyComposite composite = new PropertyComposite(parent, SWT.NONE, objectEditor);
 		
 		objectEditor.load();
 		objectEditor.validate(new ValidateEvent(objectEditor));
+		
+		return composite;
 	}
 
 	private static ObjectEditor createObjectEditor() {
-		ObjectEditor objectEditor = new ObjectEditor();
+		final ObjectEditor objectEditor = new ObjectEditor();
+		objectEditor.setLayout(new GridLayout(4, false));
 
 		{
 			final StringPropertyEditor editor = new StringPropertyEditor();
-			editor.setLabel("label:");
+			editor.setLabel("label");
 			editor.setPropertyName("abc");
 			editor.setRequired(true);
 			editor.addValidator(new IValidator() {
@@ -69,7 +84,7 @@ public class UIExample {
 		
 		{
 			final StringPropertyEditor editor = new StringPropertyEditor();
-			editor.setLabel("label:");
+			editor.setLabel("label");
 			editor.setPropertyName("efg");
 			editor.setRequired(true);
 			editor.addValidator(new IValidator() {
@@ -87,7 +102,7 @@ public class UIExample {
 		
 		{
 			final ComboPropertyEditor comboEditor = new ComboPropertyEditor();
-			comboEditor.setLabel("combo:");
+			comboEditor.setLabel("combo");
 			comboEditor.setPropertyName("combo");
 //			comboEditor.setComboItems(new String[]{"","aa", "bb"});
 			Map<String,Object> itemMap = new LinkedHashMap<>();
@@ -107,6 +122,63 @@ public class UIExample {
 				}
 			});
 			objectEditor.addPropertyEditor(comboEditor);
+		}
+		
+		{
+			final BooleanPropertyEditor editor = new BooleanPropertyEditor();
+			editor.setLabel("boolean");
+			editor.setPropertyName("boolean");
+//			editor.setReverse(true);
+			editor.addValuechangeListener(new IValuechangeListener() {
+				
+				@Override
+				public void valuechanged(ValueChangeEvent event) {
+					IPropertyEditor abcEditor = objectEditor.getPropertyEditor("file");
+					
+					if(Boolean.TRUE.equals(editor.getValue()))
+						abcEditor.setEnable(true);
+					else
+						abcEditor.setEnable(false);
+					
+				}
+			});
+			objectEditor.addPropertyEditor(editor);
+		}
+		
+		{
+			FileSelectionPropertyEditor editor = new FileSelectionPropertyEditor();
+			editor.getLayoutData().horizontalSpan = 3;
+			editor.setLabel("file");
+			editor.setPropertyName("file");
+			editor.addValidator(new NotEmptyValidator("file"));
+			
+			editor.setWinTitle("title");
+			editor.setDialogStyle(SWT.OPEN);
+			editor.setFileName("fileName");
+			editor.setFilterExtensions(new String[]{"*.1", "*.2", "*.3", "*.*"});
+//			editor.setFilterNames(new String[]{"name1","name2"});
+			editor.setInitFilterExtension("*.2");
+			editor.setFilterPath("D:/");
+			editor.setOverwrite(true);
+			editor.setMulti(true);
+//			editor.setReadOnly(true);
+			
+			objectEditor.addPropertyEditor(editor);
+		}
+		
+		{
+			DirectorySelectionPropertyEditor editor = new DirectorySelectionPropertyEditor();
+			editor.getLayoutData().horizontalSpan = 3;
+			editor.setLabel("directory");
+			editor.setPropertyName("directory");
+			editor.addValidator(new NotEmptyValidator("directory"));
+			
+			editor.setWinTitle("directory");
+			editor.setMessage("message");
+			editor.setFilterPath("D:/");
+			editor.setReadOnly(true);
+			
+			objectEditor.addPropertyEditor(editor);
 		}
 		
 		Map map = new HashMap();
@@ -130,8 +202,32 @@ public class UIExample {
 		shell.setLocation(300, 200);
 		
 		shell.setLayout(new GridLayout(2, false));
-		createUI(shell);
 		
+//		Control control = createUI(shell);
+//		control.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		ViewForm viewForm = new ViewForm(shell, SWT.NONE);
+		viewForm.setTopCenterSeparate(false);
+		viewForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		Control control = createUI(viewForm);
+		viewForm.setContent(control);
+		
+//		Label label = new Label(viewForm, SWT.NONE);
+//		label.setText("TopCenter");
+//		viewForm.setTopCenter(label);
+		
+		Label label = new Label(viewForm, SWT.NONE);
+		label.setText("TopLeft");
+		viewForm.setTopLeft(label);
+		
+		label = new Label(viewForm, SWT.NONE);
+		label.setText("TopRight");
+		viewForm.setTopRight(label);
+		
+		IMenuManager menuManager = new MenuManager();
+		
+//		viewForm.setMenu(menuManager.);
 		
 //		Label label = new Label(shell, SWT.NONE);
 //		label.setText("test");
@@ -139,7 +235,7 @@ public class UIExample {
 //		shell.pack();
 		shell.open();
 
-		createDialog(shell);
+//		createDialog(shell);
 		
 		while(!shell.isDisposed()){
 			if(!display.readAndDispatch())

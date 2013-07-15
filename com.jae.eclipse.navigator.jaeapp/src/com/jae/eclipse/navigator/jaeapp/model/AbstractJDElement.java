@@ -75,12 +75,12 @@ public abstract class AbstractJDElement implements IJDElement {
 	
 	protected synchronized void load(){
 		if(!loaded){
-			doLoadChildren();
+			doLoad();
 			loaded = true;
 		}
 	}
 	
-	protected abstract void doLoadChildren();
+	protected abstract void doLoad();
 
 	public synchronized void refresh(){
 		loaded = false;

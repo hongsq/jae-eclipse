@@ -4,6 +4,7 @@
 package com.jae.eclipse.navigator.jaeapp.action;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -34,11 +35,9 @@ public class UserAction extends AbstractJDAction {
 		super(provider, text);
 		this.edit = edit;
 		
-		String imageID = "user.action.add";
 		String id = "user.action.add";
 		if(edit){
 			id = "user.action.edit";
-			imageID = "user.action.edit";
 			this.setEnabled(false);
 		}
 
@@ -47,7 +46,7 @@ public class UserAction extends AbstractJDAction {
 		this.setMultiable(false);
 		
 		this.setId(id);
-		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor(imageID));
+		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor(id));
 	}
 	
 	private ObjectEditor createObjectEditor(){
@@ -103,7 +102,7 @@ public class UserAction extends AbstractJDAction {
 			JDCOperator operator = new JDCOperator(accessKey, secretKey);
 			String result = operator.handle("get", "info");
 			
-			String userName = (String) JsonHelper.toJavaObject(result).get("user");
+			String userName = (String) JsonHelper.toJavaObject(result, HashMap.class).get("user");
 			if(null == userName){
 				MessageDialog.openWarning(shell, "警告", "配置信息不正确!");
 				return;

@@ -37,9 +37,9 @@ public class UserOperationActionProvider extends CommonActionProvider {
 
 	@Override
 	public void fillContextMenu(IMenuManager menuManager) {
-		NavigatorUtil.appendAction2Group(menuManager, "group.common", this.addUserAction);
-		NavigatorUtil.appendAction2Group(menuManager, "group.common", this.editUserAction);
-		NavigatorUtil.appendAction2Group(menuManager, "group.common", this.deleteUserAction);
+		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.addUserAction);
+		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.editUserAction);
+		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.deleteUserAction);
 	}
 	
 	@Override
@@ -47,16 +47,16 @@ public class UserOperationActionProvider extends CommonActionProvider {
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
 		IMenuManager menuManager = actionBars.getMenuManager();
 		
-		NavigatorUtil.insertContributionItemBefore(toolBarManager, "FRAME_ACTION_GROUP_ID", new GroupMarker("group.common"));
-		NavigatorUtil.insertContributionItemBefore(menuManager, "additions", new GroupMarker("group.common"));
+		NavigatorUtil.insertContributionItemBefore(toolBarManager, "FRAME_ACTION_GROUP_ID", new GroupMarker("group.user"));
+		NavigatorUtil.insertContributionItemBefore(menuManager, "additions", new GroupMarker("group.user"));
 		
-		NavigatorUtil.appendAction2Group(toolBarManager, "group.common", this.addUserAction);
-		NavigatorUtil.appendAction2Group(toolBarManager, "group.common", this.editUserAction);
-		NavigatorUtil.appendAction2Group(toolBarManager, "group.common", this.deleteUserAction);
+		NavigatorUtil.appendAction2Group(toolBarManager, "group.user", this.addUserAction);
+		NavigatorUtil.appendAction2Group(toolBarManager, "group.user", this.editUserAction);
+		NavigatorUtil.appendAction2Group(toolBarManager, "group.user", this.deleteUserAction);
 		
-		NavigatorUtil.appendAction2Group(menuManager, "group.common", this.addUserAction);
-		NavigatorUtil.appendAction2Group(menuManager, "group.common", this.editUserAction);
-		NavigatorUtil.appendAction2Group(menuManager, "group.common", this.deleteUserAction);
+		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.addUserAction);
+		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.editUserAction);
+		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.deleteUserAction);
 	}
 	
 	

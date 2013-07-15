@@ -4,6 +4,7 @@
 package com.jae.eclipse.navigator.jaeapp.action;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.ui.navigator.CommonViewer;
 
 import com.jae.eclipse.navigator.jaeapp.model.User;
@@ -37,7 +38,7 @@ public class DeleteUserAction extends AbstractJDAction {
 		
 		JAEAppHelper.unRegeditUsers(users);
 		
-		CommonViewer viewer = (CommonViewer) this.getSelectionProvider();
+		StructuredViewer viewer = (StructuredViewer) this.getSelectionProvider();
 		viewer.refresh();
 	}
 }

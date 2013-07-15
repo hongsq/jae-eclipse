@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Platform;
 
@@ -43,15 +44,29 @@ public class JAEAppHelper {
 		
 		try {
 			String json = IOUtils.toString(url.openStream(), "UTF-8");
-			Map[] loadUsers = JsonHelper.toJavaArray(json);
+			Object[] loadUsers = JsonHelper.toJavaArray(json);
 			if(null != loadUsers){
-				for (Map userMap : loadUsers) {
-					User user = new User((String) userMap.get("name"));
-					user.setDisplayName((String) userMap.get("displayName"));
-					user.setDescription((String) userMap.get("description"));
-					user.setAccessKey((String) userMap.get("accessKey"));
-					user.setSecretKey((String) userMap.get("secretKey"));
-					users.add(user);
+				for (Object object : loadUsers) {
+					if (object instanceof DynaBean) {
+						DynaBean userBean = (DynaBean) object;
+						
+						User user = new User((String) userBean.get("name"));
+						user.setDisplayName((String) userBean.get("displayName"));
+						user.setDescription((String) userBean.get("description"));
+						user.setAccessKey((String) userBean.get("accessKey"));
+						user.setSecretKey((String) userBean.get("secretKey"));
+						users.add(user);
+						
+//						Object appObjects = userBean.get("apps");
+//						if(null != appObjects && appObjects.getClass().isArray()){
+//							for (Object appObject : ((Object[])appObjects)) {
+//								if (appObject instanceof type) {
+//									type new_name = (type) appObject;
+//									
+//								}
+//							}
+//						}
+					}
 				}
 			}
 		} catch(FileNotFoundException e){
@@ -81,15 +96,22 @@ public class JAEAppHelper {
 			List<Map<?, ?>> list = new ArrayList<>();
 			for (User user : users) {
 				Map userMap = new LinkedHashMap<>();
-				userMap.put("name", user.getName());
-				userMap.put("displayName", user.getDisplayName());
-				userMap.put("description", user.getDescription());
-				userMap.put("accessKey", user.getAccessKey());
-				userMap.put("secretKey", user.getSecretKey());
+				
+				String name = user.getName();
+				if(null != name) userMap.put("name", name);
+				String displayName = user.getDisplayName();
+				if(null != displayName) userMap.put("displayName", displayName);
+				String description = user.getDescription();
+				if(null != description) userMap.put("description", description);
+				String accessKey = user.getAccessKey();
+				if(null != accessKey) userMap.put("accessKey", accessKey);
+				String secretKey = user.getSecretKey();
+				if(null != secretKey) userMap.put("secretKey", secretKey);
+				
 				list.add(userMap);
 			}
 			
-			String json = JsonHelper.getJsonArray(users);
+			String json = JsonHelper.getJsonArray(list);
 			out.write(json.getBytes("UTF-8"));
 		} finally {
 			IOUtils.closeQuietly(out);

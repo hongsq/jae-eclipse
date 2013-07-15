@@ -4,9 +4,9 @@
 package com.jae.eclipse.navigator.jaeapp.action;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.navigator.CommonViewer;
 
 import com.jae.eclipse.navigator.jaeapp.model.JDApp;
 import com.jae.eclipse.ui.ObjectEditor;
@@ -59,14 +59,14 @@ public class JDAppEditAction extends AbstractJDAction {
 		
 		factory.setValue(app);
 		
-		CommonViewer viewer = (CommonViewer) this.getSelectionProvider();
+		StructuredViewer viewer = (StructuredViewer) this.getSelectionProvider();
 		
-		Shell shell = viewer.getTree().getShell();
+		Shell shell = viewer.getControl().getShell();
 		ControlFactoryDialog dialog = new ControlFactoryDialog(shell, factory);
 		if(Window.OK == dialog.open()){
 			//String repositoryURL = app.getRepositoryURL();
 			
-			viewer.refresh();
+			viewer.refresh(app);
 		}
 	}
 }

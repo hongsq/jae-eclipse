@@ -4,6 +4,7 @@
 package com.jae.eclipse.navigator.jaeapp.model;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.jae.eclipse.core.util.JDCOperator;
@@ -39,11 +40,18 @@ public class User extends AbstractJDElement {
 	}
 
 	@Override
-	protected void doLoadChildren() {
+	protected void doLoad() {
 		JDCOperator operator = new JDCOperator(accessKey, secretKey);
-		String result = operator.handle("get", "apps");
 		
-		Map<?, ?>[] maps = JsonHelper.toJavaArray(result);
+		String info = operator.handle("get", "info");
+		Map<?, ?> infoMap = JsonHelper.toJavaObject(info, HashMap.class);
+		
+		this.setName((String) infoMap.get("user"));
+		this.setDisplayName(this.getName());
+		
+		String appsResult = operator.handle("get", "apps");
+		
+		Map<?, ?>[] maps = JsonHelper.toJavaArray(appsResult, HashMap.class);
 		for (Map<?, ?> map : maps) {
 			String appName = (String) map.get("name");
 			if(null != appName){

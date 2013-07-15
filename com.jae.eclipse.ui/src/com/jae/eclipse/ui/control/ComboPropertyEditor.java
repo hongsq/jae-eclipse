@@ -10,15 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import com.jae.eclipse.ui.base.AbstractPropertyEditor;
+import com.jae.eclipse.ui.base.ValuechageNotifier;
 
 /**
  * @author hongshuiqiao
@@ -69,29 +66,13 @@ public class ComboPropertyEditor extends AbstractPropertyEditor {
 	public void afterBuild(Control parent) {
 		super.afterBuild(parent);
 		Combo combo = getCombo();
-		combo.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				fireValueChangeEvent();
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-		});
+		
+		ValuechageNotifier notifier = new ValuechageNotifier(this);
+		combo.addSelectionListener(notifier);
 		
 		if(!readOnly){
-			combo.addModifyListener(new ModifyListener() {
-				
-				@Override
-				public void modifyText(ModifyEvent e) {
-					fireValueChangeEvent();
-				}
-			});
+			combo.addModifyListener(notifier);
 		}
-
 	}
 	
 	@Override

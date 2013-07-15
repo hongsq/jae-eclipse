@@ -113,6 +113,19 @@
             </or>
          </enablement>
       </actionProvider>
+      <actionProvider
+            class="com.jae.eclipse.navigator.jaeapp.action.provider.JDCommonActionProvider"
+            id="com.jae.eclipse.navigator.jaeapp.action.JDCommonActionProvider">
+         <enablement>
+            <or>
+               <and>
+                  <instanceof
+                        value="com.jae.eclipse.navigator.jaeapp.model.IJDElement">
+                  </instanceof>
+               </and>
+            </or>
+         </enablement>
+      </actionProvider>
    </extension>
    <extension
          point="com.jae.eclipse.ui.imageRepository">
@@ -163,6 +176,50 @@
       <image
             id="jdapp.action.import"
             image="icons/action/jdapp_import_code.gif">
+      </image>
+      <image
+            id="jdapp.action.start"
+            image="icons/action/run.gif">
+      </image>
+      <image
+            id="jdapp.action.stop"
+            image="icons/action/stop.gif">
+      </image>
+      <image
+            id="common.action.refresh"
+            image="icons/action/refresh.gif">
+      </image>
+      <image
+            id="jdapp.model.java_web"
+            image="icons/appmodel/icon-java.gif">
+      </image>
+      <image
+            id="jdapp.model.node"
+            image="icons/appmodel/icon-node.gif">
+      </image>
+      <image
+            id="jdapp.model.php"
+            image="icons/appmodel/icon-php.gif">
+      </image>
+      <image
+            id="jdapp.model.rails3"
+            image="icons/appmodel/icon-ror.gif">
+      </image>
+      <image
+            id="jdapp.model.spring"
+            image="icons/appmodel/icon-java-spring.gif">
+      </image>
+      <image
+            id="jdapp.model.sinatra"
+            image="icons/appmodel/icon-sinatra.gif">
+      </image>
+      <image
+            id="jdapp.model.wsgi"
+            image="icons/appmodel/icon-python-wsgi.gif">
+      </image>
+      <image
+            id="jdapp.model.django"
+            image="icons/appmodel/icon-python-django.gif">
       </image>
    </extension>
    <extension

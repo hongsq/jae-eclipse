@@ -14,7 +14,7 @@ public class RemoteFile extends RemoteResource {
 	}
 
 	@Override
-	protected void doLoadChildren() {
+	protected void doLoad() {
 		// TODO Auto-generated method stub
 		
 	}

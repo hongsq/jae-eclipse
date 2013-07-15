@@ -21,6 +21,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
+import com.jae.eclipse.core.util.ObjectUtil;
 import com.jae.eclipse.ui.Constants;
 import com.jae.eclipse.ui.IMessageCaller;
 import com.jae.eclipse.ui.IPropertyEditor;
@@ -34,7 +35,6 @@ import com.jae.eclipse.ui.event.ValueEventContainer;
 import com.jae.eclipse.ui.impl.CompoundMessageCaller;
 import com.jae.eclipse.ui.impl.PropertyMessageCaller;
 import com.jae.eclipse.ui.util.LayoutUtil;
-import com.jae.eclipse.ui.util.ObjectUtil;
 import com.jae.eclipse.ui.util.UIUtil;
 
 /**
@@ -43,7 +43,6 @@ import com.jae.eclipse.ui.util.UIUtil;
  */
 @SuppressWarnings("deprecation")
 public abstract class AbstractPropertyEditor extends ValueEventContainer implements IPropertyEditor, IControlCreator {
-	private boolean enable=true;
 	private boolean useLabel=true;
 	private boolean required=false;
 	private String label;
@@ -70,13 +69,15 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	//自身的变化是否触发自己的验证（一般如果加入到一个容器中，自身的变化会触发整个容器的验证，不需要再重复验证自己）
 	private boolean validateFlag = true;
 	private String toolTip;
+	private String labelSeparator=":";
+	private GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 
 	public boolean isEnable() {
-		return enable;
+		return this.getEditControl().isEnabled();
 	}
 
-	public void setEnable(boolean enable) {
-		this.enable = enable;
+	public void setEnable(boolean enabled) {
+		this.getEditControl().setEnabled(enabled);
 	}
 
 	public String getToolTip() {
@@ -297,6 +298,22 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		return errorFieldDecoration;
 	}
 	
+	public String getLabelSeparator() {
+		return labelSeparator;
+	}
+
+	public void setLabelSeparator(String labelSeparator) {
+		this.labelSeparator = labelSeparator;
+	}
+
+	public GridData getLayoutData() {
+		return layoutData;
+	}
+
+	public void setLayoutData(GridData layoutData) {
+		this.layoutData = layoutData;
+	}
+
 	@Override
 	public void build(Composite parent) {
 		this.labelControl = buildLabelControl(parent);
@@ -305,7 +322,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		}
 		
 		Composite topComposite = new Composite(parent, SWT.NONE);
-		topComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		topComposite.setLayoutData(this.layoutData);
 		topComposite.setLayout(LayoutUtil.createCompactGridLayout(1));
 		
 		this.decoratedField = new DecoratedField(topComposite, SWT.NONE, this);
@@ -369,9 +386,9 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		if(!this.isUseLabel())
 			return null;
 		
-		String labelText = this.label;
+		String labelText = this.label + (null==this.labelSeparator?"":this.labelSeparator);
 		if(this.isRequired()){
-			labelText = this.label + Constants.REQUIRED_MARK;
+			labelText = this.label + (null==this.labelSeparator?"":this.labelSeparator) + Constants.REQUIRED_MARK;
 		}
 		
 		if(this.isLinkLabel()){

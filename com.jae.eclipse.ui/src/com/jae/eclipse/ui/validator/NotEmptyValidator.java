@@ -3,10 +3,10 @@
  */
 package com.jae.eclipse.ui.validator;
 
+import com.jae.eclipse.core.util.StringUtil;
 import com.jae.eclipse.ui.IMessageCaller;
 import com.jae.eclipse.ui.IPropertyEditor;
 import com.jae.eclipse.ui.IValidator;
-import com.jae.eclipse.ui.util.StringUtil;
 
 /**
  * @author hongshuiqiao

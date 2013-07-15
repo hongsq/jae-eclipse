@@ -13,6 +13,7 @@ import org.eclipse.egit.ui.internal.repository.tree.RepositoryNode;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -24,11 +25,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.navigator.CommonViewer;
 
+import com.jae.eclipse.core.util.ObjectUtil;
 import com.jae.eclipse.navigator.jaeapp.model.JDApp;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
-import com.jae.eclipse.ui.util.ObjectUtil;
 
 /**
  * @author hongshuiqiao
@@ -53,8 +53,8 @@ public class JDAppImportCodeAction extends AbstractJDAction implements IPageChan
 		
 		wizard.init(PlatformUI.getWorkbench(), this.getStructuredSelection());
 		
-		CommonViewer viewer = (CommonViewer) this.getSelectionProvider();
-		Shell shell = viewer.getTree().getShell();
+		StructuredViewer viewer = (StructuredViewer) this.getSelectionProvider();
+		Shell shell = viewer.getControl().getShell();
 		
 		WizardDialog dialog = new WizardDialog(shell, wizard);
 		

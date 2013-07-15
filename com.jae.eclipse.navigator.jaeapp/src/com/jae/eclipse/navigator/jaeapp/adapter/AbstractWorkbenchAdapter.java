@@ -6,6 +6,7 @@ package com.jae.eclipse.navigator.jaeapp.adapter;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.WorkbenchAdapter;
 
+import com.jae.eclipse.navigator.jaeapp.model.IDisplayNameElement;
 import com.jae.eclipse.navigator.jaeapp.model.IImageElement;
 import com.jae.eclipse.navigator.jaeapp.model.INameElement;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
@@ -15,9 +16,23 @@ import com.jae.eclipse.ui.extension.ImageRepositoryManager;
  *
  */
 public abstract class AbstractWorkbenchAdapter extends WorkbenchAdapter {
+	private boolean useDisplayName = true;
+
+	public boolean isUseDisplayName() {
+		return useDisplayName;
+	}
+
+	public void setUseDisplayName(boolean useDisplayName) {
+		this.useDisplayName = useDisplayName;
+	}
 
 	@Override
 	public String getLabel(Object object) {
+		if(this.useDisplayName && (object instanceof IDisplayNameElement)){
+			String name = ((IDisplayNameElement) object).getDisplayName();
+			return null==name?"":name;
+		}
+		
 		if (object instanceof INameElement) {
 			String name = ((INameElement) object).getName();
 			return null==name?"":name;

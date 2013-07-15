@@ -11,9 +11,9 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.widgets.Control;
 
+import com.jae.eclipse.core.util.StringUtil;
 import com.jae.eclipse.ui.IMessageCaller;
 import com.jae.eclipse.ui.base.AbstractPropertyEditor;
-import com.jae.eclipse.ui.util.StringUtil;
 
 /**
  * 属性编辑器的messagecaller

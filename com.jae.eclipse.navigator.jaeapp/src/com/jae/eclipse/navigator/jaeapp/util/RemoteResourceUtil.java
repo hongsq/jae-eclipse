@@ -3,11 +3,11 @@
  */
 package com.jae.eclipse.navigator.jaeapp.util;
 
+import com.jae.eclipse.core.util.StringUtil;
 import com.jae.eclipse.navigator.jaeapp.model.IJDElement;
 import com.jae.eclipse.navigator.jaeapp.model.JDApp;
 import com.jae.eclipse.navigator.jaeapp.model.RemoteFolder;
 import com.jae.eclipse.navigator.jaeapp.model.RemoteResource;
-import com.jae.eclipse.ui.util.StringUtil;
 
 /**
  * @author hongshuiqiao

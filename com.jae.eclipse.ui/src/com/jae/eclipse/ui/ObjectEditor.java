@@ -3,8 +3,9 @@
  */
 package com.jae.eclipse.ui;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -24,7 +25,7 @@ import com.jae.eclipse.ui.util.LayoutUtil;
  */
 public class ObjectEditor extends ValueEventContainer implements IUIDescElement, IStore, ILoadable, IValueEventContainer, IValidatable, IValuechangeListener {
 	private UIDescription uiDescription = new UIDescription();
-	private List<IPropertyEditor> editors = new ArrayList<IPropertyEditor>();
+	private Map<String, IPropertyEditor> editors = new LinkedHashMap<String, IPropertyEditor>();
 	private GridLayout layout = LayoutUtil.createCompactGridLayout(2);
 	private Object value;
 	private IMessageCaller messageCaller;
@@ -32,20 +33,29 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 	private boolean validateFlag = true;
 	
 	public void addPropertyEditor(IPropertyEditor editor){
-		editors.add(editor);
+		editors.put(editor.getPropertyName(), editor);
 		editor.addValuechangeListener(this);
 	}
 	
 	public void removePropertyEditor(IPropertyEditor editor){
-		editors.remove(editor);
+		editors.remove(editor.getPropertyName());
 		editor.removeValuechangeListener(this);
 	}
 	
 	public void clearPropertyEditors(){
 		editors.clear();
-		for (IPropertyEditor editor : this.editors) {
+		Collection<IPropertyEditor> propertyEditors = this.editors.values();
+		for (IPropertyEditor editor : propertyEditors) {
 			editor.removeValuechangeListener(this);
 		}
+	}
+	
+	public IPropertyEditor[] getPropertyEditors(){
+		return editors.values().toArray(new IPropertyEditor[editors.size()]);
+	}
+	
+	public IPropertyEditor getPropertyEditor(String propertyName){
+		return editors.get(propertyName);
 	}
 	
 	public IMessageCaller getMessageCaller() {
@@ -85,7 +95,8 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 	public void build(Composite parent){
 		beforeBuild(parent);
 		
-		for (IPropertyEditor editor : this.editors) {
+		Collection<IPropertyEditor> propertyEditors = this.editors.values();
+		for (IPropertyEditor editor : propertyEditors) {
 			editor.setEditElement(this.value);
 			editor.setMessageCaller(this.messageCaller);
 			if (editor instanceof AbstractPropertyEditor) {
@@ -95,11 +106,11 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 			editor.beforeBuild(parent);
 		}
 		
-		for (IPropertyEditor editor : this.editors) {
+		for (IPropertyEditor editor : propertyEditors) {
 			editor.build(parent);
 		}
 		
-		for (IPropertyEditor editor : this.editors) {
+		for (IPropertyEditor editor : propertyEditors) {
 			editor.afterBuild(parent);
 		}
 		
@@ -111,7 +122,9 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 		boolean flag = true;
 		if(null != this.messageCaller)
 			this.messageCaller.clear();
-		for (IPropertyEditor editor : this.editors) {
+
+		Collection<IPropertyEditor> propertyEditors = this.editors.values();
+		for (IPropertyEditor editor : propertyEditors) {
 			flag = editor.validate(event) && flag;
 		}
 		return flag;
@@ -119,14 +132,16 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 
 	@Override
 	public void load() {
-		for (IPropertyEditor editor : this.editors) {
+		Collection<IPropertyEditor> propertyEditors = this.editors.values();
+		for (IPropertyEditor editor : propertyEditors) {
 			editor.load();
 		}
 	}
 
 	@Override
 	public void save() {
-		for (IPropertyEditor editor : this.editors) {
+		Collection<IPropertyEditor> propertyEditors = this.editors.values();
+		for (IPropertyEditor editor : propertyEditors) {
 			editor.save();
 		}
 	}
