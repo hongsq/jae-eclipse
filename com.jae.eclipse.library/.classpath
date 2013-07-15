@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/cloudfoundry-client-lib-0.8.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache.commons.httpclient_3.1.0.v201012070820.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson/org.codehaus.jackson.core_1.6.0.v20101005-0925.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson/org.codehaus.jackson.mapper_1.6.0.v20101005-0925.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/springframework/org.springframework.aop_3.1.1.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/springframework/org.springframework.asm_3.1.1.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/springframework/org.springframework.beans_3.1.1.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/springframework/org.springframework.context_3.1.1.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/springframework/org.springframework.core_3.1.1.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/springframework/org.springframework.expression_3.1.1.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/springframework/org.springframework.web_3.1.1.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-security-config-3.1.0.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-security-core-3.1.0.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-security-crypto-3.1.0.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-security-oauth2-1.0.0.RC1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-security-web-3.1.0.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-webmvc-3.0.7.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ezmorph-1.0.6.jar"/>
@@ -10,10 +27,10 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/fluent-hc-4.2.5.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/httpclient-4.2.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpclient-4.2.5.jar" sourcepath="D:/Work/resources/http/httpcomponents/httpcomponents-client-4.2.5-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpclient-cache-4.2.5.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.2.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/httpmime-4.2.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.2.4.jar" sourcepath="D:/Work/resources/http/httpcomponents/httpcomponents-core-4.2.4-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpmime-4.2.5.jar" sourcepath="D:/Work/resources/http/httpcomponents/httpcomponents-client-4.2.5-src.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
