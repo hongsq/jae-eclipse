@@ -10,26 +10,27 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.io.IOUtils;
-import org.cloudfoundry.client.lib.CloudFoundryOperations;
-import org.cloudfoundry.client.lib.domain.CloudInfo;
 import org.eclipse.core.runtime.Platform;
 
 import com.jae.eclipse.core.util.JsonHelper;
+import com.jae.eclipse.navigator.jaeapp.internal.AppRepository;
+import com.jae.eclipse.navigator.jaeapp.internal.JDRootSaveModel;
 import com.jae.eclipse.navigator.jaeapp.model.User;
 
 /**
  * @author hongshuiqiao
  *
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class JAEAppHelper {
+	private static final String JDCONFIG_USER_CONFIG = "jdconfig/user.config";
 	private static List<User> users = new ArrayList<User>();
+	private static Map<String, String> srcRepositoryMap = new HashMap<String, String>();
 	
 	static{
 		try {
@@ -40,42 +41,35 @@ public class JAEAppHelper {
 	}
 
 	public static void load() throws IOException {
-		URL url = Platform.getConfigurationLocation().getDataArea("jdconfig/user.xml");
+		URL url = Platform.getConfigurationLocation().getDataArea(JDCONFIG_USER_CONFIG);
 		if(null == url)
 			return;
 		
 		try {
 			String json = IOUtils.toString(url.openStream(), "UTF-8");
-			Object[] loadUsers = JsonHelper.toJavaArray(json);
-			if(null != loadUsers){
-				for (Object object : loadUsers) {
-					if (object instanceof DynaBean) {
-						DynaBean userBean = (DynaBean) object;
-						
-						User user = new User((String) userBean.get("name"));
-//						user.setDisplayName((String) userBean.get("displayName"));
-//						user.setDescription((String) userBean.get("description"));
-						user.setAccessKey((String) userBean.get("accessKey"));
-						user.setSecretKey((String) userBean.get("secretKey"));
-						users.add(user);
-						
-						CloudFoundryOperations operator = user.getCloudFoundryClient();
-						CloudInfo info = operator.getCloudInfo();
-						
-						user.setName(info.getUser());
-						user.setDisplayName(user.getName());
-					}
+			if(null == json || "".equals(json.trim()))
+				return;
+			
+			JDRootSaveModel[] rootElements = JsonHelper.toJavaArray(json, JDRootSaveModel.class);
+			if(null != rootElements){
+				for (JDRootSaveModel jaeRoot : rootElements) {
+					User user = new User("");
+					user.setDisplayName(jaeRoot.getName());
+					user.setAccessKey(jaeRoot.getAccessKey());
+					user.setSecretKey(jaeRoot.getSecretKey());
+					
+					users.add(user);
 				}
 			}
 		} catch(FileNotFoundException e){
 			//nothing to do.
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public static void save() throws IOException {
-		URL url = Platform.getConfigurationLocation().getDataArea("jdconfig/user.xml");
+		URL url = Platform.getConfigurationLocation().getDataArea(JDCONFIG_USER_CONFIG);
 		if(null == url)
 			return;
 		
@@ -91,25 +85,47 @@ public class JAEAppHelper {
 		
 		try {
 			out = new FileOutputStream(file);
-			List<Map<?, ?>> list = new ArrayList<>();
+			Map<String, JDRootSaveModel> rootElements = new HashMap<String, JDRootSaveModel>();
 			for (User user : users) {
-				Map userMap = new LinkedHashMap<>();
+				JDRootSaveModel root = new JDRootSaveModel();
 				
-				String name = user.getName();
-				if(null != name) userMap.put("name", name);
-				String displayName = user.getDisplayName();
-				if(null != displayName) userMap.put("displayName", displayName);
-				String description = user.getDescription();
-				if(null != description) userMap.put("description", description);
 				String accessKey = user.getAccessKey();
-				if(null != accessKey) userMap.put("accessKey", accessKey);
 				String secretKey = user.getSecretKey();
-				if(null != secretKey) userMap.put("secretKey", secretKey);
+				root.setSecretKey(secretKey);
+				root.setAccessKey(accessKey);
+				root.setName(user.getDisplayName());
 				
-				list.add(userMap);
+				rootElements.put(accessKey+"|"+secretKey, root);
 			}
 			
-			String json = JsonHelper.getJsonArray(list);
+			Set<String> keySet = srcRepositoryMap.keySet();
+			for (String key : keySet) {
+				String srcRepository = srcRepositoryMap.get(key);
+				String[] keyArray = key.split("[|]");
+				if(keyArray.length != 3)
+					continue;
+				
+				String accessKey = keyArray[0];
+				String secretKey = keyArray[1];
+				
+				JDRootSaveModel root = rootElements.get(accessKey+"|"+secretKey);
+				if(null == root)
+					continue;
+				
+				String name = keyArray[2];
+				
+				AppRepository repository = new AppRepository();
+				repository.setName(name);
+				repository.setUrl(srcRepository);
+				List<AppRepository> list = root.getRepositories();
+				if(null == list){
+					list = new ArrayList<AppRepository>();
+					root.setRepositories(list);
+				}
+				list.add(repository);
+			}
+			
+			String json = JsonHelper.getJsonArray(rootElements.values());
 			out.write(json.getBytes("UTF-8"));
 		} finally {
 			IOUtils.closeQuietly(out);

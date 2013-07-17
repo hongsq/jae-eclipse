@@ -5,14 +5,11 @@ package com.jae.eclipse.navigator.jaeapp.action;
 
 import java.io.IOException;
 
-import org.cloudfoundry.client.lib.domain.CloudInfo;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.navigator.CommonViewer;
 
-import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 import com.jae.eclipse.navigator.jaeapp.model.User;
 import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;
 import com.jae.eclipse.ui.ObjectEditor;
@@ -54,8 +51,15 @@ public class UserAction extends AbstractJDAction {
 		
 		{
 			StringPropertyEditor editor = new StringPropertyEditor();
+			editor.setPropertyName("displayName");
+			editor.setLabel("名称");
+			editor.addValidator(new NotEmptyValidator("名称"));
+			objectEditor.addPropertyEditor(editor);
+		}
+		{
+			StringPropertyEditor editor = new StringPropertyEditor();
 			editor.setPropertyName("accessKey");
-			editor.setLabel("accessKey:");
+			editor.setLabel("accessKey");
 			editor.addValidator(new NotEmptyValidator("accessKey"));
 			objectEditor.addPropertyEditor(editor);
 		}
@@ -63,7 +67,7 @@ public class UserAction extends AbstractJDAction {
 		{
 			StringPropertyEditor editor = new StringPropertyEditor();
 			editor.setPropertyName("secretKey");
-			editor.setLabel("secretKey:");
+			editor.setLabel("secretKey");
 			editor.addValidator(new NotEmptyValidator("secretKey"));
 			objectEditor.addPropertyEditor(editor);
 		}
@@ -95,16 +99,6 @@ public class UserAction extends AbstractJDAction {
 		Shell shell = viewer.getTree().getShell();
 		ControlFactoryDialog dialog = new ControlFactoryDialog(shell, factory);
 		if(Window.OK == dialog.open()){
-			CloudFoundryClientExt client = user.getCloudFoundryClient();
-			CloudInfo info = client.getCloudInfo();
-			
-			if(null == info){
-				MessageDialog.openWarning(shell, "警告", "配置信息不正确!");
-				return;
-			}else{
-				user.setName(info.getUser());
-			}
-			
 			try {
 				if(edit)
 					JAEAppHelper.save();

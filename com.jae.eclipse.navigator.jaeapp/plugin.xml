@@ -234,6 +234,14 @@
             id="jdapp.action.deploy"
             image="icons/action/deploy.gif">
       </image>
+      <image
+            id="action.user.connect"
+            image="icons/action/connect.gif">
+      </image>
+      <image
+            id="action.user.disconnect"
+            image="icons/action/disconnect.gif">
+      </image>
    </extension>
    <extension
          point="org.eclipse.core.runtime.adapters">

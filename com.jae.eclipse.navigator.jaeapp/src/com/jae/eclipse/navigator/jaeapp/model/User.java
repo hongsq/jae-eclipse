@@ -6,8 +6,10 @@ package com.jae.eclipse.navigator.jaeapp.model;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.cloudfoundry.client.lib.CloudFoundryOperations;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
 import org.cloudfoundry.client.lib.domain.CloudApplication.AppState;
+import org.cloudfoundry.client.lib.domain.CloudInfo;
 
 import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 import com.jae.eclipse.cloudfoundry.util.CloudFoundryHelper;
@@ -20,11 +22,16 @@ import com.jae.eclipse.cloudfoundry.util.CloudFoundryHelper;
 public class User extends AbstractJDElement {
 	private String accessKey;
 	private String secretKey;
+	private boolean connected = false;
 	
 	public User(String name) {
 		super(null, name);
 	}
 
+	public boolean isConnected() {
+		return connected;
+	}
+	
 	public String getAccessKey() {
 		return accessKey;
 	}
@@ -40,9 +47,26 @@ public class User extends AbstractJDElement {
 	public void setSecretKey(String secretKey) {
 		this.secretKey = secretKey;
 	}
-
+	
+	public synchronized void connect() {
+		CloudFoundryOperations operator = this.getCloudFoundryClient();
+		CloudInfo info = operator.getCloudInfo();
+		
+		this.setName(info.getUser());
+		this.connected = true;
+		this.refresh();
+	}
+	
+	public synchronized void disConnect(){
+		this.refresh();
+		this.connected = false;
+	}
+	
 	@Override
 	protected void doLoad() {
+		if(!this.connected)
+			return;
+		
 		CloudFoundryClientExt operator = getCloudFoundryClient();
 		
 		List<CloudApplication> apps = operator.getApplications();

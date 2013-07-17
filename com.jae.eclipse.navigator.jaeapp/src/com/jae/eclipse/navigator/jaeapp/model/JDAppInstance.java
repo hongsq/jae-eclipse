@@ -3,10 +3,7 @@
  */
 package com.jae.eclipse.navigator.jaeapp.model;
 
-import org.cloudfoundry.client.lib.CloudFoundryOperations;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.PlatformUI;
-
+import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 import com.jae.eclipse.navigator.jaeapp.util.JDModelUtil;
 import com.jae.eclipse.navigator.jaeapp.util.RemoteResourceUtil;
 
@@ -39,16 +36,10 @@ public class JDAppInstance extends AbstractJDElement {
 		User user = JDModelUtil.getParentElement(this, User.class);
 		JDApp app = JDModelUtil.getParentElement(this, JDApp.class);
 		
-		CloudFoundryOperations operator = user.getCloudFoundryClient();
+		CloudFoundryClientExt operator = user.getCloudFoundryClient();
 		
 		String rootPath = "";//根路径
-		String blob = null;
-		try {
-			blob = operator.getFile(app.getName(), this.instanceIndex, rootPath);
-		} catch (Exception e) {
-			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "错误", "获取远程资源时出错，请稍后再试");
-			throw e;
-		}
+		String blob = operator.getFile(app.getName(), this.instanceIndex, rootPath);
 		String[] files = blob.split("\n");
 		for (int i = 0; i < files.length; i++) {
 			String[] content = files[i].split("\\s+");
