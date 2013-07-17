@@ -75,6 +75,12 @@ public class JAEAppContentProvider implements ITreeContentProvider {
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
 						try {
+							monitor.beginTask("load children from remote.", 100);
+							monitor.worked(10);
+							
+							Display4LoadingThread thread = new Display4LoadingThread("loading - "+jdElement.getName(), loadingElement, finished, monitor);
+							thread.start();
+							
 							adapter.getChildren(jdElement);
 							
 							display.asyncExec(new Runnable() {
@@ -100,40 +106,7 @@ public class JAEAppContentProvider implements ITreeContentProvider {
 					}
 				};
 				
-				Thread thread = new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						int count = 1;
-						while(!finished.get()){
-							if(count>5){
-								loadingElement.setName("loading . ");
-								count=1;
-							}else{
-								loadingElement.setName(loadingElement.getName()+". ");
-							}
-							
-							try {
-								Thread.sleep(2000);
-							} catch (InterruptedException e) {}
-
-							count++;
-							
-							display.asyncExec(new Runnable() {
-								
-								public void run() {
-									JAEAppView view = JAEAppView.getInstance();
-									if(null != view){
-										view.getCommonViewer().refresh(loadingElement);
-									}
-								}
-							});
-						}
-					}
-				}, "loading - "+jdElement.getName());
-				
 				job.schedule();
-				thread.start();
 				
 				return new Object[]{loadingElement};
 			}
@@ -160,28 +133,5 @@ public class JAEAppContentProvider implements ITreeContentProvider {
 			return false;
 		
 		return getChildren(element).length>0;
-	}
-
-}
-
-class LoadingJDElement extends AbstractJDElement{
-
-	public LoadingJDElement(IJDElement parent, String name) {
-		super(parent, name);
-	}
-
-	@Override
-	public String getDisplayName() {
-		return this.getName();
-	}
-	
-	@Override
-	protected void doLoad() {
-		// nothing to do.
-	}
-	
-	@Override
-	public LoadState getLoadState() {
-		return LoadState.LOADED;
 	}
 }
