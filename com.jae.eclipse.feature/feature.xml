@@ -6,7 +6,7 @@
       provider-name="JAE">
 
    <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+      本插件依赖egit，请在安装本插件前先安装egit插件（http://download.eclipse.org/egit/updates/）。
    </description>
 
    <copyright url="http://www.example.com/copyright">
