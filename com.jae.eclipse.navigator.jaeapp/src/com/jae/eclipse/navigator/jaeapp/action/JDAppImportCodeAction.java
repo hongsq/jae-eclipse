@@ -45,6 +45,7 @@ public class JDAppImportCodeAction extends AbstractJDAction implements IPageChan
 		this.setMustSelect(true);
 		this.setMultiable(false);
 		this.setSelectType(JDApp.class);
+		this.setEnabled(false);
 	}
 
 	@Override

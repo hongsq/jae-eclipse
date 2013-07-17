@@ -25,6 +25,8 @@ public class ConnectAction extends AbstractJDAction {
 		this.setSelectType(User.class);
 		this.setMultiable(false);
 		
+		this.setEnabled(false);
+		
 		String id = "action.user.connect";
 		if(!this.connect) id = "action.user.disconnect";
 		this.setId(id);

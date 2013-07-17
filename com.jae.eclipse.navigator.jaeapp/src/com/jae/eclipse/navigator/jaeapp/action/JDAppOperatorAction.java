@@ -42,6 +42,7 @@ public class JDAppOperatorAction extends AbstractJDAction {
 		this.setMustSelect(true);
 		this.setMultiable(true);
 		this.setSelectType(JDApp.class);
+		this.setEnabled(false);
 	}
 	
 	@Override

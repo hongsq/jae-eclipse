@@ -63,6 +63,13 @@ public class User extends AbstractJDElement {
 	}
 	
 	@Override
+	public LoadState getLoadState() {
+		if(!this.connected)
+			return LoadState.LOADED;
+		return super.getLoadState();
+	}
+	
+	@Override
 	protected void doLoad() {
 		if(!this.connected)
 			return;

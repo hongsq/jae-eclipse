@@ -9,6 +9,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
 import com.jae.eclipse.navigator.jaeapp.model.JDApp;
+import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;
 import com.jae.eclipse.ui.ObjectEditor;
 import com.jae.eclipse.ui.control.StringPropertyEditor;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
@@ -31,6 +32,7 @@ public class JDAppEditAction extends AbstractJDAction {
 		this.setMustSelect(true);
 		this.setMultiable(false);
 		this.setSelectType(JDApp.class);
+		this.setEnabled(false);
 	}
 
 	private ObjectEditor createObjectEditor(){
@@ -64,9 +66,7 @@ public class JDAppEditAction extends AbstractJDAction {
 		Shell shell = viewer.getControl().getShell();
 		ControlFactoryDialog dialog = new ControlFactoryDialog(shell, factory);
 		if(Window.OK == dialog.open()){
-			//String repositoryURL = app.getRepositoryURL();
-			
-			viewer.refresh(app);
+			JAEAppHelper.regeditAppRepository(app);
 		}
 	}
 }

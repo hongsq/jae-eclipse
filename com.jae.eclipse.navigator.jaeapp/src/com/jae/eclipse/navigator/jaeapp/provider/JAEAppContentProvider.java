@@ -151,7 +151,6 @@ public class JAEAppContentProvider implements ITreeContentProvider {
 	@Override
 	public boolean hasChildren(Object element) {
 		if ((element instanceof IWorkspaceRoot)
-//				|| (element instanceof User)
 				|| (element instanceof JDAppInstance)
 				|| (element instanceof RemoteFolder)) {
 			return true;

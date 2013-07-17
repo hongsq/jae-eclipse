@@ -40,6 +40,7 @@ public class UserAction extends AbstractJDAction {
 		this.setMustSelect(this.edit);
 		this.setSelectType(User.class);
 		this.setMultiable(false);
+		this.setEnabled(!this.edit);
 		
 		this.setId(id);
 		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor(id));

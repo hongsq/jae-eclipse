@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Platform;
 import com.jae.eclipse.core.util.JsonHelper;
 import com.jae.eclipse.navigator.jaeapp.internal.AppRepository;
 import com.jae.eclipse.navigator.jaeapp.internal.JDRootSaveModel;
+import com.jae.eclipse.navigator.jaeapp.model.JDApp;
 import com.jae.eclipse.navigator.jaeapp.model.User;
 
 /**
@@ -95,7 +96,7 @@ public class JAEAppHelper {
 				root.setAccessKey(accessKey);
 				root.setName(user.getDisplayName());
 				
-				rootElements.put(accessKey+"|"+secretKey, root);
+				rootElements.put(createKey(accessKey, secretKey), root);
 			}
 			
 			Set<String> keySet = srcRepositoryMap.keySet();
@@ -108,7 +109,7 @@ public class JAEAppHelper {
 				String accessKey = keyArray[0];
 				String secretKey = keyArray[1];
 				
-				JDRootSaveModel root = rootElements.get(accessKey+"|"+secretKey);
+				JDRootSaveModel root = rootElements.get(createKey(accessKey, secretKey));
 				if(null == root)
 					continue;
 				
@@ -130,6 +131,10 @@ public class JAEAppHelper {
 		} finally {
 			IOUtils.closeQuietly(out);
 		}
+	}
+
+	private static String createKey(String accessKey, String secretKey) {
+		return accessKey+"|"+secretKey;
 	}
 
 	/**
@@ -178,5 +183,10 @@ public class JAEAppHelper {
 	
 	public static void clearUsers(){
 		users.clear();
+	}
+	
+	public static void regeditAppRepository(JDApp app){
+		User user = JDModelUtil.getParentElement(app, User.class);
+		srcRepositoryMap.put(createKey(user.getAccessKey(), user.getSecretKey())+"|"+app.getName(), app.getRepositoryURL());
 	}
 }

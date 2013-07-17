@@ -46,6 +46,7 @@ public class JDAppDeployAction extends AbstractJDAction {
 		this.setMustSelect(true);
 		this.setMultiable(false);
 		this.setSelectType(JDApp.class);
+		this.setEnabled(false);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class JDAppDeployAction extends AbstractJDAction {
 			final File file = new File(path);
 			
 			String errorMessage = null;
-			if(file.exists()){
+			if(!file.exists()){
 				errorMessage = "文件\""+path + "\"不存在";
 			}else if(!file.isFile()){
 				errorMessage = "文件\""+path + "\"不是文件";
