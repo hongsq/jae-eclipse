@@ -53,27 +53,17 @@ public class JAEAppHelper {
 						DynaBean userBean = (DynaBean) object;
 						
 						User user = new User((String) userBean.get("name"));
-						user.setDisplayName((String) userBean.get("displayName"));
-						user.setDescription((String) userBean.get("description"));
+//						user.setDisplayName((String) userBean.get("displayName"));
+//						user.setDescription((String) userBean.get("description"));
 						user.setAccessKey((String) userBean.get("accessKey"));
 						user.setSecretKey((String) userBean.get("secretKey"));
 						users.add(user);
 						
-						CloudFoundryOperations operator = user.getCloudFoundryOperations();
+						CloudFoundryOperations operator = user.getCloudFoundryClient();
 						CloudInfo info = operator.getCloudInfo();
 						
 						user.setName(info.getUser());
 						user.setDisplayName(user.getName());
-						
-//						Object appObjects = userBean.get("apps");
-//						if(null != appObjects && appObjects.getClass().isArray()){
-//							for (Object appObject : ((Object[])appObjects)) {
-//								if (appObject instanceof type) {
-//									type new_name = (type) appObject;
-//									
-//								}
-//							}
-//						}
 					}
 				}
 			}

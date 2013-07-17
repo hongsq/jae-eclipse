@@ -28,7 +28,7 @@ public class RemoteFile extends RemoteResource {
 		JDApp app = JDModelUtil.getParentElement(this, JDApp.class);
 		JDAppInstance instance = JDModelUtil.getParentElement(this, JDAppInstance.class);
 		
-		CloudFoundryOperations operator = user.getCloudFoundryOperations();
+		CloudFoundryOperations operator = user.getCloudFoundryClient();
 		
 		String content = operator.getFile(app.getName(), instance.getInstanceIndex(), this.getPath());
 		

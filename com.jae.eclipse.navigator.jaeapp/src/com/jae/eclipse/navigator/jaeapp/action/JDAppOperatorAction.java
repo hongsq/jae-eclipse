@@ -3,17 +3,23 @@
  */
 package com.jae.eclipse.navigator.jaeapp.action;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.cloudfoundry.client.lib.domain.CloudApplication;
+import org.cloudfoundry.client.lib.domain.CloudApplication.AppState;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Display;
 
-import com.jae.eclipse.core.util.JDCOperator;
-import com.jae.eclipse.core.util.JsonHelper;
+import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
+import com.jae.eclipse.cloudfoundry.exception.CloudFoundryClientRuntimeException;
 import com.jae.eclipse.navigator.jaeapp.model.JDApp;
 import com.jae.eclipse.navigator.jaeapp.model.User;
+import com.jae.eclipse.navigator.jaeapp.util.JDModelUtil;
+import com.jae.eclipse.ui.dialog.DetailMessageDialog;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
 
 /**
@@ -58,31 +64,65 @@ public class JDAppOperatorAction extends AbstractJDAction {
 		this.setEnabled(flag);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void run() {
-		Object[] objects = this.getStructuredSelection().toArray();
-		for (Object object : objects) {
-			JDApp app = (JDApp) object;
-			User user = (User) app.getParent();
-			JDCOperator operator = new JDCOperator(user.getAccessKey(), user.getSecretKey());
+		final String name = (this.start?"启动":"关闭")+"应用";
+		final Object[] objects = this.getStructuredSelection().toArray();
+		final TreeViewer viewer = (TreeViewer) this.getSelectionProvider();
+		final Display display = viewer.getControl().getDisplay();
+		Job job = new Job(name) {
 			
-			String path = "apps/"+app.getName();
-			String getResult = operator.handle("get", path);
-			Map map = JsonHelper.toJavaObject(getResult, HashMap.class);
-			
-			if("STARTED".equalsIgnoreCase((String) map.get("state")) && !this.start){
-				map.put("state", "STOPPED");
-				String result = operator.handleWithString("put", path, JsonHelper.getJson(map));
-				System.out.println(result);
-			}else if("STOPPED".equalsIgnoreCase((String) map.get("state")) && this.start){
-				map.put("state", "STARTED");
-				String result = operator.handleWithString("put", path, JsonHelper.getJson(map));
-				System.out.println(result);
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					for (Object object : objects) {
+						final JDApp app = (JDApp) object;
+
+						User user = JDModelUtil.getParentElement(app, User.class);
+						CloudFoundryClientExt client = user.getCloudFoundryClient();
+						CloudApplication application = client.getApplication(app.getName());
+						
+						if(JDAppOperatorAction.this.start){
+							if(application.getState() == AppState.STOPPED){
+								client.startApplication(app.getName());
+							}
+							
+							app.setStarted(true);
+						}else{
+							if(application.getState() != AppState.STOPPED){
+								client.stopApplication(app.getName());
+							}
+
+							app.setStarted(false);
+						}
+						
+						display.asyncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								app.refresh();
+//								viewer.collapseToLevel(app, 1);
+								viewer.refresh(app);
+							}
+						});
+					}
+				} catch (CloudFoundryClientRuntimeException e) {
+					return Status.OK_STATUS;
+				} catch (final Exception e) {
+					display.asyncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							DetailMessageDialog.openError(viewer.getControl().getShell(), "提示", name+"失败。", e);
+						}
+					});
+					return Status.OK_STATUS;
+				}
+				return Status.OK_STATUS;
 			}
-			
-			StructuredViewer viewer = (StructuredViewer) this.getSelectionProvider();
-			viewer.refresh(app);
-		}
+		};
+		
+		job.setUser(true);
+		job.schedule();
 	}
 }

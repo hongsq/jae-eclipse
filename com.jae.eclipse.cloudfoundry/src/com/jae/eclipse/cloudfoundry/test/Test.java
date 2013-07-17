@@ -26,8 +26,10 @@ public class Test {
 //		String email = "hongshuiqiao@jd.com";
 //		String password = "hongshuiqiao";
 //		String version = "0.1.1";
-		String accessKey = "9f7ce80405f240938743875e332d9aa4";
-		String secretKey = "65428cb05e764b4f90d95f3b8f3d53e10UFtzrPf";
+//		String accessKey = "9f7ce80405f240938743875e332d9aa4";
+//		String secretKey = "65428cb05e764b4f90d95f3b8f3d53e10UFtzrPf";
+		String accessKey = "9c379f079214447fad2959c4621cd6feVb797oH1";
+		String secretKey = "5e998dbbafb44ca783099afcdead40fa7A3Vf7Fh";
 		CloudCredentials credentials = new CloudCredentials(accessKey+"|"+secretKey);
 		CloudFoundryClientExt client = new CloudFoundryClientExt(credentials, url);
 
@@ -36,11 +38,11 @@ public class Test {
 //		client.uploadApplication("hongsq", warFile);
 		
 //		String result = client.getFile("hongsq", 0, "logs/stderr.log");
-		String result = client.getFile("hongsq_python_django", 0, "app");
-		System.out.println(result);
+//		String result = client.getFile("hongsq_python_django", 0, "app");
+//		System.out.println(result);
 		
 		
-//		getApps(client);
+		getApps(client);
 //		ApplicationStats stats = client.getApplicationStats("hongsq");
 //		System.out.println(stats);
 	}

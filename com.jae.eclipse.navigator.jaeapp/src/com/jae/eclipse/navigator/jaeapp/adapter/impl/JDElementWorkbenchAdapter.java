@@ -16,7 +16,6 @@ public class JDElementWorkbenchAdapter extends AbstractWorkbenchAdapter {
 	@Override
 	protected Object[] doGetChildren(Object element) {
 		IJDElement jdElement = (IJDElement) element;
-		
 		IJDElement[] children = jdElement.getChildren();
 		return children;
 	}

@@ -28,7 +28,13 @@ import org.cloudfoundry.client.lib.domain.ServiceConfiguration;
 import org.cloudfoundry.client.lib.domain.Staging;
 import org.cloudfoundry.client.lib.rest.CloudControllerClient;
 import org.cloudfoundry.client.lib.rest.CloudControllerClientFactory;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.springframework.util.Assert;
+
+import com.jae.eclipse.cloudfoundry.exception.CloudFoundryClientRuntimeException;
+import com.jae.eclipse.ui.dialog.DetailMessageDialog;
 
 /**
  * @author hongshuiqiao
@@ -42,179 +48,315 @@ public class CloudFoundryClientExt implements CloudFoundryOperations {
 		this(null, cloudControllerUrl, null, null);
 	}
 
-	public CloudFoundryClientExt(CloudCredentials credentials,
-			URL cloudControllerUrl) {
+	public CloudFoundryClientExt(CloudCredentials credentials, URL cloudControllerUrl) {
 		this(credentials, cloudControllerUrl, null, null);
 	}
 
-	public CloudFoundryClientExt(CloudCredentials credentials,
-			URL cloudControllerUrl, CloudSpace sessionSpace) {
+	public CloudFoundryClientExt(CloudCredentials credentials, URL cloudControllerUrl, CloudSpace sessionSpace) {
 		this(credentials, cloudControllerUrl, null, sessionSpace);
 	}
 
-	public CloudFoundryClientExt(URL cloudControllerUrl,
-			HttpProxyConfiguration httpProxyConfiguration) {
+	public CloudFoundryClientExt(URL cloudControllerUrl, HttpProxyConfiguration httpProxyConfiguration) {
 		this(null, cloudControllerUrl, httpProxyConfiguration, null);
 	}
 
-	public CloudFoundryClientExt(CloudCredentials credentials,
-			URL cloudControllerUrl,
-			HttpProxyConfiguration httpProxyConfiguration) {
+	public CloudFoundryClientExt(CloudCredentials credentials, URL cloudControllerUrl, HttpProxyConfiguration httpProxyConfiguration) {
 		this(credentials, cloudControllerUrl, httpProxyConfiguration, null);
 	}
 
-	public CloudFoundryClientExt(CloudCredentials credentials,
-			URL cloudControllerUrl,
-			HttpProxyConfiguration httpProxyConfiguration,
-			CloudSpace sessionSpace) {
-		Assert.notNull(cloudControllerUrl,
-				"URL for cloud controller cannot be null");
-		RestUtilExt restUtilExt = new RestUtilExt();
-		CloudControllerClientFactory cloudControllerClientFactory = new CloudControllerClientFactory(
-				restUtilExt, httpProxyConfiguration);
+	public CloudFoundryClientExt(CloudCredentials credentials, URL cloudControllerUrl, HttpProxyConfiguration httpProxyConfiguration, CloudSpace sessionSpace) {
+		Assert.notNull(cloudControllerUrl, "URL for cloud controller cannot be null");
+		RestUtilExt restUtilExt = new RestUtilExt(credentials);
+		CloudControllerClientFactory cloudControllerClientFactory = new CloudControllerClientFactory(restUtilExt, httpProxyConfiguration);
 
-		this.cc = cloudControllerClientFactory.newCloudController(
-				cloudControllerUrl, credentials, sessionSpace);
+		this.cc = cloudControllerClientFactory.newCloudController(cloudControllerUrl, credentials, sessionSpace);
 	}
 
 	public URL getCloudControllerUrl() {
-		return this.cc.getCloudControllerUrl();
+		try {
+			return this.cc.getCloudControllerUrl();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public CloudInfo getCloudInfo() {
-		if (this.info == null) {
-			this.info = this.cc.getInfo();
+		try {
+			if (this.info == null) {
+				this.info = this.cc.getInfo();
+			}
+			return this.info;
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
 		}
-		return this.info;
 	}
 
 	public boolean supportsSpaces() {
-		return this.cc.supportsSpaces();
+		try {
+			return this.cc.supportsSpaces();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public List<CloudSpace> getSpaces() {
-		return this.cc.getSpaces();
+		try {
+			return this.cc.getSpaces();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public List<String> getApplicationPlans() {
-		return this.cc.getApplicationPlans();
+		try {
+			return this.cc.getApplicationPlans();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void register(String email, String password) {
-		this.cc.register(email, password);
+		try {
+			this.cc.register(email, password);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updatePassword(String newPassword) {
-		this.cc.updatePassword(newPassword);
+		try {
+			this.cc.updatePassword(newPassword);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updatePassword(CloudCredentials credentials, String newPassword) {
-		this.cc.updatePassword(credentials, newPassword);
+		try {
+			this.cc.updatePassword(credentials, newPassword);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void unregister() {
-		this.cc.unregister();
+		try {
+			this.cc.unregister();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public String login() {
-		
-		CloudInfo info = this.cc.getInfo();
-		
+		try {
+			CloudInfo info = this.cc.getInfo();
+			
 //		return this.cc.login();
-		return info.getUser();
+			return info.getUser();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void logout() {
-		this.cc.logout();
+		try {
+			this.cc.logout();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public List<CloudApplication> getApplications() {
-		return this.cc.getApplications();
+		try {
+			return this.cc.getApplications();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
+	}
+
+	private void openError(final Exception e) {
+		final Display display = PlatformUI.getWorkbench().getDisplay();
+		if(Thread.currentThread() == display.getThread()){
+			doOpenError(e, display);
+		}else{
+			display.asyncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					doOpenError(e, display);					
+				}
+			});
+		}
+	}
+
+	private void doOpenError(Exception e, Display display) {
+		Shell shell = display.getActiveShell();
+		DetailMessageDialog.openError(shell, "错误", "远程操作云擎时出错，请稍后再试", e);
 	}
 
 	public CloudApplication getApplication(String appName) {
-		return this.cc.getApplication(appName);
+		try {
+			return this.cc.getApplication(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public ApplicationStats getApplicationStats(String appName) {
-		return this.cc.getApplicationStats(appName);
+		try {
+			return this.cc.getApplicationStats(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public int[] getApplicationMemoryChoices() {
-		return this.cc.getApplicationMemoryChoices();
+		try {
+			return this.cc.getApplicationMemoryChoices();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public int getDefaultApplicationMemory(String framework) {
-		return this.cc.getDefaultApplicationMemory(framework);
+		try {
+			return this.cc.getDefaultApplicationMemory(framework);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void createApplication(String appName, Staging staging, int memory,
-			List<String> uris, List<String> serviceNames) {
-		this.cc.createApplication(appName, staging, memory, uris, serviceNames,
-				false);
+	public void createApplication(String appName, Staging staging, int memory, List<String> uris, List<String> serviceNames) {
+		try {
+			this.cc.createApplication(appName, staging, memory, uris, serviceNames, false);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void createApplication(String appName, Staging staging, int memory,
-			List<String> uris, List<String> serviceNames, boolean checkExists) {
-		this.cc.createApplication(appName, staging, memory, uris, serviceNames,
-				checkExists);
+	public void createApplication(String appName, Staging staging, int memory, List<String> uris, List<String> serviceNames, boolean checkExists) {
+		try {
+			this.cc.createApplication(appName, staging, memory, uris, serviceNames, checkExists);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void createApplication(String appName, Staging staging, int memory,
-			List<String> uris, List<String> serviceNames, String applicationPlan) {
-		this.cc.createApplication(appName, staging, memory, uris, serviceNames,
-				applicationPlan, false);
+	public void createApplication(String appName, Staging staging, int memory, List<String> uris, List<String> serviceNames, String applicationPlan) {
+		try {
+			this.cc.createApplication(appName, staging, memory, uris, serviceNames, applicationPlan, false);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void createApplication(String appName, Staging staging, int memory,
-			List<String> uris, List<String> serviceNames,
-			String applicationPlan, boolean checkExists) {
-		this.cc.createApplication(appName, staging, memory, uris, serviceNames,
-				applicationPlan, checkExists);
+	public void createApplication(String appName, Staging staging, int memory, List<String> uris, List<String> serviceNames, String applicationPlan, boolean checkExists) {
+		try {
+			this.cc.createApplication(appName, staging, memory, uris, serviceNames, applicationPlan, checkExists);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void createApplication(String appName, String framework, int memory,
-			List<String> uris, List<String> serviceNames) {
-		this.cc.createApplication(appName, new Staging(framework), memory,
-				uris, serviceNames, false);
+	public void createApplication(String appName, String framework, int memory, List<String> uris, List<String> serviceNames) {
+		try {
+			this.cc.createApplication(appName, new Staging(framework), memory, uris, serviceNames, false);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void createApplication(String appName, String framework, int memory,
-			List<String> uris, List<String> serviceNames, boolean checkExists) {
-		this.cc.createApplication(appName, new Staging(framework), memory,
-				uris, serviceNames, checkExists);
+	public void createApplication(String appName, String framework, int memory, List<String> uris, List<String> serviceNames, boolean checkExists) {
+		try {
+			this.cc.createApplication(appName, new Staging(framework), memory, uris, serviceNames, checkExists);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void createService(CloudService service) {
-		this.cc.createService(service);
+		try {
+			this.cc.createService(service);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void uploadApplication(String appName, String file)
-			throws IOException {
-		this.cc.uploadApplication(appName, new File(file), null);
+	public void uploadApplication(String appName, String file) throws IOException {
+		try {
+			this.cc.uploadApplication(appName, new File(file), null);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void uploadApplication(String appName, File file) throws IOException {
-		this.cc.uploadApplication(appName, file, null);
+		try {
+			this.cc.uploadApplication(appName, file, null);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void uploadApplication(String appName, File file,
-			UploadStatusCallback callback) throws IOException {
-		this.cc.uploadApplication(appName, file, callback);
+	public void uploadApplication(String appName, File file, UploadStatusCallback callback) throws IOException {
+		try {
+			this.cc.uploadApplication(appName, file, callback);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void uploadApplication(String appName, ApplicationArchive archive)
-			throws IOException {
-		this.cc.uploadApplication(appName, archive, null);
+	public void uploadApplication(String appName, ApplicationArchive archive) throws IOException {
+		try {
+			this.cc.uploadApplication(appName, archive, null);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void uploadApplication(String appName, ApplicationArchive archive,
-			UploadStatusCallback callback) throws IOException {
-		this.cc.uploadApplication(appName, archive, callback);
+	public void uploadApplication(String appName, ApplicationArchive archive, UploadStatusCallback callback) throws IOException {
+		try {
+			this.cc.uploadApplication(appName, archive, callback);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void startApplication(String appName) {
-		this.cc.startApplication(appName);
+		try {
+			this.cc.startApplication(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 //	@Override
 //	public StartingInfo startApplication(String appName) {
@@ -222,189 +364,370 @@ public class CloudFoundryClientExt implements CloudFoundryOperations {
 //	}
 
 	public void debugApplication(String appName, CloudApplication.DebugMode mode) {
-		this.cc.debugApplication(appName, mode);
+		try {
+			this.cc.debugApplication(appName, mode);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void stopApplication(String appName) {
-		this.cc.stopApplication(appName);
+		try {
+			this.cc.stopApplication(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void restartApplication(String appName) {
-		this.cc.restartApplication(appName);
+		try {
+			this.cc.restartApplication(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void deleteApplication(String appName) {
-		this.cc.deleteApplication(appName);
+		try {
+			this.cc.deleteApplication(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void deleteAllApplications() {
-		this.cc.deleteAllApplications();
+		try {
+			this.cc.deleteAllApplications();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void deleteAllServices() {
-		this.cc.deleteAllServices();
+		try {
+			this.cc.deleteAllServices();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updateApplicationMemory(String appName, int memory) {
-		this.cc.updateApplicationMemory(appName, memory);
+		try {
+			this.cc.updateApplicationMemory(appName, memory);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updateApplicationInstances(String appName, int instances) {
-		this.cc.updateApplicationInstances(appName, instances);
+		try {
+			this.cc.updateApplicationInstances(appName, instances);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updateApplicationServices(String appName, List<String> services) {
-		this.cc.updateApplicationServices(appName, services);
+		try {
+			this.cc.updateApplicationServices(appName, services);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updateApplicationStaging(String appName, Staging staging) {
-		this.cc.updateApplicationStaging(appName, staging);
+		try {
+			this.cc.updateApplicationStaging(appName, staging);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updateApplicationUris(String appName, List<String> uris) {
-		this.cc.updateApplicationUris(appName, uris);
+		try {
+			this.cc.updateApplicationUris(appName, uris);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updateApplicationEnv(String appName, Map<String, String> env) {
-		this.cc.updateApplicationEnv(appName, env);
+		try {
+			this.cc.updateApplicationEnv(appName, env);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updateApplicationEnv(String appName, List<String> env) {
-		this.cc.updateApplicationEnv(appName, env);
+		try {
+			this.cc.updateApplicationEnv(appName, env);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void updateApplicationPlan(String appName, String applicationPlan) {
-		this.cc.updateApplicationPlan(appName, applicationPlan);
+		try {
+			this.cc.updateApplicationPlan(appName, applicationPlan);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public Map<String, String> getLogs(String appName) {
-		return this.cc.getLogs(appName);
+		try {
+			return this.cc.getLogs(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public Map<String, String> getCrashLogs(String appName) {
-		return this.cc.getCrashLogs(appName);
+		try {
+			return this.cc.getCrashLogs(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public String getFile(String appName, int instanceIndex, String filePath) {
-		return this.cc.getFile(appName, instanceIndex, filePath, 0, -1);
+		try {
+			return this.cc.getFile(appName, instanceIndex, filePath, 0, -1);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public String getFile(String appName, int instanceIndex, String filePath,
-			int startPosition) {
-		Assert.isTrue(
-				startPosition >= 0,
-				startPosition
-						+ " is not a valid value for start position, it should be 0 or greater.");
+	public String getFile(String appName, int instanceIndex, String filePath, int startPosition) {
+		Assert.isTrue(startPosition >= 0, startPosition + " is not a valid value for start position, it should be 0 or greater.");
 
-		return this.cc.getFile(appName, instanceIndex, filePath, startPosition,
-				-1);
+		try {
+			return this.cc.getFile(appName, instanceIndex, filePath, startPosition, -1);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public String getFile(String appName, int instanceIndex, String filePath,
-			int startPosition, int endPosition) {
-		Assert.isTrue(
-				startPosition >= 0,
-				startPosition
-						+ " is not a valid value for start position, it should be 0 or greater.");
+	public String getFile(String appName, int instanceIndex, String filePath, int startPosition, int endPosition) {
+		Assert.isTrue(startPosition >= 0, startPosition + " is not a valid value for start position, it should be 0 or greater.");
 
-		Assert.isTrue(
-				endPosition > startPosition,
-				endPosition
-						+ " is not a valid value for end position, it should be greater than startPosition "
-						+ "which is " + startPosition + ".");
+		Assert.isTrue(endPosition > startPosition, endPosition + " is not a valid value for end position, it should be greater than startPosition " + "which is " + startPosition + ".");
 
-		return this.cc.getFile(appName, instanceIndex, filePath, startPosition,
-				endPosition - 1);
+		try {
+			return this.cc.getFile(appName, instanceIndex, filePath, startPosition, endPosition - 1);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public String getFileTail(String appName, int instanceIndex,
-			String filePath, int length) {
-		Assert.isTrue(
-				length > 0,
-				length
-						+ " is not a valid value for length, it should be 1 or greater.");
-		return this.cc.getFile(appName, instanceIndex, filePath, -1, length);
+	public String getFileTail(String appName, int instanceIndex, String filePath, int length) {
+		Assert.isTrue(length > 0, length + " is not a valid value for length, it should be 1 or greater.");
+		try {
+			return this.cc.getFile(appName, instanceIndex, filePath, -1, length);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public List<CloudService> getServices() {
-		return this.cc.getServices();
+		try {
+			return this.cc.getServices();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public CloudService getService(String service) {
-		return this.cc.getService(service);
+		try {
+			return this.cc.getService(service);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void deleteService(String service) {
-		this.cc.deleteService(service);
+		try {
+			this.cc.deleteService(service);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public List<ServiceConfiguration> getServiceConfigurations() {
-		return this.cc.getServiceConfigurations();
+		try {
+			return this.cc.getServiceConfigurations();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void bindService(String appName, String serviceName) {
-		this.cc.bindService(appName, serviceName);
+		try {
+			this.cc.bindService(appName, serviceName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void unbindService(String appName, String serviceName) {
-		this.cc.unbindService(appName, serviceName);
+		try {
+			this.cc.unbindService(appName, serviceName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public InstancesInfo getApplicationInstances(String appName) {
-		return this.cc.getApplicationInstances(appName);
+		try {
+			return this.cc.getApplicationInstances(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public CrashesInfo getCrashes(String appName) {
-		return this.cc.getCrashes(appName);
+		try {
+			return this.cc.getCrashes(appName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void rename(String appName, String newName) {
-		this.cc.rename(appName, newName);
+		try {
+			this.cc.rename(appName, newName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public List<CloudDomain> getDomainsForOrg() {
-		return this.cc.getDomainsForOrg();
+		try {
+			return this.cc.getDomainsForOrg();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public List<CloudDomain> getDomains() {
-		return this.cc.getDomains();
+		try {
+			return this.cc.getDomains();
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void addDomain(String domainName) {
-		this.cc.addDomain(domainName);
+		try {
+			this.cc.addDomain(domainName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void deleteDomain(String domainName) {
-		this.cc.deleteDomain(domainName);
+		try {
+			this.cc.deleteDomain(domainName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void removeDomain(String domainName) {
-		this.cc.removeDomain(domainName);
+		try {
+			this.cc.removeDomain(domainName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public List<CloudRoute> getRoutes(String domainName) {
-		return this.cc.getRoutes(domainName);
+		try {
+			return this.cc.getRoutes(domainName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void addRoute(String host, String domainName) {
-		this.cc.addRoute(host, domainName);
+		try {
+			this.cc.addRoute(host, domainName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void deleteRoute(String host, String domainName) {
-		this.cc.deleteRoute(host, domainName);
+		try {
+			this.cc.deleteRoute(host, domainName);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
-	public void updateHttpProxyConfiguration(
-			HttpProxyConfiguration httpProxyConfiguration) {
-		this.cc.updateHttpProxyConfiguration(httpProxyConfiguration);
+	public void updateHttpProxyConfiguration(HttpProxyConfiguration httpProxyConfiguration) {
+		try {
+			this.cc.updateHttpProxyConfiguration(httpProxyConfiguration);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void registerRestLogListener(RestLogCallback callBack) {
-		this.cc.registerRestLogListener(callBack);
+		try {
+			this.cc.registerRestLogListener(callBack);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public void unRegisterRestLogListener(RestLogCallback callBack) {
-		this.cc.unRegisterRestLogListener(callBack);
+		try {
+			this.cc.unRegisterRestLogListener(callBack);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 }

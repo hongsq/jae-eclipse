@@ -4,16 +4,15 @@
 package com.jae.eclipse.navigator.jaeapp.action;
 
 import java.io.IOException;
-import java.util.HashMap;
 
+import org.cloudfoundry.client.lib.domain.CloudInfo;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.navigator.CommonViewer;
 
-import com.jae.eclipse.core.util.JDCOperator;
-import com.jae.eclipse.core.util.JsonHelper;
+import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 import com.jae.eclipse.navigator.jaeapp.model.User;
 import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;
 import com.jae.eclipse.ui.ObjectEditor;
@@ -96,18 +95,14 @@ public class UserAction extends AbstractJDAction {
 		Shell shell = viewer.getTree().getShell();
 		ControlFactoryDialog dialog = new ControlFactoryDialog(shell, factory);
 		if(Window.OK == dialog.open()){
-			String accessKey = user.getAccessKey();
-			String secretKey = user.getSecretKey();
+			CloudFoundryClientExt client = user.getCloudFoundryClient();
+			CloudInfo info = client.getCloudInfo();
 			
-			JDCOperator operator = new JDCOperator(accessKey, secretKey);
-			String result = operator.handle("get", "info");
-			
-			String userName = (String) JsonHelper.toJavaObject(result, HashMap.class).get("user");
-			if(null == userName){
+			if(null == info){
 				MessageDialog.openWarning(shell, "警告", "配置信息不正确!");
 				return;
 			}else{
-				user.setName(userName);
+				user.setName(info.getUser());
 			}
 			
 			try {

@@ -5,10 +5,10 @@ package com.jae.eclipse.navigator.jaeapp.model;
 
 import java.util.List;
 
-import org.cloudfoundry.client.lib.CloudFoundryOperations;
 import org.cloudfoundry.client.lib.domain.InstanceInfo;
 import org.cloudfoundry.client.lib.domain.InstancesInfo;
 
+import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 import com.jae.eclipse.navigator.jaeapp.util.JDModelUtil;
 
 /**
@@ -44,14 +44,14 @@ public class JDApp extends AbstractJDElement {
 		return started;
 	}
 
-	public void setStarted(boolean started) {
+	public synchronized void setStarted(boolean started) {
 		this.started = started;
 	}
 
 	@Override
 	protected void doLoad() {
 		User user = JDModelUtil.getParentElement(this, User.class);
-		CloudFoundryOperations operator = user.getCloudFoundryOperations();
+		CloudFoundryClientExt operator = user.getCloudFoundryClient();
 		
 		InstancesInfo infos = operator.getApplicationInstances(this.getName());
 		List<InstanceInfo> list = infos.getInstances();

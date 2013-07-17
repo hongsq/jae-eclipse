@@ -4,8 +4,6 @@
 package com.jae.eclipse.navigator.jaeapp.model;
 
 import org.cloudfoundry.client.lib.CloudFoundryOperations;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.PlatformUI;
 
 import com.jae.eclipse.navigator.jaeapp.util.JDModelUtil;
 import com.jae.eclipse.navigator.jaeapp.util.RemoteResourceUtil;
@@ -35,15 +33,9 @@ public class RemoteFolder extends RemoteResource {
 		JDApp app = JDModelUtil.getParentElement(this, JDApp.class);
 		JDAppInstance instance = JDModelUtil.getParentElement(this, JDAppInstance.class);
 		
-		CloudFoundryOperations operator = user.getCloudFoundryOperations();
+		CloudFoundryOperations operator = user.getCloudFoundryClient();
 		
-		String blob = null;
-		try {
-			blob = operator.getFile(app.getName(), instance.getInstanceIndex(), this.getPath());
-		} catch (Exception e) {
-			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "错误", "获取远程资源时出错，请稍后再试");
-			throw e;
-		}
+		String blob = operator.getFile(app.getName(), instance.getInstanceIndex(), this.getPath());
 		
 		String[] files = blob.split("\n");
 		for (int i = 0; i < files.length; i++) {

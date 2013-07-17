@@ -8,6 +8,7 @@
             name="JAE">
       </category>
       <view
+            allowMultiple="false"
             category="com.jae.eclipse.navigator.jaeapp"
             class="com.jae.eclipse.navigator.jaeapp.view.JAEAppView"
             icon="icons/jaeappview.gif"

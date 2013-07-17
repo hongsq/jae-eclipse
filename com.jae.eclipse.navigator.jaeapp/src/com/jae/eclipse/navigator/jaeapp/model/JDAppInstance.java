@@ -39,7 +39,7 @@ public class JDAppInstance extends AbstractJDElement {
 		User user = JDModelUtil.getParentElement(this, User.class);
 		JDApp app = JDModelUtil.getParentElement(this, JDApp.class);
 		
-		CloudFoundryOperations operator = user.getCloudFoundryOperations();
+		CloudFoundryOperations operator = user.getCloudFoundryClient();
 		
 		String rootPath = "";//根路径
 		String blob = null;

@@ -5,9 +5,9 @@ package com.jae.eclipse.navigator.jaeapp.action;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TreeViewer;
 
 import com.jae.eclipse.navigator.jaeapp.model.AbstractJDElement;
+import com.jae.eclipse.navigator.jaeapp.model.LoadState;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
 
 /**
@@ -33,9 +33,13 @@ public class RefreshAction extends AbstractJDAction {
 		Object[] elements = this.getStructuredSelection().toArray();
 		for (Object element : elements) {
 			AbstractJDElement jdElement = (AbstractJDElement) element;
-			jdElement.refresh();
-			((TreeViewer)viewer).collapseToLevel(element, 1);
-			viewer.refresh(element);
+			
+			//正在加载的就没有必要再刷新了
+			if(jdElement.getLoadState() != LoadState.LOADING){
+				jdElement.refresh();
+//				((TreeViewer)viewer).collapseToLevel(element, 1);
+				viewer.refresh(element);
+			}
 		}
 	}
 }

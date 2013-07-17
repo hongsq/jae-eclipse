@@ -6,10 +6,10 @@ package com.jae.eclipse.navigator.jaeapp.model;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.cloudfoundry.client.lib.CloudFoundryOperations;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
 import org.cloudfoundry.client.lib.domain.CloudApplication.AppState;
 
+import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 import com.jae.eclipse.cloudfoundry.util.CloudFoundryHelper;
 
 
@@ -43,7 +43,7 @@ public class User extends AbstractJDElement {
 
 	@Override
 	protected void doLoad() {
-		CloudFoundryOperations operator = getCloudFoundryOperations();
+		CloudFoundryClientExt operator = getCloudFoundryClient();
 		
 		List<CloudApplication> apps = operator.getApplications();
 		if(null != apps){
@@ -67,7 +67,7 @@ public class User extends AbstractJDElement {
 		}
 	}
 
-	public CloudFoundryOperations getCloudFoundryOperations() {
+	public CloudFoundryClientExt getCloudFoundryClient() {
 		return CloudFoundryHelper.getCloudFoundryClient(accessKey, secretKey);
 	}
 }

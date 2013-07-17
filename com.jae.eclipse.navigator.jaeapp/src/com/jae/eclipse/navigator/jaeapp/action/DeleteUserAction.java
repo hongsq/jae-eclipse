@@ -5,7 +5,6 @@ package com.jae.eclipse.navigator.jaeapp.action;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.ui.navigator.CommonViewer;
 
 import com.jae.eclipse.navigator.jaeapp.model.User;
 import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;

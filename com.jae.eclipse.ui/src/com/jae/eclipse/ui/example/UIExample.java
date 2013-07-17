@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.layout.GridData;
@@ -29,11 +27,10 @@ import com.jae.eclipse.ui.control.ComboPropertyEditor;
 import com.jae.eclipse.ui.control.DirectorySelectionPropertyEditor;
 import com.jae.eclipse.ui.control.FileSelectionPropertyEditor;
 import com.jae.eclipse.ui.control.StringPropertyEditor;
+import com.jae.eclipse.ui.dialog.DetailMessageDialog;
 import com.jae.eclipse.ui.event.IValuechangeListener;
 import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
-import com.jae.eclipse.ui.factory.ObjectEditorControlFactory;
-import com.jae.eclipse.ui.impl.ControlFactoryDialog;
 import com.jae.eclipse.ui.impl.PropertyComposite;
 import com.jae.eclipse.ui.validator.NotEmptyValidator;
 
@@ -225,7 +222,7 @@ public class UIExample {
 		label.setText("TopRight");
 		viewForm.setTopRight(label);
 		
-		IMenuManager menuManager = new MenuManager();
+//		IMenuManager menuManager = new MenuManager();
 		
 //		viewForm.setMenu(menuManager.);
 		
@@ -235,7 +232,7 @@ public class UIExample {
 //		shell.pack();
 		shell.open();
 
-//		createDialog(shell);
+		createDialog(shell);
 		
 		while(!shell.isDisposed()){
 			if(!display.readAndDispatch())
@@ -246,27 +243,30 @@ public class UIExample {
 	}
 
 	private static void createDialog(Shell shell) {
-		Map map = new HashMap();
-		map.put("abc", "abc");
-		map.put("efg", "efg");
-		map.put("combo", 11);
-		ObjectEditorControlFactory factory = new ObjectEditorControlFactory(createObjectEditor());
-		factory.setValue(map);
+//		Map map = new HashMap();
+//		map.put("abc", "abc");
+//		map.put("efg", "efg");
+//		map.put("combo", 11);
+//		ObjectEditorControlFactory factory = new ObjectEditorControlFactory(createObjectEditor());
+//		factory.setValue(map);
+//		
+//		factory.getUIDescription().setWinTitle("winTitle");
+//		factory.getUIDescription().setTitle("title");
+//		factory.getUIDescription().setDescription("description");
+//		factory.getUIDescription().setInitHeight(500);
+//		factory.getUIDescription().setInitWidth(500);
+//		
+//		ControlFactoryDialog dialog = new ControlFactoryDialog(shell, factory);
+//		
+//		dialog.setResizable(false);
+//		
+//		dialog.open();
+//		
+//		Map result = (Map) factory.getValue();
+//		System.out.println(result.get("combo"));
 		
-		factory.getUIDescription().setWinTitle("winTitle");
-		factory.getUIDescription().setTitle("title");
-		factory.getUIDescription().setDescription("description");
-		factory.getUIDescription().setInitHeight(500);
-		factory.getUIDescription().setInitWidth(500);
+		DetailMessageDialog.openError(shell, "title", "message", "detail");
 		
-		ControlFactoryDialog dialog = new ControlFactoryDialog(shell, factory);
-		
-		dialog.setResizable(false);
-		
-		dialog.open();
-		
-		Map result = (Map) factory.getValue();
-		System.out.println(result.get("combo"));
 	}
 
 }

@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.cloudfoundry.client.lib.CloudCredentials;
-import org.cloudfoundry.client.lib.CloudFoundryOperations;
 
 import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 
@@ -18,7 +17,7 @@ import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
  *
  */
 public class CloudFoundryHelper {
-	private static Map<String, CloudFoundryOperations> clientMap = new HashMap<String, CloudFoundryOperations>();
+	private static Map<String, CloudFoundryClientExt> clientMap = new HashMap<String, CloudFoundryClientExt>();
 	private static URL url;
 	static{
 		try {
@@ -28,9 +27,9 @@ public class CloudFoundryHelper {
 		}
 	}
 	
-	public synchronized static CloudFoundryOperations getCloudFoundryClient(String accessKey, String secretKey){
+	public synchronized static CloudFoundryClientExt getCloudFoundryClient(String accessKey, String secretKey){
 		String token = accessKey+"|"+secretKey;
-		CloudFoundryOperations cloudFoundryClient = clientMap.get(token);
+		CloudFoundryClientExt cloudFoundryClient = clientMap.get(token);
 		if(null == cloudFoundryClient){
 			CloudCredentials credentials = new CloudCredentials(token);
 			cloudFoundryClient = new CloudFoundryClientExt(credentials, url);

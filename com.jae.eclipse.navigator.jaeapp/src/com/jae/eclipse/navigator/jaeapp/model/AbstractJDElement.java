@@ -18,7 +18,8 @@ public abstract class AbstractJDElement implements IJDElement {
 	private String description;
 	private String imageID;
 	private List<IJDElement> children = new ArrayList<IJDElement>();
-	private boolean loaded=false;
+	private LoadState loadeState = LoadState.NONE;
+	private Object loadLock = new Object();
 
 	public AbstractJDElement(IJDElement parent, String name) {
 		this.parent = parent;
@@ -70,26 +71,35 @@ public abstract class AbstractJDElement implements IJDElement {
 		return this.children.toArray(new IJDElement[this.children.size()]);
 	}
 	
-	public boolean isLoaded() {
-		return loaded;
+	public LoadState getLoadState() {
+		return this.loadeState;
 	}
 	
-	protected synchronized void load(){
-		if(!loaded){
-			try {
-				doLoad();
-				loaded = true;
-			} catch (Exception e) {
-				e.printStackTrace();
+	protected void load(){
+		if(this.loadeState != LoadState.LOADED){
+			//只要不是加载成功，就都需要在锁中等待
+			synchronized (loadLock) {
+				if(this.loadeState == LoadState.NONE){
+					try {
+						this.loadeState = LoadState.LOADING;
+						doLoad();
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						this.loadeState = LoadState.LOADED;
+					}
+				}
 			}
 		}
 	}
 	
 	protected abstract void doLoad();
 
-	public synchronized void refresh(){
-		loaded = false;
-		this.children.clear();
+	public void refresh(){
+		synchronized (loadLock) {
+			this.loadeState = LoadState.NONE;
+			this.children.clear();
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

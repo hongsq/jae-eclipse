@@ -4,7 +4,11 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 public class Activator implements BundleActivator {
+	// The plug-in ID
+	public static final String PLUGIN_ID = "com.jae.eclipse.cloudfoundry";
 
+	// The shared instance
+	private static Activator plugin;
 	private static BundleContext context;
 
 	static BundleContext getContext() {
@@ -17,6 +21,7 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
+		plugin = this;
 	}
 
 	/*
@@ -25,6 +30,15 @@ public class Activator implements BundleActivator {
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
+		plugin = null;
 	}
 
+	/**
+	 * Returns the shared instance
+	 *
+	 * @return the shared instance
+	 */
+	public static Activator getDefault() {
+		return plugin;
+	}
 }

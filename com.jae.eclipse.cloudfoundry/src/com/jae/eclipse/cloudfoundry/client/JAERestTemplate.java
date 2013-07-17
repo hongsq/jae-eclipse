@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.cloudfoundry.client.lib.CloudCredentials;
 import org.cloudfoundry.client.lib.rest.LoggingRestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,25 +37,38 @@ public class JAERestTemplate extends LoggingRestTemplate {
 	private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 	private final static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HHmmss");
 	private String version = "0.1.1";
-	String accessKey = "9f7ce80405f240938743875e332d9aa4";
-	String secretKey = "65428cb05e764b4f90d95f3b8f3d53e10UFtzrPf";
+	private String accessKey;
+	private String secretKey;
 	
+	public JAERestTemplate(CloudCredentials credentials) {
+		String token = credentials.getToken();
+		String[] keys = token.split("[|]");
+		this.accessKey = keys[0];
+		this.secretKey = keys[1];
+	}
+
 	@Override
 	protected <T> T doExecute(URI uri, final HttpMethod method, final RequestCallback requestCallback, final ResponseExtractor<T> responseExtractor) throws RestClientException {
-		RequestCallback newRequestCallback = new RequestCallback() {
-			@Override
-			public void doWithRequest(ClientHttpRequest request) throws IOException {
-				initJAERequest(method, request, requestCallback);
-			}
-		};
+		RequestCallback newRequestCallback = requestCallback;
+		if(null != requestCallback){
+			newRequestCallback = new RequestCallback() {
+				@Override
+				public void doWithRequest(ClientHttpRequest request) throws IOException {
+					initJAERequest(method, request, requestCallback);
+				}
+			};
+		}
 		
-		ResponseExtractor<T> newResponseExtractor = new ResponseExtractor<T>() {
-			@Override
-			public T extractData(ClientHttpResponse response) throws IOException {
-				T extractData = initJAEResponse(response, responseExtractor);
-				return extractData;
-			}
-		};
+		ResponseExtractor<T> newResponseExtractor = responseExtractor;
+		if(null != responseExtractor){
+			newResponseExtractor = new ResponseExtractor<T>() {
+				@Override
+				public T extractData(ClientHttpResponse response) throws IOException {
+					T extractData = initJAEResponse(response, responseExtractor);
+					return extractData;
+				}
+			};
+		}
 		
 		return super.doExecute(uri, method, newRequestCallback, newResponseExtractor);
 	}
@@ -154,7 +168,7 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		headers.set("Version", version);
 		Date currentDateTime = new Date();
 		String date = DATE_FORMAT.format(currentDateTime)+"T"+TIME_FORMAT.format(currentDateTime)+"Z";
-//		String date = "20130711T172431Z";
+//		String date = "20130716T101533Z";
 //		System.out.println(date);// "20130705T091132Z"
 
 		headers.set("Date", date);
