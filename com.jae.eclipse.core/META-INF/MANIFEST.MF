@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: com.jae.eclipse.core.Activator
 Bundle-Vendor: JAE
 Require-Bundle: org.eclipse.core.runtime,
- com.jae.eclipse.library;bundle-version="1.0.0"
+ com.jae.eclipse.library
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.jae.eclipse.core.exception,

@@ -3,6 +3,9 @@
    <feature url="features/com.jae.eclipse.feature_1.0.0.jar" id="com.jae.eclipse.feature" version="1.0.0">
       <category name="com.jae.eclipse"/>
    </feature>
+   <feature url="features/com.jae.eclipse.feature.code_1.0.0.jar" id="com.jae.eclipse.feature.code" version="1.0.0">
+      <category name="com.jae.eclipse"/>
+   </feature>
    <category-def name="com.jae.eclipse" label="jae-eclipse">
       <description>
          the eclipse plugins for jae

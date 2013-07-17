@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            class="com.jae.eclipse.navigator.jaeapp.code.action.JDAppCodeImportActionProvider"
+            id="com.jae.eclipse.navigator.jaeapp.action.JDAppCodeImportActionProvider">
+         <enablement>
+            <or>
+               <and>
+                  <instanceof
+                        value="com.jae.eclipse.navigator.jaeapp.model.JDApp">
+                  </instanceof>
+               </and>
+            </or>
+         </enablement>
+      </actionProvider>
+   </extension>
+
+</plugin>

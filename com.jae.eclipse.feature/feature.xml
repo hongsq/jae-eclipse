@@ -6,7 +6,7 @@
       provider-name="JAE">
 
    <description url="http://www.example.com/description">
-      本插件依赖egit，请在安装本插件前先安装egit插件（http://download.eclipse.org/egit/updates/）。
+      本插件用于操作京东云引擎。
    </description>
 
    <copyright url="http://www.example.com/copyright">
@@ -19,21 +19,16 @@
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui" version="3.103.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.navigator" version="3.5.200" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.resources" version="3.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.navigator.resources" version="3.4.400" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.egit.ui" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.egit.core" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jgit" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jgit.pgm" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide" version="3.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.browser" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.editors" version="3.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.forms" version="3.5.200" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.views" version="3.6.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor" version="3.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jface.text" version="3.8.0" match="greaterOrEqual"/>
+      <import plugin="com.jae.eclipse.core"/>
+      <import plugin="com.jae.eclipse.library"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="com.jae.eclipse.ui"/>
+      <import plugin="com.jae.eclipse.navigator"/>
+      <import plugin="org.eclipse.ui.navigator"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="com.jae.eclipse.cloudfoundry"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.forms"/>
    </requires>
 
    <plugin

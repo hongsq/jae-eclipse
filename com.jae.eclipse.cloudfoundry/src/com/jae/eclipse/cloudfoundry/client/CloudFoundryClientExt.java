@@ -69,7 +69,12 @@ public class CloudFoundryClientExt implements CloudFoundryOperations {
 		RestUtilExt restUtilExt = new RestUtilExt(credentials);
 		CloudControllerClientFactory cloudControllerClientFactory = new CloudControllerClientFactory(restUtilExt, httpProxyConfiguration);
 
-		this.cc = cloudControllerClientFactory.newCloudController(cloudControllerUrl, credentials, sessionSpace);
+		try {
+			this.cc = cloudControllerClientFactory.newCloudController(cloudControllerUrl, credentials, sessionSpace);
+		} catch (Exception e) {
+			openError(e);
+			throw new CloudFoundryClientRuntimeException(e);
+		}
 	}
 
 	public URL getCloudControllerUrl() {

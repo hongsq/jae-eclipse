@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.jae.eclipse.feature.code"
+      label="Code"
+      version="1.0.0"
+      provider-name="JAE">
+
+   <description url="http://www.example.com/description">
+      [本插件用于操作京云引擎的相关源码管理，它依赖了egit插件，请确认已经安装了egit相关插件（http://download.eclipse.org/egit/updates/）。]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="com.jae.eclipse.core"/>
+      <import plugin="com.jae.eclipse.navigator.jaeapp"/>
+      <import plugin="com.jae.eclipse.ui"/>
+      <import plugin="org.eclipse.egit.ui"/>
+      <import plugin="org.eclipse.jgit"/>
+      <import plugin="org.eclipse.ui.navigator"/>
+      <import plugin="com.jae.eclipse.navigator"/>
+   </requires>
+
+   <plugin
+         id="com.jae.eclipse.navigator.jaeapp.code"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         unpack="false"/>
+
+</feature>
