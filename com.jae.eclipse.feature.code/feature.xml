@@ -18,15 +18,10 @@
    </license>
 
    <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="com.jae.eclipse.core"/>
-      <import plugin="com.jae.eclipse.navigator.jaeapp"/>
-      <import plugin="com.jae.eclipse.ui"/>
-      <import plugin="org.eclipse.egit.ui"/>
-      <import plugin="org.eclipse.jgit"/>
-      <import plugin="org.eclipse.ui.navigator"/>
-      <import plugin="com.jae.eclipse.navigator"/>
+      <import feature="com.jae.eclipse.feature" version="1.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.jgit" version="3.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.egit" version="3.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.egit.mylyn" version="3.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

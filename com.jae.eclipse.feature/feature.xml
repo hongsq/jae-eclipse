@@ -19,14 +19,9 @@
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="com.jae.eclipse.core"/>
-      <import plugin="com.jae.eclipse.library"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="com.jae.eclipse.ui"/>
-      <import plugin="com.jae.eclipse.navigator"/>
       <import plugin="org.eclipse.ui.navigator"/>
       <import plugin="org.eclipse.core.resources"/>
-      <import plugin="com.jae.eclipse.cloudfoundry"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.forms"/>
    </requires>
