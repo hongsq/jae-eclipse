@@ -96,6 +96,7 @@ public class JAEAppContentProvider implements ITreeContentProvider {
 							});
 						} finally {
 							finished.set(true);
+							monitor.done();
 						}
 						return Status.OK_STATUS;
 					}

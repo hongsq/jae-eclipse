@@ -13,7 +13,7 @@
             class="com.jae.eclipse.navigator.jaeapp.view.JAEAppView"
             icon="icons/jaeappview.gif"
             id="com.jae.eclipse.navigator.jaeapp.view"
-            name="JAE App View"
+            name="JAE View"
             restorable="true">
       </view>
    </extension>
@@ -60,7 +60,7 @@
             icon="icons/jaeappview.gif"
             id="com.jae.eclipse.navigator.jaeapp.content.jaeapp"
             labelProvider="com.jae.eclipse.navigator.jaeapp.provider.JAEAppLabelProvider"
-            name="JAE APP View"
+            name="JAE View"
             priority="normal">
          <triggerPoints>
             <or>

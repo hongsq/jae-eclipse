@@ -44,9 +44,10 @@ public class Display4LoadingThread extends Thread {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {}
 
-			count++;
+			if(count%2==0){
+				monitor.worked(10);
+			}
 			
-			final int currentCount = count;
 			display.asyncExec(new Runnable() {
 				
 				public void run() {
@@ -54,12 +55,10 @@ public class Display4LoadingThread extends Thread {
 					if(null != view){
 						view.getCommonViewer().refresh(loadingElement);
 					}
-					
-					if(currentCount%2==0){
-						monitor.worked(10);
-					}
 				}
 			});
+
+			count++;
 		}
 	}
 }

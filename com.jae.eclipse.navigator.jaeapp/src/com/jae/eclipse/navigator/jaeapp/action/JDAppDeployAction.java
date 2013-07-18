@@ -85,8 +85,10 @@ public class JDAppDeployAction extends AbstractJDAction {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					JDApp app = (JDApp) JDAppDeployAction.this.getStructuredSelection().getFirstElement();
+					monitor.beginTask("部署资源到应用\""+app.getName()+"\"", 100);
 					User user = JDModelUtil.getParentElement(app, User.class);
 					CloudFoundryClientExt client = user.getCloudFoundryClient();
+					monitor.worked(30);
 					try {
 						client.uploadApplication(app.getName(), file);
 					} catch (final IOException e) {

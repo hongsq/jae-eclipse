@@ -76,8 +76,11 @@ public class JDAppOperatorAction extends AbstractJDAction {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
+					monitor.beginTask(name, objects.length*100);
 					for (Object object : objects) {
 						final JDApp app = (JDApp) object;
+						monitor.setTaskName(name+"\""+app.getName()+"\"");
+						monitor.worked(50);
 
 						User user = JDModelUtil.getParentElement(app, User.class);
 						CloudFoundryClientExt client = user.getCloudFoundryClient();
@@ -96,7 +99,7 @@ public class JDAppOperatorAction extends AbstractJDAction {
 
 							app.setStarted(false);
 						}
-						
+						monitor.worked(50);
 						display.asyncExec(new Runnable() {
 							
 							public void run() {
@@ -116,6 +119,8 @@ public class JDAppOperatorAction extends AbstractJDAction {
 						}
 					});
 					return Status.OK_STATUS;
+				} finally {
+					monitor.done();
 				}
 				return Status.OK_STATUS;
 			}

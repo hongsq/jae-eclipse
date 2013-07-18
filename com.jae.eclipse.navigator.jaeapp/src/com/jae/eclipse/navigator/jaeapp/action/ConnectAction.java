@@ -64,24 +64,35 @@ public class ConnectAction extends AbstractJDAction {
 		final Display display = viewer.getControl().getDisplay();
 		Job job = new Job(this.getText()) {
 			
-			protected IStatus run(IProgressMonitor monitor) {
-				Object[] objects = ConnectAction.this.getStructuredSelection().toArray();
-				for (Object object : objects) {
-					User user = (User) object;
-					if(ConnectAction.this.connect){
-						user.connect();
-					}else{
-						user.disConnect();
-					}
+			protected IStatus run(final IProgressMonitor monitor) {
+				try {
+					Object[] objects = ConnectAction.this.getStructuredSelection().toArray();
+					monitor.beginTask(getText()+"远程服务器", objects.length * 100);
 					
-					display.asyncExec(new Runnable() {
+					for (Object object : objects) {
+						final User user = (User) object;
 						
-						public void run() {
-							viewer.refresh();
+						monitor.setTaskName(getText()+user.getDisplayName());
+						monitor.worked(50);
+						
+						if(ConnectAction.this.connect){
+							user.connect();
+						}else{
+							user.disConnect();
 						}
-					});
+
+						monitor.worked(50);
+						display.asyncExec(new Runnable() {
+							
+							public void run() {
+								viewer.refresh();
+							}
+						});
+					}
+					return Status.OK_STATUS;
+				} finally {
+					monitor.done();
 				}
-				return Status.OK_STATUS;
 			}
 		};
 		
