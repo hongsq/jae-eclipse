@@ -30,11 +30,9 @@ import com.jae.eclipse.ui.util.SWTResourceUtil;
  */
 public class JAEAppLabelProvider extends LabelProvider implements IColorProvider, IFontProvider, ICommonLabelProvider {
 
-	@Override
 	public void restoreState(IMemento aMemento) {
 	}
 
-	@Override
 	public void saveState(IMemento aMemento) {
 	}
 
@@ -60,7 +58,6 @@ public class JAEAppLabelProvider extends LabelProvider implements IColorProvider
 		return "";
 	}
 
-	@Override
 	public String getDescription(Object anElement) {
 		if (anElement instanceof IDescriptionElement) {
 			return ((IDescriptionElement) anElement).getDescription();
@@ -72,11 +69,9 @@ public class JAEAppLabelProvider extends LabelProvider implements IColorProvider
 		return "";
 	}
 
-	@Override
 	public void init(ICommonContentExtensionSite aConfig) {
 	}
 
-	@Override
 	public Font getFont(Object element) {
 		IWorkbenchAdapter2 adapter = JAEAppUtil.getWorkbenchAdapter2(element);
 		if (adapter == null) {
@@ -96,12 +91,10 @@ public class JAEAppLabelProvider extends LabelProvider implements IColorProvider
 		return font;
 	}
 
-	@Override
 	public Color getForeground(Object element) {
 		return getColor(element, true);
 	}
 
-	@Override
 	public Color getBackground(Object element) {
 		return getColor(element, false);
 	}

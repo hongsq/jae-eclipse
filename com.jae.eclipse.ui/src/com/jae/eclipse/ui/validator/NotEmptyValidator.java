@@ -20,7 +20,6 @@ public class NotEmptyValidator implements IValidator {
 		this.name = name;
 	}
 
-	@Override
 	public boolean validate(IMessageCaller messageCaller, Object validateObject) {
 		if (validateObject instanceof IPropertyEditor) {
 			IPropertyEditor editor = (IPropertyEditor) validateObject;

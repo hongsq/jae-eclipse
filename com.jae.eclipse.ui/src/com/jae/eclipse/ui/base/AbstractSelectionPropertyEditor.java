@@ -49,7 +49,6 @@ public abstract class AbstractSelectionPropertyEditor extends AbstractPropertyEd
 		return button;
 	}
 
-	@Override
 	public Control createControl(Composite parent, int style) {
 		Composite composite = new Composite(parent, style);
 		composite.setLayout(LayoutUtil.createCompactGridLayout(2));
@@ -87,7 +86,6 @@ public abstract class AbstractSelectionPropertyEditor extends AbstractPropertyEd
 		this.button.addSelectionListener(this);
 	}
 
-	@Override
 	public void widgetSelected(SelectionEvent event) {
 		Shell shell = event.widget.getDisplay().getActiveShell();
 		String selectionValue = doSelection(shell, this.text.getText());
@@ -97,7 +95,6 @@ public abstract class AbstractSelectionPropertyEditor extends AbstractPropertyEd
 
 	protected abstract String doSelection(Shell shell, String oldValue);
 
-	@Override
 	public void widgetDefaultSelected(SelectionEvent event) {
 		widgetSelected(event);
 	}

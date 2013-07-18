@@ -27,7 +27,6 @@ public class ComboPropertyEditor extends AbstractPropertyEditor {
 	private List<String> items = new ArrayList<String>();
 	private Map<String, Object> itemMap = new LinkedHashMap<String, Object>();
 
-	@Override
 	public Control createControl(Composite parent, int style) {
 		int newStyle = style;
 		if(readOnly)

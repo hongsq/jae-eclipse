@@ -28,12 +28,10 @@ public class ObjectEditorControlFactory extends AbstractControlFactory {
 		return objectEditor;
 	}
 
-	@Override
 	public void save() {
 		this.objectEditor.save();
 	}
 	
-	@Override
 	public void load() {
 		this.objectEditor.load();
 	}

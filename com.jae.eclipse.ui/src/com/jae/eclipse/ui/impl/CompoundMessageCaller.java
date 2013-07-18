@@ -31,35 +31,30 @@ public class CompoundMessageCaller implements IMessageCaller {
 		return this.list.toArray(new IMessageCaller[this.list.size()]);
 	}
 	
-	@Override
 	public void error(String message) {
 		for (IMessageCaller messageCaller : this.list) {
 			messageCaller.error(message);
 		}
 	}
 
-	@Override
 	public void info(String message) {
 		for (IMessageCaller messageCaller : this.list) {
 			messageCaller.info(message);
 		}
 	}
 
-	@Override
 	public void warn(String message) {
 		for (IMessageCaller messageCaller : this.list) {
 			messageCaller.warn(message);
 		}
 	}
 
-	@Override
 	public void clear() {
 		for (IMessageCaller messageCaller : this.list) {
 			messageCaller.clear();
 		}
 	}
 
-	@Override
 	public boolean hasError() {
 		for (IMessageCaller messageCaller : this.list) {
 			if(messageCaller.hasError())

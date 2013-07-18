@@ -7,6 +7,6 @@ Bundle-Activator: com.jae.eclipse.navigator.Activator
 Bundle-Vendor: JAE
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: com.jae.eclipse.navigator.util

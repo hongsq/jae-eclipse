@@ -39,14 +39,12 @@ public class CompoundControlFactory extends AbstractControlFactory {
 		return this.factories.toArray(new IControlFactory[this.factories.size()]);
 	}
 	
-	@Override
 	public void save() {
 		for (IControlFactory factory : factories) {
 			factory.save();
 		}
 	}
 
-	@Override
 	public void load() {
 		for (IControlFactory factory : factories) {
 			factory.load();

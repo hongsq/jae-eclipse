@@ -77,7 +77,6 @@ public class PropertyMessageCaller implements IMessageCaller {
 		}
 	}
 
-	@Override
 	public void error(String message) {
 		FieldDecoration fieldDecoration = this.propertyEditor.getErrorFieldDecoration();
 		fieldDecoration.setDescription(message);
@@ -90,7 +89,6 @@ public class PropertyMessageCaller implements IMessageCaller {
 		this.hasError = true;
 	}
 
-	@Override
 	public void info(String message) {
 		if (null != message) {
 			Control editorControl = this.propertyEditor.getEditControl();
@@ -100,7 +98,6 @@ public class PropertyMessageCaller implements IMessageCaller {
 		}
 	}
 
-	@Override
 	public void warn(String message) {
 		FieldDecoration fieldDecoration = this.propertyEditor.getWarnFieldDecoration();
 		fieldDecoration.setDescription(message);
@@ -112,7 +109,6 @@ public class PropertyMessageCaller implements IMessageCaller {
 			this.propertyEditor.getDecoratedField().hideHover();
 	}
 
-	@Override
 	public void clear() {
 		this.hasError = false;
 		this.propertyEditor.getDecoratedField().hideDecoration(this.propertyEditor.getWarnFieldDecoration());
@@ -130,7 +126,6 @@ public class PropertyMessageCaller implements IMessageCaller {
 		this.propertyEditor.getDecoratedField().hideHover();
 	}
 
-	@Override
 	public boolean hasError() {
 		return this.hasError;
 	}

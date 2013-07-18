@@ -67,7 +67,6 @@ public class JDappCodeImportAction extends AbstractJDAction implements IPageChan
 		}
 	}
 
-	@Override
 	public void pageChanged(PageChangedEvent event) {
 		IWizardPage page = (IWizardPage) event.getSelectedPage();
 		

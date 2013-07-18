@@ -19,7 +19,6 @@ import com.jae.eclipse.navigator.jaeapp.model.IJDElement;
 public class WorkbenchAdapterFactory implements IAdapterFactory {
 	private Class[] adapterClasses = new Class[]{IWorkbenchAdapter.class, IWorkbenchAdapter2.class};
 
-	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if(IWorkbenchAdapter.class == adapterType || IWorkbenchAdapter2.class == adapterType){
 			if (adaptableObject instanceof IJDElement) {
@@ -30,7 +29,6 @@ public class WorkbenchAdapterFactory implements IAdapterFactory {
 		return NullWorkbenchAdapter.INSTANCE;
 	}
 
-	@Override
 	public Class[] getAdapterList() {
 		return adapterClasses;
 	}

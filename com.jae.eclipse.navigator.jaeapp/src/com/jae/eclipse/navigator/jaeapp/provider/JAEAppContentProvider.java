@@ -32,20 +32,16 @@ import com.jae.eclipse.navigator.jaeapp.view.JAEAppView;
  */
 public class JAEAppContentProvider implements ITreeContentProvider {
 	
-	@Override
 	public void dispose() {
 	}
 
-	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
-	@Override
 	public Object[] getElements(Object inputElement) {
 		return this.getChildren(inputElement);
 	}
 
-	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IWorkspaceRoot) {
 			return JAEAppHelper.getUsers();
@@ -85,7 +81,6 @@ public class JAEAppContentProvider implements ITreeContentProvider {
 							
 							display.asyncExec(new Runnable() {
 								
-								@Override
 								public void run() {
 									JAEAppView view = JAEAppView.getInstance();
 									if(null != view){
@@ -115,13 +110,11 @@ public class JAEAppContentProvider implements ITreeContentProvider {
 		return adapter.getChildren(jdElement);
 	}
 
-	@Override
 	public Object getParent(Object element) {
 		IWorkbenchAdapter adapter = JAEAppUtil.getWorkbenchAdapter(element);
 		return adapter.getParent(element);
 	}
 
-	@Override
 	public boolean hasChildren(Object element) {
 		if ((element instanceof IWorkspaceRoot)
 				|| (element instanceof JDAppInstance)

@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.ui,
  com.jae.eclipse.core,
  com.jae.eclipse.cloudfoundry,
  org.eclipse.ui.ide
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: com.jae.eclipse.navigator.jaeapp.action,
  com.jae.eclipse.navigator.jaeapp.model

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.jae.eclipse.feature"
-      label="Feature"
+      label="JAE  Core"
       version="1.0.0"
       provider-name="JAE">
 

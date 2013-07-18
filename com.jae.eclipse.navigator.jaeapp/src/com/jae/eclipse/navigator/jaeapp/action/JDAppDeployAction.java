@@ -92,7 +92,6 @@ public class JDAppDeployAction extends AbstractJDAction {
 					} catch (final IOException e) {
 						display.asyncExec(new Runnable() {
 							
-							@Override
 							public void run() {
 								DetailMessageDialog.openError(shell, "错误", "部署失败。", e);								
 							}
@@ -103,7 +102,6 @@ public class JDAppDeployAction extends AbstractJDAction {
 					} catch (final Exception e) {
 						display.asyncExec(new Runnable() {
 							
-							@Override
 							public void run() {
 								DetailMessageDialog.openError(shell, "提示", "部署失败。", e);
 							}

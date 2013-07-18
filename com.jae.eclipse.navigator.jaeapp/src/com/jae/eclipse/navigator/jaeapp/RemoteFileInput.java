@@ -22,40 +22,33 @@ public class RemoteFileInput extends PlatformObject implements IStorageEditorInp
 		this.storage = storage;
 	}
 
-	@Override
 	public boolean exists() {
 		return true;
 	}
 
-	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
 
-	@Override
 	public String getName() {
 		return this.storage.getName();
 	}
 
-	@Override
 	public IPersistableElement getPersistable() {
 		return null;
 	}
 
-	@Override
 	public String getToolTipText() {
 		return this.storage.getFullPath().toString();
 	}
 
 	@SuppressWarnings("rawtypes")
-	@Override
 	public Object getAdapter(Class adapter) {
 		if(adapter == IStorage.class)
 			return this.storage;
 		return super.getAdapter(adapter);
 	}
 
-	@Override
 	public IStorage getStorage() throws CoreException {
 		return this.storage;
 	}

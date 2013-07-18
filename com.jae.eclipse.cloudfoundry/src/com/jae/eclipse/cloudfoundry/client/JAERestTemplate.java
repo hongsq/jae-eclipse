@@ -52,7 +52,6 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		RequestCallback newRequestCallback = requestCallback;
 		if(null != requestCallback){
 			newRequestCallback = new RequestCallback() {
-				@Override
 				public void doWithRequest(ClientHttpRequest request) throws IOException {
 					initJAERequest(method, request, requestCallback);
 				}
@@ -62,7 +61,6 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		ResponseExtractor<T> newResponseExtractor = responseExtractor;
 		if(null != responseExtractor){
 			newResponseExtractor = new ResponseExtractor<T>() {
-				@Override
 				public T extractData(ClientHttpResponse response) throws IOException {
 					T extractData = initJAEResponse(response, responseExtractor);
 					return extractData;
@@ -81,7 +79,7 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		initJAEHeaders(request, methodName);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <T> T initJAEResponse(ClientHttpResponse response, ResponseExtractor<T> responseExtractor) throws IOException {
 		if(needUseZip(response)){
 			InputStream in = new GZIPInputStream(response.getBody());
@@ -90,7 +88,7 @@ public class JAERestTemplate extends LoggingRestTemplate {
 			
 			String result = IOUtils.toString(in, charset.name());
 //			System.out.println(result);
-			return (T)new ResponseEntity<>(result, response.getStatusCode());
+			return (T)new ResponseEntity(result, response.getStatusCode());
 			
 			
 //			T result = responseExtractor.extractData(response);

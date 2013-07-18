@@ -17,13 +17,11 @@ import com.jae.eclipse.ui.event.ValidateEvent;
  */
 public abstract class AbstractViewerFactory extends AbstractControlFactory {
 
-	@Override
 	public void save() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void load() {
 		// TODO Auto-generated method stub
 		

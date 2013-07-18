@@ -49,7 +49,6 @@ public class JAEAppView extends CommonNavigator {
 		
 		commonViewer.getTree().addListener(SWT.MouseUp, new Listener() {
 			
-			@Override
 			public void handleEvent(Event event) {
 				try {
 					Point point = new Point(event.x, event.y);

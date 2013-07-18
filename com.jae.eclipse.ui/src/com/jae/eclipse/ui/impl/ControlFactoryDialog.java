@@ -110,7 +110,6 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 		super.okPressed();
 	}
 	
-	@Override
 	public void valuechanged(ValueChangeEvent event) {
 		ValidateEvent validateEvent = new ValidateEvent(event.getSource());
 		boolean validated = this.controlFactory.validate(validateEvent);
@@ -119,25 +118,21 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 			okButton.setEnabled(validated);
 	}
 
-	@Override
 	public void error(String message) {
 		this.hasError = true;
 		this.setErrorMessage(message);
 	}
 
-	@Override
 	public void info(String message) {
 		this.setErrorMessage(null);
 		this.setMessage(message, IMessageProvider.INFORMATION);
 	}
 
-	@Override
 	public void warn(String message) {
 		this.setErrorMessage(null);
 		this.setMessage(message, IMessageProvider.WARNING);
 	}
 
-	@Override
 	public void clear() {
 		this.hasError = false;
 		this.setErrorMessage(null);
@@ -149,7 +144,6 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 		}
 	}
 
-	@Override
 	public boolean hasError() {
 		return this.hasError;
 	}

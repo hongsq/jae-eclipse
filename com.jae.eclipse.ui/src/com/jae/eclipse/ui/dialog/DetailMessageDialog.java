@@ -279,12 +279,10 @@ public class DetailMessageDialog extends MessageDialog implements SelectionListe
         open(WARNING, parent, title, message, detailMessage, SWT.NONE);
     }
 
-	@Override
 	public void widgetSelected(SelectionEvent event) {
 		toggleDetailsArea();
 	}
 
-	@Override
 	public void widgetDefaultSelected(SelectionEvent event) {
 		widgetSelected(event);
 	}

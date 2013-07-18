@@ -39,7 +39,6 @@ public class BooleanPropertyEditor extends AbstractPropertyEditor {
 		}
 	}
 
-	@Override
 	public Control createControl(Composite parent, int style) {
 		Button button = new Button(parent, style|SWT.CHECK);
 		if(this.reverse)

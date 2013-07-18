@@ -117,7 +117,6 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 		afterBuild(parent);
 	}
 
-	@Override
 	public boolean validate(ValidateEvent event) {
 		boolean flag = true;
 		if(null != this.messageCaller)
@@ -130,7 +129,6 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 		return flag;
 	}
 
-	@Override
 	public void load() {
 		Collection<IPropertyEditor> propertyEditors = this.editors.values();
 		for (IPropertyEditor editor : propertyEditors) {
@@ -138,7 +136,6 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 		}
 	}
 
-	@Override
 	public void save() {
 		Collection<IPropertyEditor> propertyEditors = this.editors.values();
 		for (IPropertyEditor editor : propertyEditors) {
@@ -154,7 +151,6 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 		this.validateFlag = validateFlag;
 	}
 
-	@Override
 	public void valuechanged(ValueChangeEvent event) {
 		if(validateFlag){
 			ValidateEvent validateEvent = new ValidateEvent(event.getSource());
@@ -163,12 +159,10 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 		this.fireValuechanged(event);
 	}
 
-	@Override
 	public UIDescription getUIDescription() {
 		return this.uiDescription;
 	}
 
-	@Override
 	public void setUIDescription(UIDescription uiDescription) {
 		this.uiDescription = uiDescription;
 	}

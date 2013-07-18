@@ -136,7 +136,6 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.linkAction = linkAction;
 	}
 	
-	@Override
 	public boolean isLinkLabel() {
 		return null != this.linkAction;
 	}
@@ -163,7 +162,6 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.validators.clear();
 	}
 	
-	@Override
 	public void save() {
 		if(!UIUtil.isControlValid(this.editControl))
 			return;
@@ -179,13 +177,11 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		ObjectUtil.setValue(this.editElement, this.propertyName, value);
 	}
 	
-	@Override
 	public void load() {
 		Object value = ObjectUtil.getValue(this.editElement, this.propertyName);
 		this.setValue(value);
 	}
 	
-	@Override
 	public void setValue(Object value) {
 		Object oldValue = this.getValue();
 		if(null != value && value.equals(oldValue))
@@ -201,7 +197,6 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		fireValueChangeEvent();
 	}
 	
-	@Override
 	public Object getValue() {
 		Object value = this.doGetValue();
 		
@@ -212,11 +207,9 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	
 	protected abstract void doSetValue(Object value);
 	
-	@Override
 	public void beforeBuild(Control parent) {
 	}
 	
-	@Override
 	public void afterBuild(Control parent) {
 		if(this.isLinkLabel()){
 			((Hyperlink)this.labelControl).addHyperlinkListener(new HyperlinkAdapter(){
@@ -230,7 +223,6 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		
 		this.addValuechangeListener(new IValuechangeListener() {
 			
-			@Override
 			public void valuechanged(ValueChangeEvent event) {
 				if(!validateFlag)
 					return;
@@ -261,7 +253,6 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.validateFlag = validateFlag;
 	}
 
-	@Override
 	public boolean validate(ValidateEvent event) {
 		if(null != this.propertyMessageCaller)
 			this.propertyMessageCaller.clear();
@@ -314,7 +305,6 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.layoutData = layoutData;
 	}
 
-	@Override
 	public void build(Composite parent) {
 		this.labelControl = buildLabelControl(parent);
 		if(null != this.labelControl){

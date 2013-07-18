@@ -28,14 +28,12 @@ public class RemoteFileStorage extends PlatformObject implements IStorage {
 	}
 
 	@SuppressWarnings({ "rawtypes"})
-	@Override
 	public Object getAdapter(Class adapter) {
 		if(adapter == RemoteFile.class)
 			return file;
 		return super.getAdapter(adapter);
 	}
 
-	@Override
 	public InputStream getContents() throws CoreException {
 		try {
 			return new ByteArrayInputStream(this.file.getContent().getBytes("UTF-8"));
@@ -45,17 +43,14 @@ public class RemoteFileStorage extends PlatformObject implements IStorage {
 		}
 	}
 
-	@Override
 	public IPath getFullPath() {
 		return new Path(this.file.getPath());
 	}
 
-	@Override
 	public String getName() {
 		return this.file.getName();
 	}
 
-	@Override
 	public boolean isReadOnly() {
 		return true;
 	}

@@ -61,7 +61,6 @@ public class UIExample {
 			editor.setPropertyName("abc");
 			editor.setRequired(true);
 			editor.addValidator(new IValidator() {
-				@Override
 				public boolean validate(IMessageCaller messageCaller, Object validateObject) {
 					boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
 					if(isEmpty)
@@ -86,7 +85,6 @@ public class UIExample {
 			editor.setRequired(true);
 			editor.addValidator(new IValidator() {
 				
-				@Override
 				public boolean validate(IMessageCaller messageCaller, Object validateObject) {
 					boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
 					if(isEmpty)
@@ -102,7 +100,7 @@ public class UIExample {
 			comboEditor.setLabel("combo");
 			comboEditor.setPropertyName("combo");
 //			comboEditor.setComboItems(new String[]{"","aa", "bb"});
-			Map<String,Object> itemMap = new LinkedHashMap<>();
+			Map<String,Object> itemMap = new LinkedHashMap<String,Object>();
 			itemMap.put("aa", 11);
 			itemMap.put("bb", 22);
 			itemMap.put("cc", 33);
@@ -110,7 +108,6 @@ public class UIExample {
 			
 			comboEditor.addValidator(new IValidator() {
 				
-				@Override
 				public boolean validate(IMessageCaller messageCaller, Object validateObject) {
 					boolean isEmpty = (null==comboEditor.getValue());
 					if(isEmpty)
@@ -128,7 +125,6 @@ public class UIExample {
 //			editor.setReverse(true);
 			editor.addValuechangeListener(new IValuechangeListener() {
 				
-				@Override
 				public void valuechanged(ValueChangeEvent event) {
 					IPropertyEditor abcEditor = objectEditor.getPropertyEditor("file");
 					

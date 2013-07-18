@@ -99,7 +99,6 @@ public class JDAppOperatorAction extends AbstractJDAction {
 						
 						display.asyncExec(new Runnable() {
 							
-							@Override
 							public void run() {
 								app.refresh();
 //								viewer.collapseToLevel(app, 1);
@@ -112,7 +111,6 @@ public class JDAppOperatorAction extends AbstractJDAction {
 				} catch (final Exception e) {
 					display.asyncExec(new Runnable() {
 						
-						@Override
 						public void run() {
 							DetailMessageDialog.openError(viewer.getControl().getShell(), "提示", name+"失败。", e);
 						}

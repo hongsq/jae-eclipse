@@ -41,22 +41,18 @@ public class ValuechageNotifier implements ISelectionChangedListener, ModifyList
 		}
 	}
 
-	@Override
 	public void modifyText(ModifyEvent event) {
 		invokeFireMethod();
 	}
 
-	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		invokeFireMethod();
 	}
 
-	@Override
 	public void widgetSelected(SelectionEvent e) {
 		invokeFireMethod();
 	}
 
-	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 		invokeFireMethod();
 	}

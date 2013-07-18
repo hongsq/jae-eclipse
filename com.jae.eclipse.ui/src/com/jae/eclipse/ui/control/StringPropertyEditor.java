@@ -36,7 +36,6 @@ public class StringPropertyEditor extends AbstractPropertyEditor {
 		this.password = password;
 	}
 
-	@Override
 	public Control createControl(Composite parent, int style) {
 		int realStyle = style|SWT.BORDER;
 		if(this.password)

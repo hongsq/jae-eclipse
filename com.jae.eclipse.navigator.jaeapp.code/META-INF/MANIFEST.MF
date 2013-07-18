@@ -14,5 +14,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jgit,
  org.eclipse.ui.navigator,
  com.jae.eclipse.navigator
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy

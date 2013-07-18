@@ -4,7 +4,7 @@ Bundle-Name: Library
 Bundle-SymbolicName: com.jae.eclipse.library
 Bundle-Version: 1.0.0
 Bundle-Vendor: JAE
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: lib/commons-codec-1.6.jar,
  lib/commons-logging-1.1.1.jar,
  lib/fluent-hc-4.2.5.jar,

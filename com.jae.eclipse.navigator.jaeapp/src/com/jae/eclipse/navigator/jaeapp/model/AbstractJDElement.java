@@ -28,7 +28,6 @@ public abstract class AbstractJDElement implements IJDElement {
 		this.setImageID(this.getClass().getName());
 	}
 	
-	@Override
 	public IJDElement getParent() {
 		return this.parent;
 	}

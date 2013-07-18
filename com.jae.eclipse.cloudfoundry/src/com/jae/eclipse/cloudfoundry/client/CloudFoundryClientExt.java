@@ -198,7 +198,6 @@ public class CloudFoundryClientExt implements CloudFoundryOperations {
 		}else{
 			display.asyncExec(new Runnable() {
 				
-				@Override
 				public void run() {
 					doOpenError(e, display);					
 				}
