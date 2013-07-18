@@ -3,9 +3,14 @@
  */
 package com.jae.eclipse.navigator.jaeapp.action;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Display;
 
 import com.jae.eclipse.navigator.jaeapp.model.User;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
@@ -55,17 +60,32 @@ public class ConnectAction extends AbstractJDAction {
 
 	@Override
 	public void run() {
-		TreeViewer viewer = (TreeViewer) this.getSelectionProvider();
-		Object[] objects = this.getStructuredSelection().toArray();
-		for (Object object : objects) {
-			User user = (User) object;
-			if(this.connect){
-				user.connect();
-			}else{
-				user.disConnect();
-			}
+		final TreeViewer viewer = (TreeViewer) this.getSelectionProvider();
+		final Display display = viewer.getControl().getDisplay();
+		Job job = new Job(this.getText()) {
 			
-			viewer.refresh();
-		}
+			protected IStatus run(IProgressMonitor monitor) {
+				Object[] objects = ConnectAction.this.getStructuredSelection().toArray();
+				for (Object object : objects) {
+					User user = (User) object;
+					if(ConnectAction.this.connect){
+						user.connect();
+					}else{
+						user.disConnect();
+					}
+					
+					display.asyncExec(new Runnable() {
+						
+						public void run() {
+							viewer.refresh();
+						}
+					});
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		
+		job.setUser(true);
+		job.schedule();
 	}
 }
