@@ -43,6 +43,7 @@ import com.jae.eclipse.ui.dialog.DetailMessageDialog;
 public class CloudFoundryClientExt implements CloudFoundryOperations {
 	private CloudControllerClient cc;
 	private CloudInfo info;
+	private RestUtilExt restUtil;
 
 	public CloudFoundryClientExt(URL cloudControllerUrl) {
 		this(null, cloudControllerUrl, null, null);
@@ -66,8 +67,8 @@ public class CloudFoundryClientExt implements CloudFoundryOperations {
 
 	public CloudFoundryClientExt(CloudCredentials credentials, URL cloudControllerUrl, HttpProxyConfiguration httpProxyConfiguration, CloudSpace sessionSpace) {
 		Assert.notNull(cloudControllerUrl, "URL for cloud controller cannot be null");
-		RestUtilExt restUtilExt = new RestUtilExt(credentials);
-		CloudControllerClientFactory cloudControllerClientFactory = new CloudControllerClientFactory(restUtilExt, httpProxyConfiguration);
+		this.restUtil = new RestUtilExt(credentials);
+		CloudControllerClientFactory cloudControllerClientFactory = new CloudControllerClientFactory(this.restUtil, httpProxyConfiguration);
 
 		try {
 			this.cc = cloudControllerClientFactory.newCloudController(cloudControllerUrl, credentials, sessionSpace);
@@ -75,6 +76,10 @@ public class CloudFoundryClientExt implements CloudFoundryOperations {
 			openError(e);
 			throw new CloudFoundryClientRuntimeException(e);
 		}
+	}
+	
+	public RestUtilExt getRestUtil() {
+		return restUtil;
 	}
 
 	public URL getCloudControllerUrl() {

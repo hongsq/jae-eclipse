@@ -13,6 +13,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpConnectionManager;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.SimpleHttpConnectionManager;
 import org.apache.commons.io.IOUtils;
 import org.cloudfoundry.client.lib.CloudCredentials;
 import org.cloudfoundry.client.lib.rest.LoggingRestTemplate;
@@ -21,7 +25,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.CommonsClientHttpRequestFactory;
+import org.springframework.http.client.InterceptingClientHttpRequestFactory;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestClientException;
@@ -33,6 +40,7 @@ import com.jae.eclipse.core.util.ObjectUtil;
  * @author hongshuiqiao
  *
  */
+@SuppressWarnings("deprecation")
 public class JAERestTemplate extends LoggingRestTemplate {
 	private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 	private final static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HHmmss");
@@ -47,6 +55,62 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		this.secretKey = keys[1];
 	}
 
+	@Override
+	public ClientHttpRequestFactory getRequestFactory() {
+		ClientHttpRequestFactory requestFactory = super.getRequestFactory();
+		return requestFactory;
+	}
+	
+	@Override
+	protected ClientHttpRequest createRequest(URI url, HttpMethod method) throws IOException {
+		ClientHttpRequestFactory requestFactory = getRequestFactory();
+		
+		CommonsClientHttpRequestFactory commonFactory = null;
+		if (requestFactory instanceof CommonsClientHttpRequestFactory) {
+			commonFactory = (CommonsClientHttpRequestFactory) requestFactory;
+		}else if (requestFactory instanceof InterceptingClientHttpRequestFactory) {
+			try {
+				Field field = ObjectUtil.getField(requestFactory.getClass(), "requestFactory", false);
+				if(null != field){
+					field.setAccessible(true);
+					
+					ClientHttpRequestFactory cFactory = (ClientHttpRequestFactory) field.get(requestFactory);
+					if (cFactory instanceof CommonsClientHttpRequestFactory) {
+						commonFactory = (CommonsClientHttpRequestFactory) cFactory;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else if(requestFactory.getClass().getName().endsWith("CloudFoundryClientHttpRequestFactory")){
+			try {
+				Field field = ObjectUtil.getField(requestFactory.getClass(), "delegate", false);
+				if(null != field){
+					field.setAccessible(true);
+					
+					ClientHttpRequestFactory cFactory = (ClientHttpRequestFactory) field.get(requestFactory);
+					if (cFactory instanceof CommonsClientHttpRequestFactory) {
+						commonFactory = (CommonsClientHttpRequestFactory) cFactory;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(null != commonFactory){
+			HttpConnectionManager manager = commonFactory.getHttpClient().getHttpConnectionManager();
+			if ((manager instanceof MultiThreadedHttpConnectionManager))
+				((MultiThreadedHttpConnectionManager)manager).shutdown();
+			
+			HttpClient httpClient = new HttpClient(new SimpleHttpConnectionManager(true));
+			commonFactory.setHttpClient(httpClient);
+		}
+		
+		return super.createRequest(url, method);
+	}
+	
+	
 	@Override
 	protected <T> T doExecute(URI uri, final HttpMethod method, final RequestCallback requestCallback, final ResponseExtractor<T> responseExtractor) throws RestClientException {
 		RequestCallback newRequestCallback = requestCallback;
@@ -81,24 +145,33 @@ public class JAERestTemplate extends LoggingRestTemplate {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <T> T initJAEResponse(ClientHttpResponse response, ResponseExtractor<T> responseExtractor) throws IOException {
-		if(needUseZip(response)){
-			InputStream in = new GZIPInputStream(response.getBody());
-			
-			Charset charset = getContentTypeCharset(response.getHeaders().getContentType());
-			
-			String result = IOUtils.toString(in, charset.name());
+		try {
+			if(needUseZip(response)){
+				InputStream in = new GZIPInputStream(response.getBody());
+				
+				Charset charset = getContentTypeCharset(response.getHeaders().getContentType());
+				
+				String result = IOUtils.toString(in, charset.name());
 //			System.out.println(result);
-			return (T)new ResponseEntity(result, response.getStatusCode());
-			
-			
-//			T result = responseExtractor.extractData(response);
-//			
-//			
-//			IOUtils.toString(new GZIPInputStream(new ByteArrayInputStream(new ByteArrayHttpMessageConverter().read(byte[].class, response))));
-//			
-//			return result;
-		}else{
-			return responseExtractor.extractData(response);
+				return (T)new ResponseEntity(result, response.getStatusCode());
+			}else{
+				return responseExtractor.extractData(response);
+			}
+		} finally {
+			try {
+				//已经从响应出取出结果了，则应该关闭连接
+				Field httpMethodField = ObjectUtil.getField(response.getClass(), "httpMethod", false);
+				if(null != httpMethodField){
+					httpMethodField.setAccessible(true);
+					Object object = httpMethodField.get(response);
+					if (object instanceof org.apache.commons.httpclient.HttpMethod) {
+						org.apache.commons.httpclient.HttpMethod httpMethod = (org.apache.commons.httpclient.HttpMethod) object;
+						httpMethod.abort();
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

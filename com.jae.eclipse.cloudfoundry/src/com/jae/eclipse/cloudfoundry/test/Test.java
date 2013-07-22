@@ -3,11 +3,23 @@
  */
 package com.jae.eclipse.cloudfoundry.test;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
 import org.cloudfoundry.client.lib.CloudCredentials;
+import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
+import org.springframework.web.client.RestTemplate;
 
 import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 
@@ -26,13 +38,13 @@ public class Test {
 //		String email = "hongshuiqiao@jd.com";
 //		String password = "hongshuiqiao";
 //		String version = "0.1.1";
-//		String accessKey = "9f7ce80405f240938743875e332d9aa4";
-//		String secretKey = "65428cb05e764b4f90d95f3b8f3d53e10UFtzrPf";
-		String accessKey = "9c379f079214447fad2959c4621cd6feVb797oH1";
-		String secretKey = "5e998dbbafb44ca783099afcdead40fa7A3Vf7Fh";
+		String accessKey = "9f7ce80405f240938743875e332d9aa4";
+		String secretKey = "65428cb05e764b4f90d95f3b8f3d53e10UFtzrPf";
+//		String accessKey = "9c379f079214447fad2959c4621cd6feVb797oH1";
+//		String secretKey = "5e998dbbafb44ca783099afcdead40fa7A3Vf7Fh";
 		CloudCredentials credentials = new CloudCredentials(accessKey+"|"+secretKey);
 		CloudFoundryClientExt client = new CloudFoundryClientExt(credentials, url);
-
+		
 //		File warFile = new File("C:/Users/Administrator/git/jae_hongsq/hello-java-1.0.war");
 //		File warFile = new File("C:/Users/Administrator/git/jae_hongsq/hello-java-1.0-war");
 //		client.uploadApplication("hongsq", warFile);
@@ -42,9 +54,33 @@ public class Test {
 //		System.out.println(result);
 		
 		
-		getApps(client);
+//		getApps(client);
 //		ApplicationStats stats = client.getApplicationStats("hongsq");
 //		System.out.println(stats);
+		
+		
+
+		RestTemplate restTemplate = client.getRestUtil().createRestTemplate(null);
+		
+		HttpHeaders headers = new HttpHeaders();
+		
+	    
+//	    if (supportsRanges) {
+//	      headers.set("Range", range);
+//	    }
+	    HttpEntity requestEntity = new HttpEntity(headers);
+	    String urlPath = url+"/apps/{app}/instances/{instance}/files/{filePath}";
+	    String app = "hongsq";
+	    String instance = "0";
+	    String filePath = "logs";
+	    ResponseEntity responseEntity = restTemplate.exchange(urlPath, HttpMethod.GET, requestEntity, String.class, new Object[] { app, instance, filePath });
+
+	    
+	    
+		System.out.println(responseEntity.getBody());
+		
+//		restTemplate.
+		
 	}
 
 	private static void getApps(CloudFoundryClientExt client) {
