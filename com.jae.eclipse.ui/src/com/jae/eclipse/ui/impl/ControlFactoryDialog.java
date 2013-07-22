@@ -98,7 +98,8 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 		
 		this.controlFactory.addValuechangeListener(this);
 		this.controlFactory.setMessageCaller(this);
-		Control control = this.controlFactory.createControl(composite);
+		this.controlFactory.createControl(composite);
+		Control control = this.controlFactory.getControl();
 		control.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		return composite;

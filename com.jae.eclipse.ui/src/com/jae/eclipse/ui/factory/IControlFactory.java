@@ -27,9 +27,10 @@ public interface IControlFactory extends IUIDescElement, IValueEventContainer, I
 	/**
 	 * 创建控件
 	 * @param parent
-	 * @return
 	 */
-	public Control createControl(Composite parent);
+	public void createControl(Composite parent);
+	
+	public Control getControl();
 	
 	public IMessageCaller getMessageCaller();
 	

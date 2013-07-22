@@ -28,7 +28,7 @@ import com.jae.eclipse.ui.ObjectEditor;
 import com.jae.eclipse.ui.control.FileSelectionPropertyEditor;
 import com.jae.eclipse.ui.dialog.DetailMessageDialog;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
-import com.jae.eclipse.ui.factory.ObjectEditorControlFactory;
+import com.jae.eclipse.ui.factory.impl.ObjectEditorControlFactory;
 import com.jae.eclipse.ui.impl.ControlFactoryDialog;
 import com.jae.eclipse.ui.validator.NotEmptyValidator;
 
@@ -128,7 +128,7 @@ public class JDAppDeployAction extends AbstractJDAction {
 		FileSelectionPropertyEditor editor = new FileSelectionPropertyEditor();
 		editor.setPropertyName("path");
 		editor.setLabel("路径");
-		editor.setFilterExtensions(new String[]{"*.war","*.zip","*.*"});
+		editor.setFilterExtensions(new String[]{"*.war;*.zip","*.*"});
 		editor.setButtonText("浏览");
 		editor.setRequired(true);
 		editor.addValidator(new NotEmptyValidator("路径"));

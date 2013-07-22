@@ -148,9 +148,9 @@ public class UIExample {
 			editor.setWinTitle("title");
 			editor.setDialogStyle(SWT.OPEN);
 			editor.setFileName("fileName");
-			editor.setFilterExtensions(new String[]{"*.1", "*.2", "*.3", "*.*"});
+			editor.setFilterExtensions(new String[]{"*.war,*.zip", "*.war;*.zip", "*.*"});
 //			editor.setFilterNames(new String[]{"name1","name2"});
-			editor.setInitFilterExtension("*.2");
+//			editor.setInitFilterExtension("*.2");
 			editor.setFilterPath("D:/");
 			editor.setOverwrite(true);
 			editor.setMulti(true);

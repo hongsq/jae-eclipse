@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-import com.jae.eclipse.navigator.jaeapp.view.JAEAppView;
+import com.jae.eclipse.navigator.jaeapp.view.JAEView;
 
 /**
  * @author hongshuiqiao
@@ -51,7 +51,7 @@ public class Display4LoadingThread extends Thread {
 			display.asyncExec(new Runnable() {
 				
 				public void run() {
-					JAEAppView view = JAEAppView.getInstance();
+					JAEView view = JAEView.getInstance();
 					if(null != view){
 						view.getCommonViewer().refresh(loadingElement);
 					}

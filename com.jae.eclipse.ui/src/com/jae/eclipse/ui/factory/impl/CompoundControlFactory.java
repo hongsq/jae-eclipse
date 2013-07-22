@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.jae.eclipse.ui.factory;
+package com.jae.eclipse.ui.factory.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import com.jae.eclipse.ui.event.ValidateEvent;
-import com.jae.eclipse.ui.factory.base.AbstractControlFactory;
+import com.jae.eclipse.ui.factory.AbstractControlFactory;
+import com.jae.eclipse.ui.factory.IControlFactory;
 import com.jae.eclipse.ui.util.LayoutUtil;
 
 /**
@@ -72,7 +73,8 @@ public class CompoundControlFactory extends AbstractControlFactory {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(LayoutUtil.createCompactGridLayout(1));
 		for (IControlFactory factory : factories) {
-			Control control = factory.createControl(composite);
+			factory.createControl(composite);
+			Control control = factory.getControl();
 			control.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		}
 		return composite;

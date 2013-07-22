@@ -3,7 +3,8 @@
  */
 package com.jae.eclipse.navigator.jaeapp.view;
 
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ISelection;
@@ -20,7 +21,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 
-import com.jae.eclipse.core.util.ObjectUtil;
 import com.jae.eclipse.navigator.jaeapp.RemoteFileInput;
 import com.jae.eclipse.navigator.jaeapp.RemoteFileStorage;
 import com.jae.eclipse.navigator.jaeapp.model.RemoteFile;
@@ -29,15 +29,15 @@ import com.jae.eclipse.navigator.jaeapp.model.RemoteFile;
  * @author hongshuiqiao
  *
  */
-public class JAEAppView extends CommonNavigator {
-	private static JAEAppView instance;
+public class JAEView extends CommonNavigator {
+	private static JAEView instance;
 
-	public JAEAppView() {
+	public JAEView() {
 		super();
-		JAEAppView.instance = this;
+		JAEView.instance = this;
 	}
 
-	public static JAEAppView getInstance() {
+	public static JAEView getInstance() {
 		return instance;
 	}
 	
@@ -55,14 +55,15 @@ public class JAEAppView extends CommonNavigator {
 					TreeItem item = commonViewer.getTree().getItem(point);
 					ISelection selection = StructuredSelection.EMPTY;
 					if(null != item){
-						selection = commonViewer.getSelection();
+						TreeItem[] items = commonViewer.getTree().getSelection();
+						List<Object> list = new ArrayList<Object>(items.length);
+						for (TreeItem treeItem : items) {
+							list.add(treeItem.getData());
+						}
+						selection = new StructuredSelection(list);
 					}
 					
-					Method method = ObjectUtil.getMethod(commonViewer.getClass(), "updateSelection", false, ISelection.class);
-					if(null != method){
-						method.setAccessible(true);
-						method.invoke(commonViewer, selection);
-					}
+					commonViewer.setSelection(selection);
 				} catch (Exception e) {}
 			}
 		});

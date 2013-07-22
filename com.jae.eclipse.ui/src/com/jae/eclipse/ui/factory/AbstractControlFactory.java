@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.jae.eclipse.ui.factory.base;
+package com.jae.eclipse.ui.factory;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -11,7 +11,6 @@ import com.jae.eclipse.ui.UIDescription;
 import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.event.ValueEventContainer;
-import com.jae.eclipse.ui.factory.IControlFactory;
 
 /**
  * @author hongshuiqiao
@@ -25,9 +24,8 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 	private boolean validateFlag = true;
 	private IMessageCaller messageCaller;
 
-	public Control createControl(Composite parent) {
+	public final void createControl(Composite parent) {
 		this.control = this.doCreateControl(parent);
-		return this.control;
 	}
 
 	public IMessageCaller getMessageCaller() {
@@ -76,6 +74,10 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 		this.uiDescription = uiDescription;
 	}
 
+	public Control getControl() {
+		return this.control;
+	}
+	
 	protected abstract boolean doValidate(ValidateEvent event);
 
 	protected abstract Control doCreateControl(Composite parent);

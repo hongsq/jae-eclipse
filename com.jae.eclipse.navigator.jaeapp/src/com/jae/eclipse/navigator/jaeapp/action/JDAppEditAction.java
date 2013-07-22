@@ -14,7 +14,7 @@ import com.jae.eclipse.ui.ObjectEditor;
 import com.jae.eclipse.ui.control.StringPropertyEditor;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
 import com.jae.eclipse.ui.factory.IControlFactory;
-import com.jae.eclipse.ui.factory.ObjectEditorControlFactory;
+import com.jae.eclipse.ui.factory.impl.ObjectEditorControlFactory;
 import com.jae.eclipse.ui.impl.ControlFactoryDialog;
 import com.jae.eclipse.ui.validator.NotEmptyValidator;
 

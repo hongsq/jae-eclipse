@@ -24,7 +24,7 @@ import com.jae.eclipse.navigator.jaeapp.model.RemoteFile;
 import com.jae.eclipse.navigator.jaeapp.model.RemoteFolder;
 import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;
 import com.jae.eclipse.navigator.jaeapp.util.JAEAppUtil;
-import com.jae.eclipse.navigator.jaeapp.view.JAEAppView;
+import com.jae.eclipse.navigator.jaeapp.view.JAEView;
 
 /**
  * @author hongshuiqiao
@@ -82,7 +82,7 @@ public class JAEAppContentProvider implements ITreeContentProvider {
 							display.asyncExec(new Runnable() {
 								
 								public void run() {
-									JAEAppView view = JAEAppView.getInstance();
+									JAEView view = JAEView.getInstance();
 									if(null != view){
 										LoadState state = ((AbstractJDElement) jdElement).getLoadState();
 										if(LoadState.LOADED == state){

@@ -10,7 +10,7 @@
       <view
             allowMultiple="false"
             category="com.jae.eclipse.navigator.jaeapp"
-            class="com.jae.eclipse.navigator.jaeapp.view.JAEAppView"
+            class="com.jae.eclipse.navigator.jaeapp.view.JAEView"
             icon="icons/jaeappview.gif"
             id="com.jae.eclipse.navigator.jaeapp.view"
             name="JAE View"

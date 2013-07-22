@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.jae.eclipse.ui.factory;
+package com.jae.eclipse.ui.factory.impl;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Control;
 
 import com.jae.eclipse.ui.ObjectEditor;
 import com.jae.eclipse.ui.event.ValidateEvent;
-import com.jae.eclipse.ui.factory.base.AbstractControlFactory;
+import com.jae.eclipse.ui.factory.AbstractControlFactory;
 import com.jae.eclipse.ui.impl.PropertyComposite;
 
 /**
