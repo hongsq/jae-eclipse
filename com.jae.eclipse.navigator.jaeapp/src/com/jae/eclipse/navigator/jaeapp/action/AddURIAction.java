@@ -24,6 +24,10 @@ public class AddURIAction extends AbstractJDAction {
 		return (TableViewer) super.getSelectionProvider();
 	}
 	
+	public AbstractTableFactory getFactory() {
+		return factory;
+	}
+	
 	@Override
 	public void run() {
 //		this.factory.get

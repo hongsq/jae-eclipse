@@ -29,6 +29,7 @@ import com.jae.eclipse.ui.impl.ControlFactoryDialog;
  * @author hongshuiqiao
  *
  */
+@SuppressWarnings({ "rawtypes" })
 public class ExampleTableControlFactory extends AbstractTableFactory {
 	private TableValueTranslator translator = new DefaultTableValueTranslator(this);
 	

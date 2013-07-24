@@ -4,12 +4,9 @@
 package com.jae.eclipse.ui.control;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Text;
 
 import com.jae.eclipse.ui.base.AbstractPropertyEditor;
 import com.jae.eclipse.ui.base.ValuechageNotifier;
