@@ -8,10 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,8 +58,8 @@ public class JAEAppHelper {
 					
 					users.put(createKey(user.getAccessKey(), user.getSecretKey()), user);
 					
-					List<AppRepository> apps = jaeRoot.getRepositories();
-					if(null == apps)
+					AppRepository[] apps = jaeRoot.getRepositories();
+					if(null == apps || apps.length <= 0)
 						continue;
 					
 					for (AppRepository app : apps) {
@@ -126,12 +124,7 @@ public class JAEAppHelper {
 				AppRepository repository = new AppRepository();
 				repository.setName(name);
 				repository.setUrl(srcRepository);
-				List<AppRepository> list = root.getRepositories();
-				if(null == list){
-					list = new ArrayList<AppRepository>();
-					root.setRepositories(list);
-				}
-				list.add(repository);
+				root.addAppRepository(repository);
 			}
 			
 			String json = JsonHelper.getJsonArray(rootElements.values());

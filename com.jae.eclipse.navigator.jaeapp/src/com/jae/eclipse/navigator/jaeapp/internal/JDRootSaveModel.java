@@ -3,6 +3,8 @@
  */
 package com.jae.eclipse.navigator.jaeapp.internal;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -10,7 +12,7 @@ import java.util.List;
  *
  */
 public class JDRootSaveModel {
-	private List<AppRepository> repositories;
+	private List<AppRepository> repositories = new ArrayList<AppRepository>();
 	private String name;
 	private String accessKey;
 	private String secretKey;
@@ -32,10 +34,15 @@ public class JDRootSaveModel {
 	public void setSecretKey(String secretKey) {
 		this.secretKey = secretKey;
 	}
-	public List<AppRepository> getRepositories() {
-		return repositories;
+	public void addAppRepository(AppRepository appRepository){
+		this.repositories.add(appRepository);
 	}
-	public void setRepositories(List<AppRepository> repositories) {
-		this.repositories = repositories;
+	public AppRepository[] getRepositories() {
+		return this.repositories.toArray(new AppRepository[this.repositories.size()]);
+	}
+	public void setRepositories(AppRepository[] repositories) {
+		if(null != repositories){
+			this.repositories.addAll(Arrays.asList(repositories));
+		}
 	}
 }
