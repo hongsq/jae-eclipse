@@ -71,13 +71,19 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	private String toolTip;
 	private String labelSeparator=":";
 	private GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+	private boolean enable=true;
 
 	public boolean isEnable() {
+		if(!UIUtil.isControlValid(this.editControl))
+			return this.enable;
+		
 		return this.getEditControl().isEnabled();
 	}
 
 	public void setEnable(boolean enabled) {
-		this.getEditControl().setEnabled(enabled);
+		this.enable = enabled;
+		if(UIUtil.isControlValid(this.editControl))
+			this.getEditControl().setEnabled(this.enable);
 	}
 
 	public String getToolTip() {
@@ -319,6 +325,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.decoratedField.getLayoutControl().setLayoutData(this.editLayoutData);
 		this.editControl = this.decoratedField.getControl();
 		this.editControl.setToolTipText(this.toolTip);
+		this.editControl.setEnabled(this.enable);
 		
 		this.buildFieldDecoration();
 		

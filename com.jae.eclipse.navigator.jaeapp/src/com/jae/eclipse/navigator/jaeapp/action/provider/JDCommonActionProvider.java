@@ -8,7 +8,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 
 import com.jae.eclipse.navigator.jaeapp.action.RefreshAction;
@@ -18,7 +17,7 @@ import com.jae.eclipse.navigator.util.NavigatorUtil;
  * @author hongshuiqiao
  *
  */
-public class JDCommonActionProvider extends CommonActionProvider {
+public class JDCommonActionProvider extends AbstractJDActionProvider {
 	private RefreshAction refreshAction;
 
 	@Override

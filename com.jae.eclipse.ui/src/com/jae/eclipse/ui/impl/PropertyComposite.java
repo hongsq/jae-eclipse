@@ -6,6 +6,7 @@ package com.jae.eclipse.ui.impl;
 import org.eclipse.swt.widgets.Composite;
 
 import com.jae.eclipse.ui.ObjectEditor;
+import com.jae.eclipse.ui.util.LayoutUtil;
 
 /**
  * @author hongshuiqiao
@@ -23,7 +24,7 @@ public class PropertyComposite extends Composite {
 		super(parent, style);
 		this.objectEditor = objectEditor;
 		
-		this.setLayout(this.objectEditor.getLayout());
+		this.setLayout(LayoutUtil.createCompactGridLayout(1));
 		this.objectEditor.build(this);
 	}
 

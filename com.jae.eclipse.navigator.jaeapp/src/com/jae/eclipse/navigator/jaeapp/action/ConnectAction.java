@@ -12,7 +12,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 
+import com.jae.eclipse.cloudfoundry.exception.CloudFoundryClientRuntimeException;
 import com.jae.eclipse.navigator.jaeapp.model.User;
+import com.jae.eclipse.navigator.jaeapp.view.JAEView;
 import com.jae.eclipse.ui.extension.ImageRepositoryManager;
 
 /**
@@ -75,10 +77,14 @@ public class ConnectAction extends AbstractJDAction {
 						monitor.setTaskName(getText()+user.getDisplayName());
 						monitor.worked(50);
 						
-						if(ConnectAction.this.connect){
-							user.connect();
-						}else{
-							user.disConnect();
+						try {
+							if(ConnectAction.this.connect){
+								user.connect();
+							}else{
+								user.disConnect();
+							}
+						} catch (CloudFoundryClientRuntimeException e) {
+							return Status.OK_STATUS;
 						}
 
 						monitor.worked(50);
@@ -86,6 +92,7 @@ public class ConnectAction extends AbstractJDAction {
 							
 							public void run() {
 								viewer.refresh();
+								JAEView.getInstance().updateActionBars();
 							}
 						});
 					}

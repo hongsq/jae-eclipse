@@ -32,6 +32,9 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 	private boolean multiSelection=false;
 	private List<IValidator> validators = new ArrayList<IValidator>();
 	private ColumnModel[] columns = new ColumnModel[0];
+	private TableValueTranslator valueTranslator;
+	private boolean headerVisible=true;
+	private boolean linesVisible=true;
 
 	@Override
 	protected ISelection computeSelection(Point point) {
@@ -62,7 +65,7 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 		
 		TableViewer viewer = new TableViewer(parent, style);
 		Table table = viewer.getTable();
-		columns = this.createColumns();
+		columns = this.createColumns(viewer);
 		if(null != columns){
 			String[] columnProperties = new String[columns.length];
 			CellEditor[] editors = new CellEditor[columns.length];
@@ -82,6 +85,7 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 				column.setAlignment(columnModel.getAlignment());
 				
 				editors[i] = columnModel.getCellEditor();
+				columnProperties[i] = columnModel.getPropertyName();
 			}
 			
 			viewer.setColumnProperties(columnProperties);
@@ -97,7 +101,34 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 		if(null == this.getLabelProvider())
 			this.setLabelProvider(new TableLabelProvider());
 		
+		table.setHeaderVisible(headerVisible);
+		table.setLinesVisible(linesVisible);
+		
 		return viewer;
+	}
+
+	public TableValueTranslator getValueTranslator() {
+		return valueTranslator;
+	}
+
+	public void setValueTranslator(TableValueTranslator valueTranslator) {
+		this.valueTranslator = valueTranslator;
+	}
+
+	public boolean isHeaderVisible() {
+		return headerVisible;
+	}
+
+	public void setHeaderVisible(boolean headerVisible) {
+		this.headerVisible = headerVisible;
+	}
+
+	public boolean isLinesVisible() {
+		return linesVisible;
+	}
+
+	public void setLinesVisible(boolean linesVisible) {
+		this.linesVisible = linesVisible;
 	}
 
 	@Override
@@ -123,18 +154,36 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 	}
 
 	public boolean canModify(Object element, String property) {
-		ColumnModel column = ((RowModel)element).getFactory().getColumn(property);
+		RowModel row = null;
+		if (element instanceof TableItem) {
+			row = (RowModel) ((TableItem) element).getData();
+		} else if (element instanceof RowModel) {
+			row = (RowModel)element;
+		}
+		ColumnModel column = row.getFactory().getColumn(property);
 		return null != column && null != column.getCellEditor() && column.isEditable();
 	}
 
 	public Object getValue(Object element, String property) {
-		RowModel row = (RowModel)element;
+		RowModel row = null;
+		if (element instanceof TableItem) {
+			row = (RowModel) ((TableItem) element).getData();
+		} else if (element instanceof RowModel) {
+			row = (RowModel)element;
+		}
 		return row.getCellValue(property);
 	}
 
 	public void modify(Object element, String property, Object value) {
-		RowModel row = (RowModel)element;
+		RowModel row = null;
+		if (element instanceof TableItem) {
+			row = (RowModel) ((TableItem) element).getData();
+		} else if (element instanceof RowModel) {
+			row = (RowModel)element;
+		}
 		row.setCellValue(property, value);
+		
+		this.getViewer().refresh();
 	}
 
 	@Override
@@ -164,7 +213,5 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 		return this.columns[columnIndex];
 	}
 	
-	protected abstract TableValueTranslator getValueTranslator();
-
-	protected abstract ColumnModel[] createColumns();
+	protected abstract ColumnModel[] createColumns(TableViewer viewer);
 }

@@ -18,6 +18,7 @@ public class RowModel {
 	public RowModel(AbstractTableFactory factory, Object data) {
 		super();
 		this.factory = factory;
+		this.data = data;
 	}
 	
 	public Object getData(){

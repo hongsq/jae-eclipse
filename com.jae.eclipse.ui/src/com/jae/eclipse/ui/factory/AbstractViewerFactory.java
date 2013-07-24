@@ -36,7 +36,7 @@ public abstract class AbstractViewerFactory extends AbstractControlFactory {
 	protected Control doCreateControl(Composite parent) {
 		ViewForm viewForm = new ViewForm(parent, SWT.FLAT);
 		
-		viewer = createViewer(parent);
+		viewer = createViewer(viewForm);
 		Control viewControl = viewer.getControl();
 		viewForm.setContent(viewControl);
 		viewer.setContentProvider(contentProvider);
@@ -62,6 +62,7 @@ public abstract class AbstractViewerFactory extends AbstractControlFactory {
 		viewForm.setTopRight(toolBar); // 顶端右边缘：工具栏
 		if(null != title){
 			Label titleLabel = new Label(viewForm, SWT.NONE);
+			titleLabel.setText(title);
 			viewForm.setTopLeft(titleLabel);//顶端左侧：标题
 		}
 		
@@ -78,7 +79,7 @@ public abstract class AbstractViewerFactory extends AbstractControlFactory {
 
 	protected abstract Object createInput();
 
-	protected abstract void fillActionToolBars(IToolBarManager toolBarManager);
+	protected abstract void fillActionToolBars(IToolBarManager manager);
 
 	protected abstract void fillContextMenu(IMenuManager manager);
 	

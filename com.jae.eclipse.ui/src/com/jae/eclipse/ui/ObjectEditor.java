@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
@@ -23,7 +25,7 @@ import com.jae.eclipse.ui.util.LayoutUtil;
  * @author hongshuiqiao
  *
  */
-public class ObjectEditor extends ValueEventContainer implements IUIDescElement, IStore, ILoadable, IValueEventContainer, IValidatable, IValuechangeListener {
+public class ObjectEditor extends ValueEventContainer implements ILayoutContainer, ILayoutElement, IUIDescElement, IStore, ILoadable, IValueEventContainer, IValidatable, IValuechangeListener {
 	private UIDescription uiDescription = new UIDescription();
 	private Map<String, IPropertyEditor> editors = new LinkedHashMap<String, IPropertyEditor>();
 	private GridLayout layout = LayoutUtil.createCompactGridLayout(2);
@@ -31,6 +33,7 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 	private IMessageCaller messageCaller;
 	//自身的变化是否触发自己的验证（一般如果加入到一个容器中，自身的变化会触发整个容器的验证，不需要再重复验证自己）
 	private boolean validateFlag = true;
+	private GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 	
 	public void addPropertyEditor(IPropertyEditor editor){
 		editors.put(editor.getPropertyName(), editor);
@@ -82,6 +85,14 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 		this.layout = layout;
 	}
 
+	public GridData getLayoutData() {
+		return layoutData;
+	}
+
+	public void setLayoutData(GridData layoutData) {
+		this.layoutData = layoutData;
+	}
+
 	protected void beforeBuild(Composite parent) {
 	}
 	
@@ -93,7 +104,11 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 	 * @param parent
 	 */
 	public void build(Composite parent){
-		beforeBuild(parent);
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(this.getLayout());
+		composite.setLayoutData(this.layoutData);
+		
+		beforeBuild(composite);
 		
 		Collection<IPropertyEditor> propertyEditors = this.editors.values();
 		for (IPropertyEditor editor : propertyEditors) {
@@ -103,18 +118,18 @@ public class ObjectEditor extends ValueEventContainer implements IUIDescElement,
 				((AbstractPropertyEditor) editor).setValidateFlag(false);
 			}
 			
-			editor.beforeBuild(parent);
+			editor.beforeBuild(composite);
 		}
 		
 		for (IPropertyEditor editor : propertyEditors) {
-			editor.build(parent);
+			editor.build(composite);
 		}
 		
 		for (IPropertyEditor editor : propertyEditors) {
-			editor.afterBuild(parent);
+			editor.afterBuild(composite);
 		}
 		
-		afterBuild(parent);
+		afterBuild(composite);
 	}
 
 	public boolean validate(ValidateEvent event) {

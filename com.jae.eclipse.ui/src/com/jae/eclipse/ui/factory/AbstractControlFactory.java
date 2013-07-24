@@ -3,6 +3,7 @@
  */
 package com.jae.eclipse.ui.factory;
 
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -23,9 +24,21 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 	//自身的变化是否触发自己的验证（一般如果加入到一个容器中，自身的变化会触发整个容器的验证，不需要再重复验证自己）
 	private boolean validateFlag = true;
 	private IMessageCaller messageCaller;
+	private GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 
 	public final void createControl(Composite parent) {
+		this.beforeCreateControl();
 		this.control = this.doCreateControl(parent);
+		this.control.setLayoutData(this.layoutData);
+		this.afterCreateControl();
+	}
+
+	protected void beforeCreateControl() {
+		// nothing to do.
+	}
+	
+	protected void afterCreateControl() {
+		// nothing to do.
 	}
 
 	public IMessageCaller getMessageCaller() {
@@ -34,6 +47,14 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 
 	public void setMessageCaller(IMessageCaller messageCaller) {
 		this.messageCaller = messageCaller;
+	}
+
+	public GridData getLayoutData() {
+		return layoutData;
+	}
+
+	public void setLayoutData(GridData layoutData) {
+		this.layoutData = layoutData;
 	}
 
 	public Object getValue() {

@@ -16,7 +16,7 @@ import com.jae.eclipse.ui.extension.ImageRepositoryManager;
  *
  */
 public abstract class AbstractWorkbenchAdapter extends WorkbenchAdapter {
-	private boolean useDisplayName = true;
+	private boolean useDisplayName = false;
 
 	public boolean isUseDisplayName() {
 		return useDisplayName;

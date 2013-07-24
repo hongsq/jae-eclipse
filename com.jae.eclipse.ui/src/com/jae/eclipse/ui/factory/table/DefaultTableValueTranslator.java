@@ -13,10 +13,10 @@ import com.jae.eclipse.core.util.ObjectUtil;
  * @author hongshuiqiao
  *
  */
-public abstract class AbstractTableValueTranslator implements TableValueTranslator {
+public class DefaultTableValueTranslator implements TableValueTranslator {
 	private AbstractTableFactory factory;
 
-	public AbstractTableValueTranslator(AbstractTableFactory factory) {
+	public DefaultTableValueTranslator(AbstractTableFactory factory) {
 		super();
 		this.factory = factory;
 	}
@@ -72,9 +72,23 @@ public abstract class AbstractTableValueTranslator implements TableValueTranslat
 		}
 	}
 	
-	protected abstract Object fromRowData(RowModel row);
+	protected Object fromRowData(RowModel row){
+		ColumnModel[] columns = this.factory.getColumns();
+		for (ColumnModel column : columns) {
+			String propertyName = column.getPropertyName();
+			Object oldValue = getOldCellValue(row, propertyName);
+			Object newValue = row.getCellValue(column.getPropertyName());
+			
+			if((null != newValue && !newValue.equals(oldValue))
+					|| (null==newValue && null != oldValue)){
+				ObjectUtil.setValue(row.getData(), propertyName, newValue);
+			}
+			
+		}
+		return row.getData();
+	}
 
-	private Object getOldCellValue(RowModel row, String propertyName) {
+	protected Object getOldCellValue(RowModel row, String propertyName) {
 		return ObjectUtil.getValue(row.getData(), propertyName);
 	}
 }

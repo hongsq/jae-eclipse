@@ -3,6 +3,7 @@
  */
 package com.jae.eclipse.navigator.jaeapp.action;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 
@@ -30,14 +31,18 @@ public class DeleteUserAction extends AbstractJDAction {
 
 	@Override
 	public void run() {
+		StructuredViewer viewer = (StructuredViewer) this.getSelectionProvider();
 		Object[] objects = this.getStructuredSelection().toArray();
 		
 		User[] users = new User[objects.length];
 		System.arraycopy(objects, 0, users, 0, objects.length);
 		
+		if(!MessageDialog.openConfirm(viewer.getControl().getShell(), "确认", "确定要删除选中的用户吗？")){
+			return;
+		}
+		
 		JAEAppHelper.unRegeditUsers(users);
 		
-		StructuredViewer viewer = (StructuredViewer) this.getSelectionProvider();
 		viewer.refresh();
 	}
 }

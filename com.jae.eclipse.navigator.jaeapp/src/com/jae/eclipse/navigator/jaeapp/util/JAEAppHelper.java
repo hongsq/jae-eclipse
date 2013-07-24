@@ -9,8 +9,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +30,7 @@ import com.jae.eclipse.navigator.jaeapp.model.User;
  */
 public class JAEAppHelper {
 	private static final String JDCONFIG_USER_CONFIG = "jdconfig/user.config";
-	private static List<User> users = new ArrayList<User>();
+	private static Map<String, User> users = new LinkedHashMap<String, User>();
 	private static Map<String, String> srcRepositoryMap = new HashMap<String, String>();
 	
 	static{
@@ -54,12 +54,20 @@ public class JAEAppHelper {
 			JDRootSaveModel[] rootElements = JsonHelper.toJavaArray(json, JDRootSaveModel.class);
 			if(null != rootElements){
 				for (JDRootSaveModel jaeRoot : rootElements) {
-					User user = new User("");
-					user.setDisplayName(jaeRoot.getName());
+					User user = new User(jaeRoot.getName());
 					user.setAccessKey(jaeRoot.getAccessKey());
 					user.setSecretKey(jaeRoot.getSecretKey());
 					
-					users.add(user);
+					users.put(createKey(user.getAccessKey(), user.getSecretKey()), user);
+					
+					List<AppRepository> apps = jaeRoot.getRepositories();
+					if(null == apps)
+						continue;
+					
+					for (AppRepository app : apps) {
+						String key = createKey(user)+"|"+app.getName();
+						srcRepositoryMap.put(key, app.getUrl());
+					}
 				}
 			}
 		} catch(FileNotFoundException e){
@@ -87,14 +95,14 @@ public class JAEAppHelper {
 		try {
 			out = new FileOutputStream(file);
 			Map<String, JDRootSaveModel> rootElements = new HashMap<String, JDRootSaveModel>();
-			for (User user : users) {
+			for (User user : users.values()) {
 				JDRootSaveModel root = new JDRootSaveModel();
 				
 				String accessKey = user.getAccessKey();
 				String secretKey = user.getSecretKey();
 				root.setSecretKey(secretKey);
 				root.setAccessKey(accessKey);
-				root.setName(user.getDisplayName());
+				root.setName(user.getName());
 				
 				rootElements.put(createKey(accessKey, secretKey), root);
 			}
@@ -136,17 +144,27 @@ public class JAEAppHelper {
 	private static String createKey(String accessKey, String secretKey) {
 		return accessKey+"|"+secretKey;
 	}
+	
+	private static String createKey(User user) {
+		return user.getAccessKey()+"|"+user.getSecretKey();
+	}
 
+	public static User getUser(String accessKey, String secretKey){
+		return users.get(createKey(accessKey, secretKey));
+	}
+	
 	/**
 	 * 返回所有的JAE用户
 	 * @return
 	 */
 	public static User[] getUsers(){
-		return users.toArray(new User[users.size()]);
+		return users.values().toArray(new User[users.size()]);
 	}
 
 	public static void regeditUsers(User[] users){
-		JAEAppHelper.users.addAll(Arrays.asList(users));
+		for (User user : users) {
+			JAEAppHelper.users.put(createKey(user), user);
+		}
 		try {
 			save();
 		} catch (IOException e) {
@@ -155,7 +173,7 @@ public class JAEAppHelper {
 	}
 	
 	public static void regeditUser(User user){
-		users.add(user);
+		JAEAppHelper.users.put(createKey(user), user);
 		try {
 			save();
 		} catch (IOException e) {
@@ -164,7 +182,9 @@ public class JAEAppHelper {
 	}
 	
 	public static void unRegeditUsers(User[] users){
-		JAEAppHelper.users.removeAll(Arrays.asList(users));
+		for (User user : users) {
+			JAEAppHelper.users.remove(createKey(user));
+		}
 		try {
 			save();
 		} catch (IOException e) {
@@ -173,7 +193,7 @@ public class JAEAppHelper {
 	}
 	
 	public static void unRegeditUser(User user){
-		users.remove(user);
+		JAEAppHelper.users.remove(createKey(user));
 		try {
 			save();
 		} catch (IOException e) {
@@ -187,6 +207,6 @@ public class JAEAppHelper {
 	
 	public static void regeditAppRepository(JDApp app){
 		User user = JDModelUtil.getParentElement(app, User.class);
-		srcRepositoryMap.put(createKey(user.getAccessKey(), user.getSecretKey())+"|"+app.getName(), app.getRepositoryURL());
+		srcRepositoryMap.put(createKey(user)+"|"+app.getName(), app.getRepositoryURL());
 	}
 }

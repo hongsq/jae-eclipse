@@ -41,6 +41,10 @@ public class JAEView extends CommonNavigator {
 		return instance;
 	}
 	
+	public void updateActionBars(){
+		getCommonViewer().setSelection(getCommonViewer().getSelection());
+	}
+	
 	@Override
 	public void createPartControl(Composite aParent) {
 		super.createPartControl(aParent);

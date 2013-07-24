@@ -8,7 +8,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 
 import com.jae.eclipse.navigator.jaeapp.action.ConnectAction;
@@ -20,7 +19,7 @@ import com.jae.eclipse.navigator.util.NavigatorUtil;
  * @author hongshuiqiao
  *
  */
-public class UserOperationActionProvider extends CommonActionProvider {
+public class UserOperationActionProvider extends AbstractJDActionProvider {
 	private UserAction addUserAction;
 	private UserAction editUserAction;
 	private DeleteUserAction deleteUserAction;
@@ -65,6 +64,4 @@ public class UserOperationActionProvider extends CommonActionProvider {
 //		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.editUserAction);
 //		NavigatorUtil.appendAction2Group(menuManager, "group.user", this.deleteUserAction);
 	}
-	
-	
 }

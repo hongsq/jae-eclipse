@@ -6,7 +6,6 @@ package com.jae.eclipse.navigator.jaeapp.action.provider;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 
 import com.jae.eclipse.navigator.jaeapp.action.JDAppDeployAction;
@@ -18,7 +17,7 @@ import com.jae.eclipse.navigator.util.NavigatorUtil;
  * @author hongshuiqiao
  *
  */
-public class JDAppActionProvider extends CommonActionProvider {
+public class JDAppActionProvider extends AbstractJDActionProvider {
 	private JDAppEditAction editAppAction;
 	private JDAppDeployAction deployAction;
 	private JDAppOperatorAction startAction;

@@ -8,6 +8,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -89,7 +90,15 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 		}
 		
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(LayoutUtil.createCompactGridLayout(1));
+
+//		GridLayout gridLayout = new GridLayout(columnCount, false);
+		GridLayout layout = LayoutUtil.createCompactGridLayout(1);
+		layout.marginHeight = 5;
+		layout.marginWidth = 5;
+		layout.horizontalSpacing = 5;
+		layout.verticalSpacing = 5;
+		
+		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		composite.setFont(parent.getFont());
 		// Build the separator line
@@ -99,8 +108,8 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 		this.controlFactory.addValuechangeListener(this);
 		this.controlFactory.setMessageCaller(this);
 		this.controlFactory.createControl(composite);
-		Control control = this.controlFactory.getControl();
-		control.setLayoutData(new GridData(GridData.FILL_BOTH));
+		this.controlFactory.setLayoutData(new GridData(GridData.FILL_BOTH));
+		this.controlFactory.getControl();
 		
 		return composite;
 	}
