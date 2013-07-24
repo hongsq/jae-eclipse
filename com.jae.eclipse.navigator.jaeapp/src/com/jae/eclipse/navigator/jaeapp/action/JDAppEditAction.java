@@ -144,7 +144,9 @@ public class JDAppEditAction extends AbstractJDAction {
 		Shell shell = viewer.getControl().getShell();
 		ControlFactoryDialog dialog = new ControlFactoryDialog(shell, factory);
 		if(Window.OK == dialog.open()){
-			JAEAppHelper.regeditAppRepository(app);
+			//默认仓库不记录
+			if(!JAEAppHelper.getDefaultAppRepository(app).equals(app.getRepositoryURL()))
+				JAEAppHelper.regeditAppRepository(app);
 			
 			if(application.getMemory() != map.get("memory"))
 				operator.updateApplicationMemory(app.getName(), map.get("memory"));

@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class JAEAppHelper {
 		}
 	}
 
-	public static void load() throws IOException {
+	public synchronized static void load() throws IOException {
 		URL url = Platform.getConfigurationLocation().getDataArea(JDCONFIG_USER_CONFIG);
 		if(null == url)
 			return;
@@ -75,7 +76,7 @@ public class JAEAppHelper {
 		}
 	}
 	
-	public static void save() throws IOException {
+	public synchronized static void save() throws IOException {
 		URL url = Platform.getConfigurationLocation().getDataArea(JDCONFIG_USER_CONFIG);
 		if(null == url)
 			return;
@@ -196,10 +197,64 @@ public class JAEAppHelper {
 	
 	public static void clearUsers(){
 		users.clear();
+		try {
+			save();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void regeditAppRepository(JDApp app){
 		User user = JDModelUtil.getParentElement(app, User.class);
 		srcRepositoryMap.put(createKey(user)+"|"+app.getName(), app.getRepositoryURL());
+		try {
+			save();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void unRegeditAppRepository(JDApp app){
+		User user = JDModelUtil.getParentElement(app, User.class);
+		srcRepositoryMap.remove(createKey(user)+"|"+app.getName());
+		try {
+			save();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void regeditAppRepositories(JDApp[] apps){
+		for (JDApp app : apps) {
+			User user = JDModelUtil.getParentElement(app, User.class);
+			srcRepositoryMap.put(createKey(user)+"|"+app.getName(), app.getRepositoryURL());
+		}
+		try {
+			save();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void unRegeditAppRepositories(JDApp[] apps){
+		for (JDApp app : apps) {
+			User user = JDModelUtil.getParentElement(app, User.class);
+			srcRepositoryMap.remove(createKey(user)+"|"+app.getName());
+		}
+		try {
+			save();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static String getAppRepository(JDApp app){
+		User user = JDModelUtil.getParentElement(app, User.class);
+		return srcRepositoryMap.get(createKey(user)+"|"+app.getName());
+	}
+	
+	public static String getDefaultAppRepository(JDApp app){
+		User user = JDModelUtil.getParentElement(app, User.class);
+		return MessageFormat.format("https://code.jd.com/{0}/jae_{1}.git", user.getName(), app.getName());
 	}
 }

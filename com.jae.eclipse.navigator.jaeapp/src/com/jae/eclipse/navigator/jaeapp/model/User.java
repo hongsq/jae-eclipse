@@ -3,7 +3,6 @@
  */
 package com.jae.eclipse.navigator.jaeapp.model;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import org.cloudfoundry.client.lib.CloudFoundryOperations;
@@ -13,6 +12,7 @@ import org.cloudfoundry.client.lib.domain.CloudInfo;
 
 import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 import com.jae.eclipse.cloudfoundry.util.CloudFoundryHelper;
+import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;
 
 
 /**
@@ -82,7 +82,9 @@ public class User extends AbstractJDElement {
 				String appName = cloudApplication.getName();
 				if(null != appName){
 					JDApp app = new JDApp(this, appName);
-					String repositoryURL = MessageFormat.format("https://code.jd.com/{0}/jae_{1}.git", this.getName(), appName);
+					String repositoryURL = JAEAppHelper.getAppRepository(app);
+					if(null == repositoryURL)
+						repositoryURL = JAEAppHelper.getDefaultAppRepository(app);
 					app.setRepositoryURL(repositoryURL);
 //					app.setDisplayName(appName+" - "+repositoryURL);
 					
