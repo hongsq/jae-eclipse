@@ -3,7 +3,6 @@
  */
 package com.jae.eclipse.ui;
 
-import com.jae.eclipse.ui.event.ValidateEvent;
 
 
 /**
@@ -12,9 +11,8 @@ import com.jae.eclipse.ui.event.ValidateEvent;
  */
 public interface IValidatable {
 	/**
-	 * 值变化时触发验证
-	 * @param event
+	 * 值变化时触发自身验证
 	 * @return
 	 */
-	public boolean validate(ValidateEvent event);
+	public boolean validate();
 }

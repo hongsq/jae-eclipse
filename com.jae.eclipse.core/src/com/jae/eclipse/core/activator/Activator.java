@@ -1,4 +1,4 @@
-package com.jae.eclipse.core;
+package com.jae.eclipse.core.activator;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

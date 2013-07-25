@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Text;
 import com.jae.eclipse.core.util.StringUtil;
 import com.jae.eclipse.ui.base.AbstractPropertyEditor;
 import com.jae.eclipse.ui.base.ValuechageNotifier;
+import com.jae.eclipse.ui.util.UIUtil;
 
 /**
  * @author hongshuiqiao
@@ -26,6 +27,9 @@ public class StringPropertyEditor extends AbstractPropertyEditor {
 
 	public void setLimit(int limit) {
 		this.limit = limit;
+		if(UIUtil.isControlValid(getTextControl())){
+			getTextControl().setTextLimit(limit);
+		}
 	}
 
 	public boolean isPassword() {

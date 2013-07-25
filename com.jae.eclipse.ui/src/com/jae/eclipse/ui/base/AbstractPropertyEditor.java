@@ -21,7 +21,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
-import com.jae.eclipse.core.util.ObjectUtil;
+import com.jae.eclipse.core.DefaultObjectOperator;
+import com.jae.eclipse.core.ObjectOperator;
 import com.jae.eclipse.ui.Constants;
 import com.jae.eclipse.ui.IMessageCaller;
 import com.jae.eclipse.ui.IPropertyEditor;
@@ -29,7 +30,6 @@ import com.jae.eclipse.ui.IValidator;
 import com.jae.eclipse.ui.event.ILinkAction;
 import com.jae.eclipse.ui.event.IValuechangeListener;
 import com.jae.eclipse.ui.event.LinkEvent;
-import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.event.ValueEventContainer;
 import com.jae.eclipse.ui.impl.CompoundMessageCaller;
@@ -60,7 +60,8 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	// 用来在控件上显示代码提示信息
 	private FieldDecoration assitantFieldDecoration;
 	private GridData editLayoutData=new GridData(GridData.FILL_BOTH);
-	private CompoundMessageCaller messageCaller = new CompoundMessageCaller();
+	private CompoundMessageCaller compoundMessageCaller = new CompoundMessageCaller();
+	private IMessageCaller messageCaller;
 	private PropertyMessageCaller propertyMessageCaller;
 	private Object editElement;
 	private List<IValidator> validators = new ArrayList<IValidator>();
@@ -72,6 +73,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	private String labelSeparator=":";
 	private GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 	private boolean enable=true;
+	private ObjectOperator objectOperator;
 
 	public boolean isEnable() {
 		if(!UIUtil.isControlValid(this.editControl))
@@ -130,6 +132,16 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		return propertyName;
 	}
 
+	public ObjectOperator getObjectOperator(boolean defaultIfNull) {
+		if(null == this.objectOperator && defaultIfNull)
+			return DefaultObjectOperator.INSTANCE;
+		return objectOperator;
+	}
+
+	public void setObjectOperator(ObjectOperator objectOperator) {
+		this.objectOperator = objectOperator;
+	}
+
 	public void setPropertyName(String propertyName) {
 		this.propertyName = propertyName;
 	}
@@ -173,18 +185,20 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 			return;
 		
 		Object value = this.getValue();
-		Object oldValue = ObjectUtil.getValue(this.editElement, this.propertyName);
+		ObjectOperator operator = this.getObjectOperator(true);
+		Object oldValue = operator.getValue(this.editElement, this.propertyName);
 		if(null != value && value.equals(oldValue))
 			return;
 		
 		if(null == value && null == oldValue)
 			return;
 		
-		ObjectUtil.setValue(this.editElement, this.propertyName, value);
+		operator.setValue(this.editElement, this.propertyName, value);
 	}
 	
 	public void load() {
-		Object value = ObjectUtil.getValue(this.editElement, this.propertyName);
+		ObjectOperator operator = this.getObjectOperator(true);
+		Object value = operator.getValue(this.editElement, this.propertyName);
 		this.setValue(value);
 	}
 	
@@ -233,8 +247,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 				if(!validateFlag)
 					return;
 				
-				ValidateEvent validateEvent = new ValidateEvent(event.getSource());
-				validate(validateEvent);
+				validate();
 			}
 		});
 //		
@@ -259,12 +272,12 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.validateFlag = validateFlag;
 	}
 
-	public boolean validate(ValidateEvent event) {
+	public boolean validate() {
 		if(null != this.propertyMessageCaller)
 			this.propertyMessageCaller.clear();
 		
 		for (IValidator validator : this.validators) {
-			if(!validator.validate(this.messageCaller, this))
+			if(!validator.validate(this.compoundMessageCaller, this, this.getValue()))
 				return false;
 		}
 		
@@ -330,7 +343,9 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.buildFieldDecoration();
 		
 		this.propertyMessageCaller = new PropertyMessageCaller(this);
-		this.messageCaller.addMessageCaller(this.propertyMessageCaller);
+		this.compoundMessageCaller.addMessageCaller(this.propertyMessageCaller);
+		if(null != this.messageCaller)
+			this.compoundMessageCaller.addMessageCaller(this.messageCaller);
 	}
 
 	protected void buildFieldDecoration() {
@@ -369,9 +384,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	}
 	
 	public void setMessageCaller(IMessageCaller messageCaller) {
-		this.messageCaller.clearMessageCallers();
-		if(null != messageCaller)
-			this.messageCaller.addMessageCaller(messageCaller);
+		this.messageCaller = messageCaller;
 	}
 
 	/**

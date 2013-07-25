@@ -13,7 +13,10 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -24,6 +27,8 @@ import com.jae.eclipse.ui.factory.table.ColumnModel;
 import com.jae.eclipse.ui.factory.table.DefaultTableValueTranslator;
 import com.jae.eclipse.ui.factory.table.TableValueTranslator;
 import com.jae.eclipse.ui.impl.ControlFactoryDialog;
+import com.jae.eclipse.ui.validator.ColumnValidator;
+import com.jae.eclipse.ui.validator.NotEmptyValidator;
 
 /**
  * @author hongshuiqiao
@@ -33,10 +38,11 @@ import com.jae.eclipse.ui.impl.ControlFactoryDialog;
 public class ExampleTableControlFactory extends AbstractTableFactory {
 	private TableValueTranslator translator = new DefaultTableValueTranslator(this);
 	
-	public ExampleTableControlFactory() {
-		this.setValueTranslator(this.translator);
+	@Override
+	public TableValueTranslator getValueTranslator() {
+		return this.translator;
 	}
-
+	
 	@Override
 	protected ColumnModel[] createColumns(TableViewer viewer) {
 		List<ColumnModel> columns = new ArrayList<ColumnModel>();
@@ -44,19 +50,24 @@ public class ExampleTableControlFactory extends AbstractTableFactory {
 		{
 			ColumnModel column = new ColumnModel();
 			column.setPropertyName("aa");
-			column.setColumnName("aa");
+			column.setTitle("aa");
 			column.setWidth(200);
 			column.setResizable(true);
 			column.setEditable(true);
 			column.setDescription("aaaaaaaaaaaaaa");
+			column.setSortable(true);
+//			column.setAlignment(SWT.RIGHT);
+			column.addValidator(new ColumnValidator(new NotEmptyValidator("aa")));
 			column.setCellEditor(new TextCellEditor(viewer.getTable(), SWT.BORDER));
 			columns.add(column);
 		}
 		{
 			ColumnModel column = new ColumnModel();
 			column.setPropertyName("bb");
-			column.setColumnName("bb");
+			column.setTitle("bb");
 			column.setWidth(200);
+			column.setSortable(true);
+//			column.setAlignment(SWT.LEFT);
 			columns.add(column);
 		}
 		
@@ -90,8 +101,6 @@ public class ExampleTableControlFactory extends AbstractTableFactory {
 		
 		shell.open();
 		
-		createDialog(shell);
-		
 		while(!shell.isDisposed()){
 			if(!display.readAndDispatch())
 				display.sleep();
@@ -107,14 +116,28 @@ public class ExampleTableControlFactory extends AbstractTableFactory {
 		
 		Map[] list = (Map[]) factory.getValue();
 		for (Map map : list) {
-			System.out.println(map.get("aa"));
+			System.out.println("*******************");
+			System.out.println("aa="+map.get("aa"));
+			System.out.println("bb="+map.get("bb"));
+			System.out.println("cc="+map.get("cc"));
 		}
 	}
 
 	protected static Control createUI(Composite parent) {
-		ExampleTableControlFactory factory = createFactory();
-		factory.createControl(parent);
-		return factory.getControl();
+//		ExampleTableControlFactory factory = createFactory();
+//		factory.createControl(parent);
+//		return factory.getControl();
+		
+		Button button = new Button(parent, SWT.NONE);
+		button.setText("...");
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				createDialog(e.display.getActiveShell());
+			}
+		});
+		
+		return button;
 	}
 
 	private static ExampleTableControlFactory createFactory() {
@@ -123,6 +146,7 @@ public class ExampleTableControlFactory extends AbstractTableFactory {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("aa", "1");
 		map.put("bb", "2");
+		map.put("cc", "3");
 		
 		Map[] input = new Map[2];
 		input[0]=map;
@@ -130,6 +154,7 @@ public class ExampleTableControlFactory extends AbstractTableFactory {
 		map = new HashMap<String, String>();
 		map.put("aa", "11");
 		map.put("bb", "22");
+		map.put("cc", "33");
 		
 		input[1]=map;
 		

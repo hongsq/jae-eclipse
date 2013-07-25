@@ -10,11 +10,13 @@ package com.jae.eclipse.ui;
  *
  */
 public interface IValidator {
+	
 	/**
 	 * 验证器的验证逻辑
-	 * @param messageCaller
-	 * @param validateObject
+	 * @param messageCaller	消息处理
+	 * @param source		变化的源
+	 * @param value			变化后的值
 	 * @return
 	 */
-	public boolean validate(IMessageCaller messageCaller, Object validateObject);
+	public boolean validate(IMessageCaller messageCaller, Object source, Object value);
 }

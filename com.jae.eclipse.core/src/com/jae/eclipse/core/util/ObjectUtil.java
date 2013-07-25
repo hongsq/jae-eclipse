@@ -169,4 +169,11 @@ public class ObjectUtil {
         buf.append(")");
         return buf.toString();
     }
+	
+	public static void copyProperties(Object source, Object target, String[] properties){
+		for (String propertyName : properties) {
+			Object value = getValue(source, propertyName);
+			setValue(target, propertyName, value);
+		}
+	}
 }

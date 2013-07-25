@@ -6,7 +6,6 @@ package com.jae.eclipse.ui.factory.impl;
 import org.eclipse.swt.layout.GridLayout;
 
 import com.jae.eclipse.ui.ILayoutContainer;
-import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.factory.AbstractControlFactory;
 import com.jae.eclipse.ui.factory.IControlFactory;
 import com.jae.eclipse.ui.util.LayoutUtil;
@@ -38,11 +37,11 @@ public abstract class AbstractCompoundControlFactory extends AbstractControlFact
 	}
 	
 	@Override
-	public boolean doValidate(ValidateEvent event) {
+	public boolean doValidate() {
 		boolean falg = true;
 		IControlFactory[] factories = this.getControlFactories();
 		for (IControlFactory factory : factories) {
-			falg = factory.validate(event)&&falg;
+			falg = factory.validate()&&falg;
 		}
 		return falg;
 	}
@@ -63,8 +62,12 @@ public abstract class AbstractCompoundControlFactory extends AbstractControlFact
 		for (IControlFactory factory : factories) {
 			if(null != this.getValue()) factory.setValue(this.getValue());
 			factory.addValuechangeListener(this);
+			factory.setMessageCaller(this.getMessageCaller());
 			if (factory instanceof AbstractControlFactory) {
-				((AbstractControlFactory) factory).setValidateFlag(false);
+				AbstractControlFactory controlFactory = (AbstractControlFactory) factory;
+				controlFactory.setValidateFlag(false);
+				if((null != this.getObjectOperator(false)) && (null == controlFactory.getObjectOperator(false)))
+					controlFactory.setObjectOperator(this.getObjectOperator(false));
 			}
 		}
 	}

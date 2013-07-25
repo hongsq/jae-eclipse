@@ -3,29 +3,38 @@
  */
 package com.jae.eclipse.ui.factory.table;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
 
-import com.jae.eclipse.ui.IValidator;
+import com.jae.eclipse.core.DefaultObjectOperator;
+import com.jae.eclipse.core.ObjectOperator;
+import com.jae.eclipse.ui.IColumnValidator;
 
 /**
  * @author hongshuiqiao
  *
  */
 public class ColumnModel {
-	private String columnName;
+	private String title;
 	private String propertyName;
-	private ImageDescriptor columnImage;
-	private ImageDescriptor itemImage;
+	private ImageDescriptor titleImage;
+	private ImageDescriptor image;
 	private String description;
 	private int width=-1;
-	private int alignment=SWT.CENTER;
+	private int alignment=SWT.LEFT;
 	private boolean resizable;
 	private boolean movable;
 	private boolean editable;
+	private boolean sortable;
 	private CellEditor cellEditor;
-	private IValidator validator;
+	private List<IColumnValidator> validators = new ArrayList<IColumnValidator>();
+	private ObjectOperator objectOperator;
+	private Comparator<Object> comparator = new DefaultColumnComparator(this);
 
 	public String getPropertyName() {
 		return propertyName;
@@ -103,35 +112,82 @@ public class ColumnModel {
 		this.cellEditor = cellEditor;
 	}
 
-	public String getColumnName() {
-		return columnName;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setColumnName(String columnName) {
-		this.columnName = columnName;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public ImageDescriptor getColumnImage() {
-		return columnImage;
+	public ImageDescriptor getTitleImage() {
+		return titleImage;
 	}
 
-	public void setColumnImage(ImageDescriptor columnImage) {
-		this.columnImage = columnImage;
+	public void setTitleImage(ImageDescriptor titleImage) {
+		this.titleImage = titleImage;
 	}
 
-	public ImageDescriptor getItemImage() {
-		return itemImage;
+	public ImageDescriptor getImage() {
+		return image;
 	}
 
-	public void setItemImage(ImageDescriptor itemImage) {
-		this.itemImage = itemImage;
+	public void setImage(ImageDescriptor image) {
+		this.image = image;
 	}
 
-	public IValidator getValidator() {
-		return validator;
+	public boolean isSortable() {
+		return sortable;
 	}
 
-	public void setValidator(IValidator validator) {
-		this.validator = validator;
+	public void setSortable(boolean sortable) {
+		this.sortable = sortable;
+	}
+
+	public IColumnValidator[] getValidators() {
+		return this.validators.toArray(new IColumnValidator[this.validators.size()]);
+	}
+
+	public void addValidator(IColumnValidator validator){
+		this.validators.add(validator);
+	}
+	
+	public void removeValidator(IColumnValidator validator){
+		this.validators.remove(validator);
+	}
+	
+	public void clearValidators() {
+		this.validators.clear();
+	}
+
+	public ObjectOperator getObjectOperator(boolean defaultIfNull) {
+		if(null == this.objectOperator && defaultIfNull)
+			return DefaultObjectOperator.INSTANCE;
+		return objectOperator;
+	}
+
+	public void setObjectOperator(ObjectOperator objectOperator) {
+		this.objectOperator = objectOperator;
+	}
+
+	public Comparator<Object> getComparator() {
+		return comparator;
+	}
+
+	public void setComparator(Comparator<Object> comparator) {
+		this.comparator = comparator;
+	}
+
+	public ImageDescriptor getImage(Object element, int columnIndex, int rowIndex) {
+		return this.image;
+	}
+
+	public String getText(Object element, int columnIndex, int rowIndex) {
+		ObjectOperator operator = this.getObjectOperator(true);
+		
+		Object value = operator.getValue(element, this.propertyName);
+		if(null != value)
+			return value.toString();
+		return null;
 	}
 }

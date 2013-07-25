@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Shell;
 import com.jae.eclipse.ui.IMessageCaller;
 import com.jae.eclipse.ui.UIDescription;
 import com.jae.eclipse.ui.event.IValuechangeListener;
-import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.factory.IControlFactory;
 import com.jae.eclipse.ui.util.LayoutUtil;
@@ -75,7 +74,7 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 		Control contents = super.createContents(parent);
 		if(null != this.controlFactory){
 			this.controlFactory.load();
-			this.controlFactory.validate(new ValidateEvent(this.controlFactory));
+			this.controlFactory.validate();
 		}
 		return contents;
 	}
@@ -121,8 +120,7 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 	}
 	
 	public void valuechanged(ValueChangeEvent event) {
-		ValidateEvent validateEvent = new ValidateEvent(event.getSource());
-		boolean validated = this.controlFactory.validate(validateEvent);
+		boolean validated = this.controlFactory.validate();
 		Button okButton = getButton(IDialogConstants.OK_ID);
 		if(null != okButton)
 			okButton.setEnabled(validated);

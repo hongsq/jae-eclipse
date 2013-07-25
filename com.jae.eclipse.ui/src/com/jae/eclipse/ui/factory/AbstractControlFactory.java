@@ -7,9 +7,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.jae.eclipse.core.DefaultObjectOperator;
+import com.jae.eclipse.core.ObjectOperator;
 import com.jae.eclipse.ui.IMessageCaller;
 import com.jae.eclipse.ui.UIDescription;
-import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.event.ValueEventContainer;
 
@@ -25,6 +26,7 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 	private boolean validateFlag = true;
 	private IMessageCaller messageCaller;
 	private GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+	private ObjectOperator objectOperator;
 
 	public final void createControl(Composite parent) {
 		this.beforeCreateControl();
@@ -65,6 +67,16 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 		this.value = value;
 	}
 	
+	public ObjectOperator getObjectOperator(boolean defaultIfNull) {
+		if(null == this.objectOperator && defaultIfNull)
+			return DefaultObjectOperator.INSTANCE;
+		return objectOperator;
+	}
+
+	public void setObjectOperator(ObjectOperator objectOperator) {
+		this.objectOperator = objectOperator;
+	}
+
 	public boolean isValidateFlag() {
 		return validateFlag;
 	}
@@ -75,16 +87,15 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 
 	public void valuechanged(ValueChangeEvent event) {
 		if(validateFlag){
-			ValidateEvent validateEvent = new ValidateEvent(event.getSource());
-			validate(validateEvent);
+			validate();
 		}
 		this.fireValuechanged(event);
 	}
 	
-	public boolean validate(ValidateEvent event) {
+	public boolean validate() {
 		if(null != this.messageCaller)
 			this.messageCaller.clear();
-		return doValidate(event);
+		return doValidate();
 	}
 	
 	public UIDescription getUIDescription() {
@@ -99,7 +110,7 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 		return this.control;
 	}
 	
-	protected abstract boolean doValidate(ValidateEvent event);
+	protected abstract boolean doValidate();
 
 	protected abstract Control doCreateControl(Composite parent);
 }

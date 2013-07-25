@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Control;
 
 import com.jae.eclipse.ui.base.AbstractPropertyEditor;
 import com.jae.eclipse.ui.base.ValuechageNotifier;
+import com.jae.eclipse.ui.util.UIUtil;
 
 /**
  * @author hongshuiqiao
@@ -42,6 +43,16 @@ public class ComboPropertyEditor extends AbstractPropertyEditor {
 		return combo;
 	}
 	
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+		if(UIUtil.isControlValid(getCombo()))
+			getCombo().setTextLimit(limit);
+	}
+
 	public void setComboItems(String[] items){
 		this.items.clear();
 		this.itemMap.clear();

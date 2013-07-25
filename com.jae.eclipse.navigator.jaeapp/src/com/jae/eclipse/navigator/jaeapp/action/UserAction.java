@@ -61,8 +61,8 @@ public class UserAction extends AbstractJDAction {
 //		objectEditor.setLayout(new GridLayout(4, false));
 		
 		IValidator repeatValidator = new IValidator() {
-			
-			public boolean validate(IMessageCaller messageCaller, Object validateObject) {
+
+			public boolean validate(IMessageCaller messageCaller, Object source, Object value) {
 				String accessKey = (String) objectEditor.getPropertyEditor("accessKey").getValue();
 				String secretKey = (String) objectEditor.getPropertyEditor("secretKey").getValue();
 				
@@ -73,6 +73,7 @@ public class UserAction extends AbstractJDAction {
 				
 				return true;
 			}
+			
 		};
 		
 		{

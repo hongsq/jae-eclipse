@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Spinner;
 
 import com.jae.eclipse.ui.base.AbstractPropertyEditor;
 import com.jae.eclipse.ui.base.ValuechageNotifier;
+import com.jae.eclipse.ui.util.UIUtil;
 
 /**
  * @author hongshuiqiao
@@ -72,6 +73,8 @@ public class NumberPropertyEditor extends AbstractPropertyEditor {
 
 	public void setMaximum(int maximum) {
 		this.maximum = maximum;
+		if(UIUtil.isControlValid(getSpinner()))
+			getSpinner().setMaximum(maximum);
 	}
 
 	public int getMinimum() {
@@ -80,6 +83,8 @@ public class NumberPropertyEditor extends AbstractPropertyEditor {
 
 	public void setMinimum(int minimum) {
 		this.minimum = minimum;
+		if(UIUtil.isControlValid(getSpinner()))
+			getSpinner().setMinimum(minimum);
 	}
 
 	public int getPageIncrement() {
@@ -88,6 +93,8 @@ public class NumberPropertyEditor extends AbstractPropertyEditor {
 
 	public void setPageIncrement(int pageIncrement) {
 		this.pageIncrement = pageIncrement;
+		if(UIUtil.isControlValid(getSpinner()))
+			getSpinner().setPageIncrement(pageIncrement);
 	}
 
 	/**
@@ -101,6 +108,8 @@ public class NumberPropertyEditor extends AbstractPropertyEditor {
 
 	public void setIncrement(int increment) {
 		this.increment = increment;
+		if(UIUtil.isControlValid(getSpinner()))
+			getSpinner().setIncrement(increment);
 	}
 
 	public int getDigits() {
@@ -109,6 +118,8 @@ public class NumberPropertyEditor extends AbstractPropertyEditor {
 
 	public void setDigits(int digits) {
 		this.digits = digits;
+		if(UIUtil.isControlValid(getSpinner()))
+			getSpinner().setDigits(digits);
 	}
 
 	public Spinner getSpinner(){

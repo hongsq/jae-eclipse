@@ -29,7 +29,6 @@ import com.jae.eclipse.ui.control.FileSelectionPropertyEditor;
 import com.jae.eclipse.ui.control.StringPropertyEditor;
 import com.jae.eclipse.ui.dialog.DetailMessageDialog;
 import com.jae.eclipse.ui.event.IValuechangeListener;
-import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.impl.PropertyComposite;
 import com.jae.eclipse.ui.validator.NotEmptyValidator;
@@ -46,7 +45,7 @@ public class UIExample {
 		PropertyComposite composite = new PropertyComposite(parent, SWT.NONE, objectEditor);
 		
 		objectEditor.load();
-		objectEditor.validate(new ValidateEvent(objectEditor));
+		objectEditor.validate();
 		
 		return composite;
 	}
@@ -61,7 +60,7 @@ public class UIExample {
 			editor.setPropertyName("abc");
 			editor.setRequired(true);
 			editor.addValidator(new IValidator() {
-				public boolean validate(IMessageCaller messageCaller, Object validateObject) {
+				public boolean validate(IMessageCaller messageCaller, Object source, Object value) {
 					boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
 					if(isEmpty)
 						messageCaller.error("不能为空！");
@@ -85,7 +84,7 @@ public class UIExample {
 			editor.setRequired(true);
 			editor.addValidator(new IValidator() {
 				
-				public boolean validate(IMessageCaller messageCaller, Object validateObject) {
+				public boolean validate(IMessageCaller messageCaller, Object source, Object value) {
 					boolean isEmpty = StringUtil.isEmpty(editor.getValue()+"");
 					if(isEmpty)
 						messageCaller.error("不能为空！");
@@ -108,7 +107,7 @@ public class UIExample {
 			
 			comboEditor.addValidator(new IValidator() {
 				
-				public boolean validate(IMessageCaller messageCaller, Object validateObject) {
+				public boolean validate(IMessageCaller messageCaller, Object source, Object value) {
 					boolean isEmpty = (null==comboEditor.getValue());
 					if(isEmpty)
 						messageCaller.error("不能为空！");

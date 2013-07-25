@@ -12,10 +12,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import com.jae.eclipse.core.DefaultObjectOperator;
+import com.jae.eclipse.core.ObjectOperator;
 import com.jae.eclipse.ui.base.AbstractPropertyEditor;
 import com.jae.eclipse.ui.event.IValueEventContainer;
 import com.jae.eclipse.ui.event.IValuechangeListener;
-import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.event.ValueEventContainer;
 import com.jae.eclipse.ui.util.LayoutUtil;
@@ -34,6 +35,7 @@ public class ObjectEditor extends ValueEventContainer implements ILayoutContaine
 	//自身的变化是否触发自己的验证（一般如果加入到一个容器中，自身的变化会触发整个容器的验证，不需要再重复验证自己）
 	private boolean validateFlag = true;
 	private GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+	private ObjectOperator objectOperator;
 	
 	public void addPropertyEditor(IPropertyEditor editor){
 		editors.put(editor.getPropertyName(), editor);
@@ -77,6 +79,16 @@ public class ObjectEditor extends ValueEventContainer implements ILayoutContaine
 		this.value = value;
 	}
 
+	public ObjectOperator getObjectOperator(boolean defaultIfNull) {
+		if(null == this.objectOperator && defaultIfNull)
+			return DefaultObjectOperator.INSTANCE;
+		return objectOperator;
+	}
+
+	public void setObjectOperator(ObjectOperator objectOperator) {
+		this.objectOperator = objectOperator;
+	}
+
 	public GridLayout getLayout() {
 		return layout;
 	}
@@ -115,7 +127,11 @@ public class ObjectEditor extends ValueEventContainer implements ILayoutContaine
 			editor.setEditElement(this.value);
 			editor.setMessageCaller(this.messageCaller);
 			if (editor instanceof AbstractPropertyEditor) {
-				((AbstractPropertyEditor) editor).setValidateFlag(false);
+				AbstractPropertyEditor propertyEditor = (AbstractPropertyEditor) editor;
+				propertyEditor.setValidateFlag(false);
+				
+				if((null != this.objectOperator) && (null == propertyEditor.getObjectOperator(false)))
+					propertyEditor.setObjectOperator(this.objectOperator);
 			}
 			
 			editor.beforeBuild(composite);
@@ -132,14 +148,14 @@ public class ObjectEditor extends ValueEventContainer implements ILayoutContaine
 		afterBuild(composite);
 	}
 
-	public boolean validate(ValidateEvent event) {
+	public boolean validate() {
 		boolean flag = true;
 		if(null != this.messageCaller)
 			this.messageCaller.clear();
 
 		Collection<IPropertyEditor> propertyEditors = this.editors.values();
 		for (IPropertyEditor editor : propertyEditors) {
-			flag = editor.validate(event) && flag;
+			flag = editor.validate() && flag;
 		}
 		return flag;
 	}
@@ -168,8 +184,7 @@ public class ObjectEditor extends ValueEventContainer implements ILayoutContaine
 
 	public void valuechanged(ValueChangeEvent event) {
 		if(validateFlag){
-			ValidateEvent validateEvent = new ValidateEvent(event.getSource());
-			validate(validateEvent);
+			validate();
 		}
 		this.fireValuechanged(event);
 	}

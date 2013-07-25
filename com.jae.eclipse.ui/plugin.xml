@@ -2,5 +2,16 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="imageRepository" name="imageRepository" schema="schema/imageRepository.exsd"/>
+   <extension
+         point="com.jae.eclipse.ui.imageRepository">
+      <image
+            id="error_ovr"
+            image="icons/error_ovr.gif">
+      </image>
+      <image
+            id="warning_ovr"
+            image="icons/warning_ovr.gif">
+      </image>
+   </extension>
 
 </plugin>

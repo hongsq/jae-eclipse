@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
-import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.factory.AbstractControlFactory;
 import com.jae.eclipse.ui.factory.IControlFactory;
 import com.jae.eclipse.ui.util.LayoutUtil;
@@ -44,18 +43,19 @@ public class GroupControlFactory extends AbstractControlFactory {
 	}
 
 	@Override
-	protected boolean doValidate(ValidateEvent event) {
-		return this.factory.validate(event);
+	protected boolean doValidate() {
+		return this.factory.validate();
 	}
 
 	@Override
 	protected void beforeCreateControl() {
 		super.beforeCreateControl();
 		
-		if(null != this.getValue()) factory.setValue(this.getValue());
-		factory.addValuechangeListener(this);
+		if(null != this.getValue()) this.factory.setValue(this.getValue());
+		this.factory.addValuechangeListener(this);
+		this.factory.setMessageCaller(this.getMessageCaller());
 		if (factory instanceof AbstractControlFactory) {
-			((AbstractControlFactory) factory).setValidateFlag(false);
+			((AbstractControlFactory) this.factory).setValidateFlag(false);
 		}
 	}
 	

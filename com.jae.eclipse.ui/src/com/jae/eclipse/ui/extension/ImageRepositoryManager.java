@@ -26,6 +26,9 @@ public class ImageRepositoryManager {
 	}
 	
 	public static void loadExtension(){
+		if(!Platform.isRunning())
+			return;
+		
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(IMAGE_REPOSITORY_EXTENSION_POINT);
 		for (IConfigurationElement imageElement : elements) {
 			String id = imageElement.getAttribute("id");

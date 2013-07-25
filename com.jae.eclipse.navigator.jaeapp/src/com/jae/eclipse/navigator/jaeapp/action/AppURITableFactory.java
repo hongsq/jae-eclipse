@@ -29,7 +29,7 @@ public class AppURITableFactory extends AbstractTableFactory {
 		
 		{
 			ColumnModel column = new ColumnModel();
-			column.setColumnName("域名");
+			column.setTitle("域名");
 			column.setPropertyName("uri");
 			
 			list.add(column);

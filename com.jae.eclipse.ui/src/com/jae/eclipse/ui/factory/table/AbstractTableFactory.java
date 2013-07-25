@@ -10,46 +10,52 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import com.jae.eclipse.ui.IMessageCaller;
-import com.jae.eclipse.ui.IValidator;
-import com.jae.eclipse.ui.event.ValidateEvent;
+import com.jae.eclipse.ui.IColumnValidator;
+import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.factory.AbstractViewerFactory;
+import com.jae.eclipse.ui.impl.CompoundMessageCaller;
 
 /**
  * @author hongshuiqiao
- *
+ * 
  */
 public abstract class AbstractTableFactory extends AbstractViewerFactory implements ICellModifier {
-	private boolean multiSelection=false;
-	private List<IValidator> validators = new ArrayList<IValidator>();
+	private boolean multiSelection = false;
 	private ColumnModel[] columns = new ColumnModel[0];
-	private TableValueTranslator valueTranslator;
-	private boolean headerVisible=true;
-	private boolean linesVisible=true;
+	private boolean headerVisible = true;
+	private boolean linesVisible = true;
+	private TableValueTranslator valueTranslator = new DefaultTableValueTranslator(
+			this);
+	private List<String> columnProperties = new ArrayList<String>();
+	private TableMessageCaller tableMessageCaller;
+	private CompoundMessageCaller compoundMessageCaller = new CompoundMessageCaller();
 
 	@Override
 	protected ISelection computeSelection(Point point) {
 		Table table = this.getViewer().getTable();
 		TableItem selectedItem = table.getItem(point);
 		ISelection selection = null;
-		if(null == selectedItem){
+		if (null == selectedItem) {
 			selection = StructuredSelection.EMPTY;
-		}else{
+		} else {
 			TableItem[] items = table.getSelection();
 			List<Object> list = new ArrayList<Object>(items.length);
 			for (TableItem tableItem : items) {
 				list.add(tableItem.getData());
 			}
-			
+
 			selection = new StructuredSelection(list);
 		}
 		return selection;
@@ -58,65 +64,124 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 	@Override
 	protected TableViewer createViewer(Composite parent) {
 		int style = SWT.FULL_SELECTION;
-		if(this.multiSelection)
+		if (this.multiSelection)
 			style = style | SWT.MULTI;
 		else
 			style = style | SWT.SINGLE;
-		
+
 		TableViewer viewer = new TableViewer(parent, style);
 		Table table = viewer.getTable();
-		columns = this.createColumns(viewer);
-		if(null != columns){
-			String[] columnProperties = new String[columns.length];
-			CellEditor[] editors = new CellEditor[columns.length];
-			for (int i = 0; i < columns.length; i++) {
-				ColumnModel columnModel = columns[i];
-				
-				TableColumn column = new TableColumn(table, SWT.CENTER);
-				column.setText(columnModel.getColumnName());
-				ImageDescriptor image = columnModel.getColumnImage();
-				if(null != image)	column.setImage(image.createImage(true));
-				IValidator validator = columnModel.getValidator();
-				if(null != validator)	this.validators.add(validator);
+		this.columns = this.createColumns(viewer);
+		if (null != this.columns) {
+			CellEditor[] editors = new CellEditor[this.columns.length];
+			for (int i = 0; i < this.columns.length; i++) {
+				final ColumnModel columnModel = this.columns[i];
+
+				final TableColumn column = new TableColumn(table, SWT.NONE);
+				column.setText(columnModel.getTitle());
+				ImageDescriptor image = columnModel.getTitleImage();
+				if (null != image)
+					column.setImage(image.createImage(true));
 				column.setToolTipText(columnModel.getDescription());
 				column.setWidth(columnModel.getWidth());
 				column.setMoveable(columnModel.isMovable());
 				column.setResizable(columnModel.isResizable());
 				column.setAlignment(columnModel.getAlignment());
-				
+				column.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						if (columnModel.isSortable()) {
+							sortColumn(columnModel, column);
+						}
+					}
+				});
+				if (null != this.getObjectOperator(false)
+						&& null == columnModel.getObjectOperator(false))
+					columnModel
+							.setObjectOperator(this.getObjectOperator(false));
+
 				editors[i] = columnModel.getCellEditor();
-				columnProperties[i] = columnModel.getPropertyName();
+				this.columnProperties.add(columnModel.getPropertyName());
 			}
-			
-			viewer.setColumnProperties(columnProperties);
+
+			viewer.setColumnProperties(this.getColumnProperties());
 			viewer.setCellEditors(editors);
 			viewer.setCellModifier(this);
-		}else{
-			columns = new ColumnModel[0];
+		} else {
+			this.columns = new ColumnModel[0];
 		}
-		
-		if(null == this.getContentProvider())
-			this.setContentProvider(new CommonContentProvider());
-		
-		if(null == this.getLabelProvider())
-			this.setLabelProvider(new TableLabelProvider());
-		
-		table.setHeaderVisible(headerVisible);
-		table.setLinesVisible(linesVisible);
-		
+
+		if (null == this.getContentProvider())
+			this.setContentProvider(new ListTableDataProvider());
+
+		if (null == this.getLabelProvider())
+			this.setLabelProvider(new TableLabelProvider(this));
+
+		table.setHeaderVisible(this.headerVisible);
+		table.setLinesVisible(this.linesVisible);
+
 		return viewer;
 	}
 
+	@Override
+	protected void afterCreateControl() {
+		super.afterCreateControl();
+		this.tableMessageCaller = new TableMessageCaller();
+		this.compoundMessageCaller.addMessageCaller(this.tableMessageCaller);
+
+		if (null != this.getMessageCaller())
+			this.compoundMessageCaller
+					.addMessageCaller(this.getMessageCaller());
+	}
+
+	protected void sortColumn(ColumnModel columnModel, TableColumn column) {
+		boolean isASC = true;// 正序(一般是从小到大)
+
+		Table table = this.getViewer().getTable();
+		if (column.equals(table.getSortColumn())) {
+			// 再次点击同一个排序列
+			int direction = table.getSortDirection();
+			if (direction == SWT.DOWN)// 上次是从反序大到小，则此次使用正序从小到大
+				isASC = true;
+			else
+				isASC = false;
+		}
+
+		this.getContentProvider().sort(columnModel.getComparator(), isASC);
+
+		if (isASC)
+			table.setSortDirection(SWT.UP);
+		else
+			table.setSortDirection(SWT.DOWN);
+		
+		table.setSortColumn(column);
+		this.getViewer().refresh();
+	}
+
 	public TableValueTranslator getValueTranslator() {
-		return valueTranslator;
+		return this.valueTranslator;
 	}
 
 	public void setValueTranslator(TableValueTranslator valueTranslator) {
 		this.valueTranslator = valueTranslator;
 	}
 
+	public TableMessageCaller getTableMessageCaller() {
+		return tableMessageCaller;
+	}
+
+	@Override
+	public ITableDataProvider getContentProvider() {
+		return (ITableDataProvider) super.getContentProvider();
+	}
+
+	@Override
+	public ITableLabelProvider getLabelProvider() {
+		return (ITableLabelProvider) super.getLabelProvider();
+	}
+
 	public boolean isHeaderVisible() {
-		return headerVisible;
+		return this.headerVisible;
 	}
 
 	public void setHeaderVisible(boolean headerVisible) {
@@ -124,7 +189,7 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 	}
 
 	public boolean isLinesVisible() {
-		return linesVisible;
+		return this.linesVisible;
 	}
 
 	public void setLinesVisible(boolean linesVisible) {
@@ -135,83 +200,97 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 	public TableViewer getViewer() {
 		return (TableViewer) super.getViewer();
 	}
-	
-	public ColumnModel[] getColumns() {
-		return columns;
-	}
-	
-	@Override
-	protected RowModel[] createInput() {
-		return this.getValueTranslator().to(this.getValue());
-	}
-	
+
 	public void load() {
 		this.getViewer().refresh();
 	}
 
 	public void save() {
-		this.getValueTranslator().from((RowModel[])this.getViewer().getInput());
+		this.getValueTranslator().fromTable(this.getContentProvider().getInput().toArray(), this.getValue());
+	}
+
+	@Override
+	protected Object createInput() {
+		return this.getValueTranslator().toTable(this.getValue());
 	}
 
 	public boolean canModify(Object element, String property) {
-		RowModel row = null;
-		if (element instanceof TableItem) {
-			row = (RowModel) ((TableItem) element).getData();
-		} else if (element instanceof RowModel) {
-			row = (RowModel)element;
-		}
-		ColumnModel column = row.getFactory().getColumn(property);
+		// element为模型
+		ColumnModel column = this.getColumn(property);
 		return null != column && null != column.getCellEditor() && column.isEditable();
 	}
 
 	public Object getValue(Object element, String property) {
-		RowModel row = null;
+		// element为模型
+		Object instance = element;
 		if (element instanceof TableItem) {
-			row = (RowModel) ((TableItem) element).getData();
-		} else if (element instanceof RowModel) {
-			row = (RowModel)element;
+			instance = ((TableItem) element).getData();
 		}
-		return row.getCellValue(property);
+
+		return this.getColumn(property).getObjectOperator(true).getValue(instance, property);
 	}
 
 	public void modify(Object element, String property, Object value) {
-		RowModel row = null;
+		// element为TableItem
+		Object instance = element;
 		if (element instanceof TableItem) {
-			row = (RowModel) ((TableItem) element).getData();
-		} else if (element instanceof RowModel) {
-			row = (RowModel)element;
+			instance = ((TableItem) element).getData();
 		}
-		row.setCellValue(property, value);
 		
-		this.getViewer().refresh();
+		Object oldValue = this.getColumn(property).getObjectOperator(true).getValue(instance, property);
+		if((null != oldValue && !oldValue.equals(value))
+				|| (null == oldValue && null != value)){
+			this.getColumn(property).getObjectOperator(true).setValue(instance, property, value);
+			this.fireValuechanged(new ValueChangeEvent(instance, oldValue, value));
+			this.validate();
+			this.getViewer().refresh();
+		}
+		
 	}
 
 	@Override
-	protected boolean doValidate(ValidateEvent event) {
-		boolean flag = true;
-		IMessageCaller messageCaller = this.getMessageCaller();
-		if(null != messageCaller)
-			messageCaller.clear();
+	protected boolean doValidate() {
+		if (null != this.tableMessageCaller)
+			this.tableMessageCaller.clear();
 
-		for (IValidator validator : this.validators) {
-			flag = validator.validate(messageCaller, this) && flag;
+		boolean flag = true;
+		TableItem[] items = this.getViewer().getTable().getItems();
+		for (int rowIndex = 0; rowIndex < items.length; rowIndex++) {
+			TableItem tableItem = items[rowIndex];
+			RowModel rowModel = (RowModel) tableItem.getData();
+			this.tableMessageCaller.setValidateObject(rowModel);
+			for (int columnIndex = 0; columnIndex < this.columns.length; columnIndex++) {
+				this.tableMessageCaller.setValidateColumn(columnIndex);
+				ColumnModel column = this.columns[columnIndex];
+				IColumnValidator[] validators = column.getValidators();
+				for (IColumnValidator validator : validators) {
+					flag = validator.validate(this.compoundMessageCaller,
+							this.getViewer(), rowModel, columnIndex, rowIndex,
+							rowModel.get(column.getPropertyName())) && flag;
+				}
+			}
 		}
+
 		return flag;
 	}
-	
-	public ColumnModel getColumn(String property){
+
+	public String[] getColumnProperties() {
+		return this.columnProperties.toArray(new String[this.columnProperties.size()]);
+	}
+
+	public ColumnModel getColumn(String property) {
 		for (ColumnModel column : this.columns) {
-			if(column.getPropertyName().equals(property))
+			if (column.getPropertyName().equals(property))
 				return column;
 		}
 		return null;
 	}
-	
-	public ColumnModel getColumn(int columnIndex){
-		if(columnIndex<0 || columnIndex>=this.columns.length)
+
+	public ColumnModel getColumn(int columnIndex) {
+		if (columnIndex < 0 || columnIndex >= this.columns.length)
 			return null;
 		return this.columns[columnIndex];
 	}
-	
+
 	protected abstract ColumnModel[] createColumns(TableViewer viewer);
 }

@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import com.jae.eclipse.ui.ObjectEditor;
-import com.jae.eclipse.ui.event.ValidateEvent;
 import com.jae.eclipse.ui.factory.AbstractControlFactory;
 import com.jae.eclipse.ui.impl.PropertyComposite;
 
@@ -37,8 +36,8 @@ public class ObjectEditorControlFactory extends AbstractControlFactory {
 	}
 
 	@Override
-	public boolean doValidate(ValidateEvent event) {
-		return this.objectEditor.validate(event);
+	public boolean doValidate() {
+		return this.objectEditor.validate();
 	}
 
 	@Override
@@ -47,6 +46,9 @@ public class ObjectEditorControlFactory extends AbstractControlFactory {
 		this.objectEditor.addValuechangeListener(this);
 		this.objectEditor.setValidateFlag(false);
 		this.objectEditor.setMessageCaller(this.getMessageCaller());
+		if((null != this.getObjectOperator(false)) && (null == this.objectEditor.getObjectOperator(false)))
+			this.objectEditor.setObjectOperator(this.getObjectOperator(false));
+		
 		PropertyComposite composite = new PropertyComposite(parent, SWT.NONE, this.objectEditor);
 		
 		return composite;

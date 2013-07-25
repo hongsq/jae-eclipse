@@ -34,14 +34,14 @@ public abstract class AbstractViewerFactory extends AbstractControlFactory {
 
 	@Override
 	protected Control doCreateControl(Composite parent) {
-		ViewForm viewForm = new ViewForm(parent, SWT.FLAT);
+		ViewForm viewForm = new ViewForm(parent, SWT.FLAT|SWT.BORDER);
 		
 		viewer = createViewer(viewForm);
 		Control viewControl = viewer.getControl();
 		viewForm.setContent(viewControl);
 		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(labelProvider);
-		viewer.setInput(this.createInput());
+		viewer.setInput(createInput());
 		
 		MenuManager manager = new MenuManager("#PopupMenu");//创建菜单管理器
 		manager.setRemoveAllWhenShown(true);
@@ -69,7 +69,7 @@ public abstract class AbstractViewerFactory extends AbstractControlFactory {
 		Listener listener = new Listener(){
 			public void handleEvent(Event event) {
 				//添加mouseup监听器是因为现有的右键点击空白区域时，不能触发空的selection，这样常会导致菜单等的状态不正确
-				viewer.setSelection(computeSelection(new Point(event.x, event.y)));
+				viewer.setSelection(computeSelection(new Point(event.x, event.y)), true);
 			}
 		};
 		viewControl.addListener (SWT.MouseUp,listener);
@@ -119,6 +119,6 @@ public abstract class AbstractViewerFactory extends AbstractControlFactory {
 		super.setValue(value);
 		
 		if(null != this.viewer)
-			this.viewer.setInput(value);
+			this.viewer.setInput(this.createInput());
 	}
 }
