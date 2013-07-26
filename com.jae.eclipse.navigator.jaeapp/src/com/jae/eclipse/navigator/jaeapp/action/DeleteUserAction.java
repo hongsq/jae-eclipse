@@ -21,7 +21,7 @@ public class DeleteUserAction extends AbstractJDAction {
 		super(provider, text);
 		
 		this.setId("user.action.remove");
-		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor("user.action.remove"));
+		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor("remove"));
 		
 		this.setMustSelect(true);
 		this.setMultiable(true);

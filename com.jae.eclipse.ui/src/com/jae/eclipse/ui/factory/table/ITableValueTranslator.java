@@ -8,7 +8,7 @@ package com.jae.eclipse.ui.factory.table;
  * @author hongshuiqiao
  *
  */
-public interface TableValueTranslator {
+public interface ITableValueTranslator {
 
 	/**
 	 * 将表格上的数据保存到指定的模型对象中

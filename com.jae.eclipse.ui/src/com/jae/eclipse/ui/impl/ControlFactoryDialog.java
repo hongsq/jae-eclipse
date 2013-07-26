@@ -15,18 +15,20 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.jae.eclipse.ui.ILoadable;
 import com.jae.eclipse.ui.IMessageCaller;
+import com.jae.eclipse.ui.IStore;
+import com.jae.eclipse.ui.IValidatable;
 import com.jae.eclipse.ui.UIDescription;
 import com.jae.eclipse.ui.event.IValuechangeListener;
 import com.jae.eclipse.ui.event.ValueChangeEvent;
 import com.jae.eclipse.ui.factory.IControlFactory;
-import com.jae.eclipse.ui.util.LayoutUtil;
 
 /**
  * @author hongshuiqiao
  *
  */
-public class ControlFactoryDialog extends TitleAreaDialog implements IValuechangeListener, IMessageCaller {
+public class ControlFactoryDialog extends TitleAreaDialog implements IValuechangeListener, IMessageCaller, ILoadable, IStore, IValidatable {
 	private IControlFactory controlFactory;
 	private boolean hasError;
 	private boolean resizable;
@@ -51,14 +53,10 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 		UIDescription uiDescription = this.controlFactory.getUIDescription();
 		if(null != uiDescription){
 			if(null != uiDescription.getWinTitle()) newShell.setText(uiDescription.getWinTitle());
-			if(null != uiDescription.getWinTitleImage()) newShell.setImage(uiDescription.getWinTitleImage());
-			if(uiDescription.getInitWidth()>0 && uiDescription.getInitHeight()>0)
-				newShell.setSize(uiDescription.getInitWidth(), uiDescription.getInitHeight());
+			if(null != uiDescription.getWinTitleImage()) newShell.setImage(uiDescription.getWinTitleImage().createImage(true));
 			if(uiDescription.getInitX()>=0 && uiDescription.getInitY()>=0)
 				newShell.setLocation(uiDescription.getInitX(), uiDescription.getInitY());
 		}
-		
-		
 	}
 
 	public boolean isResizable() {
@@ -72,10 +70,8 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 	@Override
 	protected Control createContents(Composite parent) {
 		Control contents = super.createContents(parent);
-		if(null != this.controlFactory){
-			this.controlFactory.load();
-			this.controlFactory.validate();
-		}
+		this.load();
+		this.validate();
 		return contents;
 	}
 	
@@ -85,20 +81,26 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 		if(null != uiDescription){
 			if(null != uiDescription.getTitle()) this.setTitle(uiDescription.getTitle());
 			if(null != uiDescription.getDescription()) this.setMessage(uiDescription.getDescription());
-			if(null != uiDescription.getTitleImage()) this.setTitleImage(uiDescription.getTitleImage());
+			if(null != uiDescription.getTitleImage()) this.setTitleImage(uiDescription.getTitleImage().createImage(true));
 		}
 		
 		Composite composite = new Composite(parent, SWT.NONE);
 
-//		GridLayout gridLayout = new GridLayout(columnCount, false);
-		GridLayout layout = LayoutUtil.createCompactGridLayout(1);
+		GridLayout layout = new GridLayout(1, false);
 		layout.marginHeight = 5;
 		layout.marginWidth = 5;
 		layout.horizontalSpacing = 5;
 		layout.verticalSpacing = 5;
 		
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridData layoutData = new GridData(GridData.FILL_BOTH);
+		if(null != uiDescription){
+			if(uiDescription.getWidth()>0) layoutData.widthHint = uiDescription.getWidth();
+			if(uiDescription.getHeight()>0) layoutData.heightHint = uiDescription.getHeight();
+			if(uiDescription.getMinWidth()>0) layoutData.minimumWidth = uiDescription.getMinWidth();
+			if(uiDescription.getMinHeight()>0) layoutData.minimumHeight = uiDescription.getMinHeight();
+		}
+		composite.setLayoutData(layoutData);
 		composite.setFont(parent.getFont());
 		// Build the separator line
 		Label titleBarSeparator = new Label(composite, SWT.HORIZONTAL | SWT.SEPARATOR);
@@ -106,21 +108,20 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 		
 		this.controlFactory.addValuechangeListener(this);
 		this.controlFactory.setMessageCaller(this);
+		this.controlFactory.setLayoutData(layoutData);
 		this.controlFactory.createControl(composite);
-		this.controlFactory.setLayoutData(new GridData(GridData.FILL_BOTH));
-		this.controlFactory.getControl();
 		
 		return composite;
 	}
 
 	@Override
 	protected void okPressed() {
-		this.controlFactory.save();
+		this.save();
 		super.okPressed();
 	}
 	
 	public void valuechanged(ValueChangeEvent event) {
-		boolean validated = this.controlFactory.validate();
+		boolean validated = this.validate();
 		Button okButton = getButton(IDialogConstants.OK_ID);
 		if(null != okButton)
 			okButton.setEnabled(validated);
@@ -132,11 +133,15 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 	}
 
 	public void info(String message) {
+		if(this.hasError)
+			return;
 		this.setErrorMessage(null);
 		this.setMessage(message, IMessageProvider.INFORMATION);
 	}
 
 	public void warn(String message) {
+		if(this.hasError)
+			return;
 		this.setErrorMessage(null);
 		this.setMessage(message, IMessageProvider.WARNING);
 	}
@@ -154,5 +159,21 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 
 	public boolean hasError() {
 		return this.hasError;
+	}
+
+	public boolean validate() {
+		if(null != this.controlFactory)
+			return this.controlFactory.validate();
+		return true;
+	}
+
+	public void save() {
+		if(null != this.controlFactory)
+			this.controlFactory.save();
+	}
+
+	public void load() {
+		if(null != this.controlFactory)
+			this.controlFactory.load();
 	}
 }

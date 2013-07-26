@@ -15,7 +15,7 @@ import com.jae.eclipse.core.util.ObjectUtil;
  *
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class DefaultTableValueTranslator implements TableValueTranslator {
+public class DefaultTableValueTranslator implements ITableValueTranslator {
 	private AbstractTableFactory factory;
 
 	public DefaultTableValueTranslator(AbstractTableFactory factory) {

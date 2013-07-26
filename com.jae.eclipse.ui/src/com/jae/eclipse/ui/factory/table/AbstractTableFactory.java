@@ -36,8 +36,7 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 	private ColumnModel[] columns = new ColumnModel[0];
 	private boolean headerVisible = true;
 	private boolean linesVisible = true;
-	private TableValueTranslator valueTranslator = new DefaultTableValueTranslator(
-			this);
+	private ITableValueTranslator valueTranslator = new DefaultTableValueTranslator(this);
 	private List<String> columnProperties = new ArrayList<String>();
 	private TableMessageCaller tableMessageCaller;
 	private CompoundMessageCaller compoundMessageCaller = new CompoundMessageCaller();
@@ -112,7 +111,7 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 		}
 
 		if (null == this.getContentProvider())
-			this.setContentProvider(new ListTableDataProvider());
+			this.setContentProvider(new ListTableDataProvider(this));
 
 		if (null == this.getLabelProvider())
 			this.setLabelProvider(new TableLabelProvider(this));
@@ -158,11 +157,11 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 		this.getViewer().refresh();
 	}
 
-	public TableValueTranslator getValueTranslator() {
+	public ITableValueTranslator getValueTranslator() {
 		return this.valueTranslator;
 	}
 
-	public void setValueTranslator(TableValueTranslator valueTranslator) {
+	public void setValueTranslator(ITableValueTranslator valueTranslator) {
 		this.valueTranslator = valueTranslator;
 	}
 
@@ -227,7 +226,10 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 			instance = ((TableItem) element).getData();
 		}
 
-		return this.getColumn(property).getObjectOperator(true).getValue(instance, property);
+		Object value = this.getColumn(property).getObjectOperator(true).getValue(instance, property);
+		if(null == value)
+			return "";
+		return value;
 	}
 
 	public void modify(Object element, String property, Object value) {

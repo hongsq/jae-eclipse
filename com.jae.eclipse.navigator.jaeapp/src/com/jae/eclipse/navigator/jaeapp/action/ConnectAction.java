@@ -35,9 +35,13 @@ public class ConnectAction extends AbstractJDAction {
 		this.setEnabled(false);
 		
 		String id = "action.user.connect";
-		if(!this.connect) id = "action.user.disconnect";
+		String imageID = "connect";
+		if(!this.connect) {
+			id = "action.user.disconnect";
+			imageID = "disconnect";
+		}
 		this.setId(id);
-		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor(id));
+		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor(imageID));
 	}
 	
 	@Override

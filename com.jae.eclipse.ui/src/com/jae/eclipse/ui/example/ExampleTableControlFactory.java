@@ -22,10 +22,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import com.jae.eclipse.ui.IMessageCaller;
+import com.jae.eclipse.ui.IValidator;
 import com.jae.eclipse.ui.factory.table.AbstractTableFactory;
 import com.jae.eclipse.ui.factory.table.ColumnModel;
 import com.jae.eclipse.ui.factory.table.DefaultTableValueTranslator;
-import com.jae.eclipse.ui.factory.table.TableValueTranslator;
+import com.jae.eclipse.ui.factory.table.ITableValueTranslator;
 import com.jae.eclipse.ui.impl.ControlFactoryDialog;
 import com.jae.eclipse.ui.validator.ColumnValidator;
 import com.jae.eclipse.ui.validator.NotEmptyValidator;
@@ -36,10 +38,10 @@ import com.jae.eclipse.ui.validator.NotEmptyValidator;
  */
 @SuppressWarnings({ "rawtypes" })
 public class ExampleTableControlFactory extends AbstractTableFactory {
-	private TableValueTranslator translator = new DefaultTableValueTranslator(this);
+	private ITableValueTranslator translator = new DefaultTableValueTranslator(this);
 	
 	@Override
-	public TableValueTranslator getValueTranslator() {
+	public ITableValueTranslator getValueTranslator() {
 		return this.translator;
 	}
 	
@@ -58,6 +60,27 @@ public class ExampleTableControlFactory extends AbstractTableFactory {
 			column.setSortable(true);
 //			column.setAlignment(SWT.RIGHT);
 			column.addValidator(new ColumnValidator(new NotEmptyValidator("aa")));
+			column.addValidator(new ColumnValidator(new IValidator() {
+				
+				public boolean validate(IMessageCaller messageCaller, Object source, Object value) {
+					if (value instanceof String) {
+						if(((String) value).startsWith("aa"))
+							messageCaller.warn("不能以aa开头");
+
+						if(((String) value).equals("aaa")){
+							messageCaller.error("不能为aaa");
+						}
+						
+						if(((String) value).endsWith("aa")){
+							messageCaller.warn("不能以aa结尾");
+						}
+						
+						if(((String) value).equals("aaa"))
+							return false;
+					}
+					return true;
+				}
+			}));
 			column.setCellEditor(new TextCellEditor(viewer.getTable(), SWT.BORDER));
 			columns.add(column);
 		}

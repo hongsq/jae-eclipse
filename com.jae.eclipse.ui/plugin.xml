@@ -12,6 +12,51 @@
             id="warning_ovr"
             image="icons/warning_ovr.gif">
       </image>
+      <image
+            id="add"
+            image="icons/add.gif">
+      </image>
+      <image
+            id="remove"
+            image="icons/remove.gif">
+      </image>
+      <image
+            id="edit"
+            image="icons/edit.gif">
+      </image>
+      <image
+            id="start"
+            image="icons/run.gif">
+      </image>
+      <image
+            id="stop"
+            image="icons/stop.gif">
+      </image>
+      <image
+            id="refresh"
+            image="icons/refresh.gif">
+      </image>
+      
+      <image
+            id="file"
+            image="icons/file.gif">
+      </image>
+      <image
+            id="folder"
+            image="icons/folder.gif">
+      </image>
+      <image
+            id="deploy"
+            image="icons/deploy.gif">
+      </image>
+      <image
+            id="connect"
+            image="icons/connect.gif">
+      </image>
+      <image
+            id="disconnect"
+            image="icons/disconnect.gif">
+      </image>
    </extension>
 
 </plugin>

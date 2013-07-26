@@ -34,11 +34,14 @@ public class JDAppOperatorAction extends AbstractJDAction {
 		this.start = start;
 		
 		String id = "jdapp.action.stop";
-		if(this.start)
+		String imageID = "stop";
+		if(this.start){
 			id = "jdapp.action.start";
+			imageID = "start";
+		}
 		
 		this.setId(id);
-		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor(id));
+		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor(imageID));
 		this.setMustSelect(true);
 		this.setMultiable(true);
 		this.setSelectType(JDApp.class);

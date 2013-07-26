@@ -42,7 +42,7 @@ public class JDAppDeployAction extends AbstractJDAction {
 		super(provider, text);
 
 		this.setId("jdapp.action.deploy");
-		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor("jdapp.action.deploy"));
+		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor("deploy"));
 		this.setMustSelect(true);
 		this.setMultiable(false);
 		this.setSelectType(JDApp.class);

@@ -90,7 +90,7 @@ public class PropertyMessageCaller implements IMessageCaller {
 	}
 
 	public void info(String message) {
-		if (null != message) {
+		if (null != message && !this.hasError) {
 			Control editorControl = this.propertyEditor.getEditControl();
 			if (null != editorControl) {
 				editorControl.setToolTipText(message);
@@ -99,6 +99,8 @@ public class PropertyMessageCaller implements IMessageCaller {
 	}
 
 	public void warn(String message) {
+		if(this.hasError)
+			return;
 		FieldDecoration fieldDecoration = this.propertyEditor.getWarnFieldDecoration();
 		fieldDecoration.setDescription(message);
 		this.propertyEditor.getDecoratedField().showDecoration(fieldDecoration);

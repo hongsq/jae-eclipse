@@ -11,6 +11,8 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ViewForm;
@@ -26,11 +28,13 @@ import org.eclipse.swt.widgets.ToolBar;
  * @author hongshuiqiao
  *
  */
-public abstract class AbstractViewerFactory extends AbstractControlFactory {
+public abstract class AbstractViewerFactory extends AbstractControlFactory implements ISelectionChangedListener {
 	private IContentProvider contentProvider;
 	private IBaseLabelProvider labelProvider;
 	private String title;
 	private StructuredViewer viewer;
+	private MenuManager menuManager;
+	private ToolBarManager toolBarManager;
 
 	@Override
 	protected Control doCreateControl(Composite parent) {
@@ -43,23 +47,25 @@ public abstract class AbstractViewerFactory extends AbstractControlFactory {
 		viewer.setLabelProvider(labelProvider);
 		viewer.setInput(createInput());
 		
-		MenuManager manager = new MenuManager("#PopupMenu");//创建菜单管理器
-		manager.setRemoveAllWhenShown(true);
-		manager.addMenuListener(new IMenuListener() {
+		init(viewer);
+		
+		menuManager = new MenuManager("#PopupMenu");//创建菜单管理器
+		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				//刷新菜单
 				fillContextMenu(manager);
 			}
 
 		});
-		fillContextMenu(manager);
-		viewControl.setMenu(manager.createContextMenu(viewControl));
+		fillContextMenu(menuManager);
+		viewControl.setMenu(menuManager.createContextMenu(viewControl));
 		
 		ToolBar toolBar = new ToolBar(viewForm, SWT.FLAT); // 创建一个ToolBar容器
-		final ToolBarManager toolBarManager = new ToolBarManager(toolBar); // 创建一个toolBar的管理器
+		viewForm.setTopRight(toolBar); // 顶端右边缘：工具栏
+		toolBarManager = new ToolBarManager(toolBar); // 创建一个toolBar的管理器
 		fillActionToolBars(toolBarManager); // 将Action通过toolBarManager注入ToolBar中
 
-		viewForm.setTopRight(toolBar); // 顶端右边缘：工具栏
 		if(null != title){
 			Label titleLabel = new Label(viewForm, SWT.NONE);
 			titleLabel.setText(title);
@@ -73,8 +79,21 @@ public abstract class AbstractViewerFactory extends AbstractControlFactory {
 			}
 		};
 		viewControl.addListener (SWT.MouseUp,listener);
+		viewer.addSelectionChangedListener(this);
+
+		this.menuManager.update(true);
+		this.toolBarManager.update(true);
 		
 		return viewForm;
+	}
+	
+	protected void init(StructuredViewer viewer) {
+		// nothing to do.
+	}
+
+	public void selectionChanged(SelectionChangedEvent event) {
+		this.menuManager.update(true);
+		this.toolBarManager.update(true);
 	}
 
 	protected abstract Object createInput();

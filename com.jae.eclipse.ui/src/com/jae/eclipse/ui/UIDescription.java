@@ -3,7 +3,7 @@
  */
 package com.jae.eclipse.ui;
 
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author hongshuiqiao
@@ -13,27 +13,45 @@ public class UIDescription {
 	private String winTitle;
 	private String title;
 	private String description;
-	private Image titleImage;
-	private Image winTitleImage;
-	private int initWidth=-1;
-	private int initHeight=-1;
+	private ImageDescriptor titleImage;
+	private ImageDescriptor winTitleImage;
+	private int width=-1;
+	private int height=-1;
+	private int minWidth=-1;
+	private int minHeight=-1;
 	private int initX=-1;
 	private int initY=-1;
 
-	public int getInitWidth() {
-		return initWidth;
+	public int getWidth() {
+		return width;
 	}
 
-	public void setInitWidth(int initWidth) {
-		this.initWidth = initWidth;
+	public void setWidth(int width) {
+		this.width = width;
 	}
 
-	public int getInitHeight() {
-		return initHeight;
+	public int getHeight() {
+		return height;
 	}
 
-	public void setInitHeight(int initHeight) {
-		this.initHeight = initHeight;
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getMinWidth() {
+		return minWidth;
+	}
+
+	public void setMinWidth(int minWidth) {
+		this.minWidth = minWidth;
+	}
+
+	public int getMinHeight() {
+		return minHeight;
+	}
+
+	public void setMinHeight(int minHeight) {
+		this.minHeight = minHeight;
 	}
 
 	public String getWinTitle() {
@@ -60,19 +78,19 @@ public class UIDescription {
 		this.description = description;
 	}
 
-	public Image getTitleImage() {
+	public ImageDescriptor getTitleImage() {
 		return titleImage;
 	}
 
-	public void setTitleImage(Image titleImage) {
+	public void setTitleImage(ImageDescriptor titleImage) {
 		this.titleImage = titleImage;
 	}
 
-	public Image getWinTitleImage() {
+	public ImageDescriptor getWinTitleImage() {
 		return winTitleImage;
 	}
 
-	public void setWinTitleImage(Image winTitleImage) {
+	public void setWinTitleImage(ImageDescriptor winTitleImage) {
 		this.winTitleImage = winTitleImage;
 	}
 

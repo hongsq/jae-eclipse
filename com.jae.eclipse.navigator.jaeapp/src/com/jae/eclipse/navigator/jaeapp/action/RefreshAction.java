@@ -20,7 +20,7 @@ public class RefreshAction extends AbstractJDAction {
 		super(provider, text);
 		
 		this.setId("common.action.refresh");
-		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor("common.action.refresh"));
+		this.setImageDescriptor(ImageRepositoryManager.getImageDescriptor("refresh"));
 		this.setMustSelect(true);
 		this.setMultiable(true);
 		this.setSelectType(AbstractJDElement.class);

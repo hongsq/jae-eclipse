@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.forms,
  com.jae.eclipse.library,
- com.jae.eclipse.core
+ com.jae.eclipse.core,
+ org.eclipse.ui.ide
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: com.jae.eclipse.ui,
@@ -21,6 +22,7 @@ Export-Package: com.jae.eclipse.ui,
  com.jae.eclipse.ui.factory,
  com.jae.eclipse.ui.factory.impl,
  com.jae.eclipse.ui.factory.table,
+ com.jae.eclipse.ui.factory.table.action,
  com.jae.eclipse.ui.impl,
  com.jae.eclipse.ui.resource,
  com.jae.eclipse.ui.util,

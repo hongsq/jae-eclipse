@@ -17,7 +17,7 @@ public class UIUtil {
 		return null != control && !control.isDisposed();
 	}
 
-	public void runInUI(Runnable runnable, boolean sync){
+	public static void runInUI(Runnable runnable, boolean sync){
 		Display display = Display.getCurrent();
 		if(null == display)
 			display = PlatformUI.getWorkbench().getDisplay();

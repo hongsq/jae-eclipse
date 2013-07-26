@@ -21,8 +21,8 @@ public class ColumnValidator implements IColumnValidator {
 		this.validator = validator;
 	}
 
-	public boolean validate(IMessageCaller messageCaller, ColumnViewer viewer, Object column, int columnIndex, int rowIndex, Object value) {
-		return this.validator.validate(messageCaller, column, value);
+	public boolean validate(IMessageCaller messageCaller, ColumnViewer viewer, Object rowData, int columnIndex, int rowIndex, Object value) {
+		return this.validator.validate(messageCaller, rowData, value);
 	}
 
 }

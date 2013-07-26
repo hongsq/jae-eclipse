@@ -12,6 +12,9 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.Viewer;
 
+import com.jae.eclipse.ui.event.ValueChangeEvent;
+import com.jae.eclipse.ui.util.UIUtil;
+
 /**
  * @author hongshuiqiao
  *
@@ -19,9 +22,11 @@ import org.eclipse.jface.viewers.Viewer;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ListTableDataProvider implements ITableDataProvider {
 	private List list = new ArrayList();
+	private AbstractTableFactory factory;
 
-	public ListTableDataProvider() {
+	public ListTableDataProvider(AbstractTableFactory factory) {
 		super();
+		this.factory = factory;
 	}
 
 	public void dispose() {
@@ -65,22 +70,39 @@ public class ListTableDataProvider implements ITableDataProvider {
 
 	public synchronized void add(Object element) {
 		this.list.add(element);
+		dataChangeNotifyer();
+	}
+
+	private void dataChangeNotifyer() {
+		UIUtil.runInUI(new Runnable() {
+			
+			public void run() {
+				factory.getViewer().refresh();
+				factory.fireValuechanged(new ValueChangeEvent(factory, null, null));
+				factory.validate();
+				factory.getViewer().refresh();
+			}
+		}, false);
 	}
 
 	public synchronized void insert(int index, Object element) {
 		this.list.add(index, element);
+		dataChangeNotifyer();
 	}
 
 	public synchronized void replace(int index, Object element) {
 		this.list.set(index, element);
+		dataChangeNotifyer();
 	}
 
 	public synchronized void remove(Object element) {
 		this.list.remove(element);
+		dataChangeNotifyer();
 	}
 
 	public synchronized void remove(int index) {
 		this.list.remove(index);
+		dataChangeNotifyer();
 	}
 
 	public Object get(int index) {
@@ -89,6 +111,7 @@ public class ListTableDataProvider implements ITableDataProvider {
 
 	public synchronized void clear() {
 		list.clear();
+		dataChangeNotifyer();
 	}
 
 }

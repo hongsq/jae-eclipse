@@ -118,6 +118,16 @@ public class ObjectEditor extends ValueEventContainer implements ILayoutContaine
 	public void build(Composite parent){
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(this.getLayout());
+		if(null != uiDescription){
+			if(uiDescription.getWidth()>0 && this.layoutData.widthHint<0)
+				this.layoutData.widthHint = uiDescription.getWidth();
+			if(uiDescription.getHeight()>0 && this.layoutData.heightHint<0)
+				this.layoutData.heightHint = uiDescription.getHeight();
+			if(uiDescription.getMinWidth()>0 && this.layoutData.minimumWidth<0)
+				this.layoutData.minimumWidth = uiDescription.getMinWidth();
+			if(uiDescription.getMinHeight()>0 && this.layoutData.minimumHeight<0)
+				this.layoutData.minimumHeight = uiDescription.getMinHeight();
+		}
 		composite.setLayoutData(this.layoutData);
 		
 		beforeBuild(composite);
