@@ -46,26 +46,14 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		this.accessKey = keys[0];
 		this.secretKey = keys[1];
 	}
-
-	@Override
-	protected ClientHttpRequest createRequest(URI url, HttpMethod method) throws IOException {
-		ClientHttpRequest request = super.createRequest(url, method);
-
-		String methodName = method.name().toLowerCase();
-		initJAEHeaders(request, methodName);
-		return request;
-	}
 	
 	@Override
 	protected <T> T doExecute(URI uri, final HttpMethod method, final RequestCallback requestCallback, final ResponseExtractor<T> responseExtractor) throws RestClientException {
-		RequestCallback newRequestCallback = requestCallback;
-		if(null != requestCallback){
-			newRequestCallback = new RequestCallback() {
-				public void doWithRequest(ClientHttpRequest request) throws IOException {
-					initJAERequest(method, request, requestCallback);
-				}
-			};
-		}
+		RequestCallback newRequestCallback = new RequestCallback() {
+			public void doWithRequest(ClientHttpRequest request) throws IOException {
+				initJAERequest(method, request, requestCallback);
+			}
+		};
 		
 		ResponseExtractor<T> newResponseExtractor = responseExtractor;
 		if(null != responseExtractor){
@@ -84,8 +72,8 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		if(null != requestCallback)
 			requestCallback.doWithRequest(request);
 		
-//		String methodName = method.name().toLowerCase();
-//		initJAEHeaders(request, methodName);
+		String methodName = method.name().toLowerCase();
+		initJAEHeaders(request, methodName);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

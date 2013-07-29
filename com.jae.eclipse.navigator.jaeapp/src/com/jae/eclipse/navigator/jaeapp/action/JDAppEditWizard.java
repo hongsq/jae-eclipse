@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.PlatformUI;
 
 import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 import com.jae.eclipse.cloudfoundry.exception.CloudFoundryClientRuntimeException;
@@ -240,7 +241,7 @@ public class JDAppEditWizard extends AbstractWizard {
 					e.printStackTrace();
 				} finally {
 					if(refreshFlag){
-						getShell().getDisplay().asyncExec(new Runnable() {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							
 							public void run() {
 								JAEView.getInstance().getCommonViewer().refresh();

@@ -15,7 +15,7 @@ import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
  * @author hongshuiqiao
  *
  */
-@SuppressWarnings({ "unused", "unchecked", "rawtypes" })
+@SuppressWarnings({ "unused" })
 public class Test {
 
 	/**

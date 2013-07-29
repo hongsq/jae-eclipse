@@ -2,7 +2,7 @@
 <feature
       id="com.jae.eclipse.feature.code"
       label="Code Manager"
-      version="1.0.1"
+      version="1.0.2"
       provider-name="JAE">
 
    <description url="http://www.example.com/description">
@@ -28,7 +28,7 @@
          id="com.jae.eclipse.navigator.jaeapp.code"
          download-size="0"
          install-size="0"
-         version="1.0.1"
+         version="1.0.2"
          unpack="false"/>
 
 </feature>
