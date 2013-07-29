@@ -40,6 +40,7 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 	private List<String> columnProperties = new ArrayList<String>();
 	private TableMessageCaller tableMessageCaller;
 	private CompoundMessageCaller compoundMessageCaller = new CompoundMessageCaller();
+	private boolean notEmpty = false;
 
 	@Override
 	protected ISelection computeSelection(Point point) {
@@ -195,6 +196,14 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 		this.linesVisible = linesVisible;
 	}
 
+	public boolean isNotEmpty() {
+		return notEmpty;
+	}
+
+	public void setNotEmpty(boolean notEmpty) {
+		this.notEmpty = notEmpty;
+	}
+
 	@Override
 	public TableViewer getViewer() {
 		return (TableViewer) super.getViewer();
@@ -255,8 +264,17 @@ public abstract class AbstractTableFactory extends AbstractViewerFactory impleme
 		if (null != this.tableMessageCaller)
 			this.tableMessageCaller.clear();
 
-		boolean flag = true;
 		TableItem[] items = this.getViewer().getTable().getItems();
+		if(null == items || items.length <=0){
+			if(this.notEmpty){
+				String title = this.getTitle();
+				if(null == title) title = "";
+				this.compoundMessageCaller.error(title+"数据不能为空。");
+				return false;
+			}
+		}
+
+		boolean flag = true;
 		for (int rowIndex = 0; rowIndex < items.length; rowIndex++) {
 			TableItem tableItem = items[rowIndex];
 			RowModel rowModel = (RowModel) tableItem.getData();

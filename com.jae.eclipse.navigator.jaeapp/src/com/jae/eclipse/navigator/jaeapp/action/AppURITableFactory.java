@@ -69,8 +69,7 @@ public class AppURITableFactory extends AbstractTableFactory {
 			@Override
 			public void selectionChanged(IStructuredSelection selection) {
 				super.selectionChanged(selection);
-				if(this.isEnabled()){
-					
+				if(this.isEnabled() && null != AppURITableFactory.this.app){
 					Object[] objects = selection.toArray();
 					for (Object object : objects) {
 						String uri = (String) ((RowModel)object).get("uri");
@@ -89,7 +88,7 @@ public class AppURITableFactory extends AbstractTableFactory {
 	@Override
 	public boolean canModify(Object element, String property) {
 		boolean canModify = super.canModify(element, property);
-		if(canModify){
+		if(canModify && null != this.app){
 			Object value = this.getValue(element, property);
 			if(this.app.getName().equals(value)){
 				return false;

@@ -198,6 +198,10 @@
             id="jdapp.model.django"
             image="icons/appmodel/icon-python-django.gif">
       </image>
+      <image
+            id="jdapp.action.add"
+            image="icons/action/jdapp_new.gif">
+      </image>
    </extension>
    <extension
          point="org.eclipse.core.runtime.adapters">

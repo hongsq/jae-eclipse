@@ -9,12 +9,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.cloudfoundry.client.lib.domain.Staging;
 import org.eclipse.core.runtime.Platform;
 
 import com.jae.eclipse.core.util.JsonHelper;
@@ -31,8 +33,18 @@ public class JAEAppHelper {
 	private static final String JDCONFIG_USER_CONFIG = "jdconfig/user.config";
 	private static Map<String, User> users = new LinkedHashMap<String, User>();
 	private static Map<String, String> srcRepositoryMap = new HashMap<String, String>();
+	private static Map<String, Staging> supportStaging = new HashMap<String, Staging>();
 	
 	static{
+		supportStaging.put("Java 1.6.0", new Staging("java", "java_web"));
+		supportStaging.put("Java Spring 3.0.0", new Staging("java", "spring"));
+		supportStaging.put("Node 0.8", new Staging("node08", "node"));
+		supportStaging.put("Ruby Sinatra 1.3.2", new Staging("ruby19", "sinatra"));
+		supportStaging.put("Ruby on Rails 3.2.9", new Staging("ruby19", "rails3"));
+		supportStaging.put("PHP 5.3.10", new Staging("php", "php"));
+		supportStaging.put("Python WSGI 2.7.3", new Staging("python2", "wsgi"));
+		supportStaging.put("Python Django 1.5.1", new Staging("python2", "django"));
+		
 		try {
 			load();
 		} catch (IOException e) {
@@ -256,5 +268,17 @@ public class JAEAppHelper {
 	public static String getDefaultAppRepository(JDApp app){
 		User user = JDModelUtil.getParentElement(app, User.class);
 		return MessageFormat.format("https://code.jd.com/{0}/jae_{1}.git", user.getName(), app.getName());
+	}
+	
+	public static Staging getStaging(String stagingName){
+		return supportStaging.get(stagingName);
+	}
+	
+	public static String[] getSupportStagingNames(){
+		return supportStaging.keySet().toArray(new String[supportStaging.size()]);
+	}
+	
+	public static Map<String, Staging> getSupportStagings(){
+		return Collections.unmodifiableMap(supportStaging);
 	}
 }

@@ -60,7 +60,7 @@ public class ComboPropertyEditor extends AbstractPropertyEditor {
 		this.items.addAll(Arrays.asList(items));
 	}
 	
-	public void setComboItems(Map<String, Object> items){
+	public void setComboItems(Map<String, ?> items){
 		this.items.clear();
 		this.itemMap.clear();
 		
@@ -85,6 +85,14 @@ public class ComboPropertyEditor extends AbstractPropertyEditor {
 		}
 	}
 	
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
 	@Override
 	protected Object doGetValue() {
 		Combo combo = getCombo();

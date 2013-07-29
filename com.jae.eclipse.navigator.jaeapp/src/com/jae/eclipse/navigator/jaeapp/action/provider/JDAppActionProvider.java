@@ -21,6 +21,7 @@ public class JDAppActionProvider extends AbstractJDActionProvider {
 	private JDAppEditAction editAppAction;
 	private JDAppDeployAction deployAction;
 	private JDAppOperatorAction startAction;
+	private JDAppOperatorAction restartAction;
 	private JDAppOperatorAction stopAction;
 
 	@Override
@@ -30,8 +31,9 @@ public class JDAppActionProvider extends AbstractJDActionProvider {
 		
 		editAppAction = new JDAppEditAction(viewer, "编辑应用");
 		deployAction = new JDAppDeployAction(viewer, "部署");
-		startAction = new JDAppOperatorAction(viewer, "启动应用", true);
-		stopAction = new JDAppOperatorAction(viewer, "停止应用", false);
+		startAction = new JDAppOperatorAction(viewer, "启动应用", JDAppOperatorAction.OP_TYPE_START);
+		restartAction = new JDAppOperatorAction(viewer, "重启应用", JDAppOperatorAction.OP_TYPE_RESTART);
+		stopAction = new JDAppOperatorAction(viewer, "停止应用", JDAppOperatorAction.OP_TYPE_STOP);
 	}
 
 	@Override
@@ -39,6 +41,7 @@ public class JDAppActionProvider extends AbstractJDActionProvider {
 		NavigatorUtil.appendAction2Group(menuManager, "group.jdapp", this.editAppAction);
 		NavigatorUtil.appendAction2Group(menuManager, "group.jdapp", this.deployAction);
 		NavigatorUtil.appendAction2Group(menuManager, "group.jdapp", this.startAction);
+		NavigatorUtil.appendAction2Group(menuManager, "group.jdapp", this.restartAction);
 		NavigatorUtil.appendAction2Group(menuManager, "group.jdapp", this.stopAction);
 	}
 	

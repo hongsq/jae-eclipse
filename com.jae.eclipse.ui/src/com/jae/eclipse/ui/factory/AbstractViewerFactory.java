@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -35,6 +36,11 @@ public abstract class AbstractViewerFactory extends AbstractControlFactory imple
 	private StructuredViewer viewer;
 	private MenuManager menuManager;
 	private ToolBarManager toolBarManager;
+	
+	public AbstractViewerFactory() {
+		super();
+		this.setLayoutData(new GridData(GridData.FILL_BOTH));
+	}
 
 	@Override
 	protected Control doCreateControl(Composite parent) {

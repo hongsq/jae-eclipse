@@ -8,11 +8,6 @@ import java.util.List;
 
 import org.cloudfoundry.client.lib.CloudCredentials;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 
@@ -39,6 +34,9 @@ public class Test {
 		CloudCredentials credentials = new CloudCredentials(accessKey+"|"+secretKey);
 		CloudFoundryClientExt client = new CloudFoundryClientExt(credentials, url);
 		
+		client.deleteApplication("spring");
+		System.out.println("done");
+		
 //		File warFile = new File("C:/Users/Administrator/git/jae_hongsq/hello-java-1.0.war");
 //		File warFile = new File("C:/Users/Administrator/git/jae_hongsq/hello-java-1.0-war");
 //		client.uploadApplication("hongsq", warFile);
@@ -54,24 +52,24 @@ public class Test {
 		
 		
 
-		RestTemplate restTemplate = client.getRestUtil().createRestTemplate(null);
-		
-		HttpHeaders headers = new HttpHeaders();
-		
-	    
-//	    if (supportsRanges) {
-//	      headers.set("Range", range);
-//	    }
-	    HttpEntity requestEntity = new HttpEntity(headers);
-	    String urlPath = url+"/apps/{app}/instances/{instance}/files/{filePath}";
-	    String app = "hongsq";
-	    String instance = "0";
-	    String filePath = "logs";
-	    ResponseEntity responseEntity = restTemplate.exchange(urlPath, HttpMethod.GET, requestEntity, String.class, new Object[] { app, instance, filePath });
-
-	    
-	    
-		System.out.println(responseEntity.getBody());
+//		RestTemplate restTemplate = client.getRestUtil().createRestTemplate(null);
+//		
+//		HttpHeaders headers = new HttpHeaders();
+//		
+//	    
+////	    if (supportsRanges) {
+////	      headers.set("Range", range);
+////	    }
+//	    HttpEntity requestEntity = new HttpEntity(headers);
+//	    String urlPath = url+"/apps/{app}/instances/{instance}/files/{filePath}";
+//	    String app = "hongsq";
+//	    String instance = "0";
+//	    String filePath = "logs";
+//	    ResponseEntity responseEntity = restTemplate.exchange(urlPath, HttpMethod.GET, requestEntity, String.class, new Object[] { app, instance, filePath });
+//
+//	    
+//	    
+//		System.out.println(responseEntity.getBody());
 		
 //		restTemplate.
 		

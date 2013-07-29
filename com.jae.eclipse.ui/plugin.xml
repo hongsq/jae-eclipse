@@ -57,6 +57,14 @@
             id="disconnect"
             image="icons/disconnect.gif">
       </image>
+      <image
+            id="delete"
+            image="icons/delete.gif">
+      </image>
+      <image
+            id="restart"
+            image="icons/restart.gif">
+      </image>
    </extension>
 
 </plugin>

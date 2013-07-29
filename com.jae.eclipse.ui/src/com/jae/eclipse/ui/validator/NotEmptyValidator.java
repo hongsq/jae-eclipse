@@ -17,6 +17,8 @@ public class NotEmptyValidator implements IValidator {
 	public NotEmptyValidator(String name) {
 		super();
 		this.name = name;
+		if(null == this.name)
+			this.name = "";
 	}
 
 	public boolean validate(IMessageCaller messageCaller, Object source, Object value) {

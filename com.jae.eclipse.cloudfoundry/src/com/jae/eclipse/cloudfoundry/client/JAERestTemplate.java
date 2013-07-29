@@ -48,6 +48,15 @@ public class JAERestTemplate extends LoggingRestTemplate {
 	}
 
 	@Override
+	protected ClientHttpRequest createRequest(URI url, HttpMethod method) throws IOException {
+		ClientHttpRequest request = super.createRequest(url, method);
+
+		String methodName = method.name().toLowerCase();
+		initJAEHeaders(request, methodName);
+		return request;
+	}
+	
+	@Override
 	protected <T> T doExecute(URI uri, final HttpMethod method, final RequestCallback requestCallback, final ResponseExtractor<T> responseExtractor) throws RestClientException {
 		RequestCallback newRequestCallback = requestCallback;
 		if(null != requestCallback){
@@ -75,8 +84,8 @@ public class JAERestTemplate extends LoggingRestTemplate {
 		if(null != requestCallback)
 			requestCallback.doWithRequest(request);
 		
-		String methodName = method.name().toLowerCase();
-		initJAEHeaders(request, methodName);
+//		String methodName = method.name().toLowerCase();
+//		initJAEHeaders(request, methodName);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

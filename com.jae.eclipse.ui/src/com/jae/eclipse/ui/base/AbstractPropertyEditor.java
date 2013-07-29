@@ -36,6 +36,7 @@ import com.jae.eclipse.ui.impl.CompoundMessageCaller;
 import com.jae.eclipse.ui.impl.PropertyMessageCaller;
 import com.jae.eclipse.ui.util.LayoutUtil;
 import com.jae.eclipse.ui.util.UIUtil;
+import com.jae.eclipse.ui.validator.NotEmptyValidator;
 
 /**
  * @author hongshuiqiao
@@ -325,6 +326,10 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	}
 
 	public void build(Composite parent) {
+		if(this.required){
+			this.addValidator(new NotEmptyValidator(this.getLabel()));
+		}
+		
 		this.labelControl = buildLabelControl(parent);
 		if(null != this.labelControl){
 			this.labelControl.setLayoutData(new GridData());

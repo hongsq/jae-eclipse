@@ -27,17 +27,28 @@ import com.jae.eclipse.ui.extension.ImageRepositoryManager;
  *
  */
 public class JDAppOperatorAction extends AbstractJDAction {
-	private boolean start;
+	public final static int OP_TYPE_START = 1;
+	public final static int OP_TYPE_RESTART = 2;
+	public final static int OP_TYPE_STOP = 3;
+	private int opType;
 
-	public JDAppOperatorAction(ISelectionProvider provider, String text, boolean start) {
+	/**
+	 * @param provider
+	 * @param text
+	 * @param opType
+	 */
+	public JDAppOperatorAction(ISelectionProvider provider, String text, int opType) {
 		super(provider, text);
-		this.start = start;
+		this.opType = opType;
 		
 		String id = "jdapp.action.stop";
 		String imageID = "stop";
-		if(this.start){
+		if(OP_TYPE_START == opType){
 			id = "jdapp.action.start";
 			imageID = "start";
+		}else if(OP_TYPE_RESTART == opType){
+			id = "jdapp.action.restart";
+			imageID = "restart";
 		}
 		
 		this.setId(id);
@@ -59,7 +70,7 @@ public class JDAppOperatorAction extends AbstractJDAction {
 		
 		for (Object object : objects) {
 			JDApp app = (JDApp) object;
-			if(this.start)
+			if(this.opType == OP_TYPE_START)
 				flag = !app.isStarted() && flag;
 			else
 				flag = app.isStarted() && flag;
@@ -70,10 +81,10 @@ public class JDAppOperatorAction extends AbstractJDAction {
 
 	@Override
 	public void run() {
-		final String name = (this.start?"启动":"关闭")+"应用";
 		final Object[] objects = this.getStructuredSelection().toArray();
 		final TreeViewer viewer = (TreeViewer) this.getSelectionProvider();
 		final Display display = viewer.getControl().getDisplay();
+		final String name = getText();
 		Job job = new Job(name) {
 			
 			@Override
@@ -89,17 +100,20 @@ public class JDAppOperatorAction extends AbstractJDAction {
 						CloudFoundryClientExt client = user.getCloudFoundryClient();
 						CloudApplication application = client.getApplication(app.getName());
 						
-						if(JDAppOperatorAction.this.start){
+						if(JDAppOperatorAction.this.opType == JDAppOperatorAction.OP_TYPE_START){
 							if(application.getState() == AppState.STOPPED){
 								client.startApplication(app.getName());
 							}
-							
 							app.setStarted(true);
-						}else{
+						}else if(JDAppOperatorAction.this.opType == JDAppOperatorAction.OP_TYPE_RESTART){
+							if(application.getState() == AppState.STARTED){
+								client.restartApplication(app.getName());
+							}
+							app.setStarted(true);
+						}else if(JDAppOperatorAction.this.opType == JDAppOperatorAction.OP_TYPE_STOP){
 							if(application.getState() != AppState.STOPPED){
 								client.stopApplication(app.getName());
 							}
-
 							app.setStarted(false);
 						}
 						monitor.worked(50);
