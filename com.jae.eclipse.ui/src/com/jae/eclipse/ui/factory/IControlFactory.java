@@ -6,6 +6,7 @@ package com.jae.eclipse.ui.factory;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.jae.eclipse.ui.IHelpContext;
 import com.jae.eclipse.ui.ILayoutElement;
 import com.jae.eclipse.ui.ILoadable;
 import com.jae.eclipse.ui.IMessageCaller;
@@ -19,7 +20,7 @@ import com.jae.eclipse.ui.event.IValuechangeListener;
  * @author hongshuiqiao
  *
  */
-public interface IControlFactory extends IUIDescElement, ILayoutElement, IValueEventContainer, IStore, ILoadable, IValidatable, IValuechangeListener {
+public interface IControlFactory extends IUIDescElement, IHelpContext, ILayoutElement, IValueEventContainer, IStore, ILoadable, IValidatable, IValuechangeListener {
 	
 	public Object getValue();
 	

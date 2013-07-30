@@ -3,9 +3,12 @@
  */
 package com.jae.eclipse.ui.factory;
 
+import org.eclipse.swt.events.HelpEvent;
+import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
 
 import com.jae.eclipse.core.DefaultObjectOperator;
 import com.jae.eclipse.core.ObjectOperator;
@@ -27,11 +30,20 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 	private IMessageCaller messageCaller;
 	private GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 	private ObjectOperator objectOperator;
+	private String helpContextID;
 
 	public final void createControl(Composite parent) {
 		this.beforeCreateControl();
 		this.control = this.doCreateControl(parent);
 		this.control.setLayoutData(this.layoutData);
+		if(null != this.helpContextID){
+			this.control.addHelpListener(new HelpListener() {
+				
+				public void helpRequested(HelpEvent e) {
+					PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextID);
+				}
+			});
+		}
 		this.afterCreateControl();
 	}
 
@@ -58,7 +70,15 @@ public abstract class AbstractControlFactory extends ValueEventContainer impleme
 	public void setLayoutData(GridData layoutData) {
 		this.layoutData = layoutData;
 	}
+	
+	public String getHelpContextID() {
+		return helpContextID;
+	}
 
+	public void setHelpContextID(String helpContextID) {
+		this.helpContextID = helpContextID;
+	}
+	
 	public Object getValue() {
 		return value;
 	}

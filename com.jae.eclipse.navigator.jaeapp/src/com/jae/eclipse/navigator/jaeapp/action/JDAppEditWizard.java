@@ -23,6 +23,7 @@ import com.jae.eclipse.navigator.jaeapp.model.User;
 import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;
 import com.jae.eclipse.navigator.jaeapp.util.JDModelUtil;
 import com.jae.eclipse.navigator.jaeapp.view.JAEView;
+import com.jae.eclipse.ui.HelpContextConstants;
 import com.jae.eclipse.ui.ObjectEditor;
 import com.jae.eclipse.ui.control.NumberPropertyEditor;
 import com.jae.eclipse.ui.control.NumberType;
@@ -83,6 +84,7 @@ public class JDAppEditWizard extends AbstractWizard {
 			editor.setPropertyName("repositoryURL");
 			editor.setLabel("代码仓库:");
 			editor.addValidator(new NotEmptyValidator("代码仓库"));
+			editor.setHelpContextID(HelpContextConstants.CONTEXT_JAE_APP_REPOSITORY);
 			objectEditor.addPropertyEditor(editor);
 		}
 		return objectEditor;

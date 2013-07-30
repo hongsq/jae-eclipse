@@ -12,11 +12,14 @@ import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IControlCreator;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.HelpEvent;
+import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
@@ -75,6 +78,7 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 	private GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 	private boolean enable=true;
 	private ObjectOperator objectOperator;
+	private String helpContextID;
 
 	public boolean isEnable() {
 		if(!UIUtil.isControlValid(this.editControl))
@@ -87,6 +91,14 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 		this.enable = enabled;
 		if(UIUtil.isControlValid(this.editControl))
 			this.getEditControl().setEnabled(this.enable);
+	}
+
+	public String getHelpContextID() {
+		return helpContextID;
+	}
+
+	public void setHelpContextID(String helpContextID) {
+		this.helpContextID = helpContextID;
 	}
 
 	public String getToolTip() {
@@ -251,6 +263,14 @@ public abstract class AbstractPropertyEditor extends ValueEventContainer impleme
 				validate();
 			}
 		});
+		
+		if(null != this.helpContextID){
+			this.editControl.addHelpListener(new HelpListener() {
+				public void helpRequested(HelpEvent e) {
+					PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextID);
+				}
+			});
+		}
 //		
 //		this.editControl.addFocusListener(new FocusListener() {
 //			@Override

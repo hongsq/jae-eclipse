@@ -98,6 +98,11 @@
                         value="org.eclipse.core.resources.IWorkspaceRoot">
                   </instanceof>
                </and>
+               <and>
+                  <count
+                        value="0">
+                  </count>
+               </and>
             </or>
          </enablement>
       </actionProvider>

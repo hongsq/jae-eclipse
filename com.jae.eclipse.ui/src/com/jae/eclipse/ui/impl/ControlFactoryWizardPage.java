@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 import com.jae.eclipse.ui.ILoadable;
 import com.jae.eclipse.ui.IMessageCaller;
@@ -145,4 +146,10 @@ public class ControlFactoryWizardPage extends WizardPage implements IValuechange
 		return true;
 	}
 
+	@Override
+	public void performHelp() {
+		String contextID = this.factory.getHelpContextID();
+		if(null != contextID)
+			PlatformUI.getWorkbench().getHelpSystem().displayHelp(contextID);
+	}
 }

@@ -16,6 +16,7 @@ import org.eclipse.ui.navigator.CommonViewer;
 import com.jae.eclipse.navigator.jaeapp.model.User;
 import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;
 import com.jae.eclipse.navigator.jaeapp.view.JAEView;
+import com.jae.eclipse.ui.HelpContextConstants;
 import com.jae.eclipse.ui.IMessageCaller;
 import com.jae.eclipse.ui.IValidator;
 import com.jae.eclipse.ui.ObjectEditor;
@@ -81,6 +82,7 @@ public class UserAction extends AbstractJDAction {
 			editor.setPropertyName("accessKey");
 			editor.setLabel("accessKey");
 			editor.addValidator(new NotEmptyValidator("accessKey"));
+			editor.setHelpContextID(HelpContextConstants.CONTEXT_JAE_USER_KEY);
 			editor.addValidator(repeatValidator);
 			objectEditor.addPropertyEditor(editor);
 		}
@@ -89,6 +91,7 @@ public class UserAction extends AbstractJDAction {
 			editor.setPropertyName("secretKey");
 			editor.setLabel("secretKey");
 			editor.addValidator(new NotEmptyValidator("secretKey"));
+			editor.setHelpContextID(HelpContextConstants.CONTEXT_JAE_USER_KEY);
 			editor.addValidator(repeatValidator);
 			objectEditor.addPropertyEditor(editor);
 		}

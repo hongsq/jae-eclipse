@@ -68,7 +68,41 @@ public class DeleteAction extends AbstractJDAction {
 	@Override
 	public void run() {
 		StructuredViewer viewer = (StructuredViewer) this.getSelectionProvider();
-		if(!MessageDialog.openConfirm(viewer.getControl().getShell(), "确认", "确定要删除选中的节点吗？")){
+		StringBuilder userMessage = new StringBuilder();
+		for (int i = 0; i < this.users.size(); i++) {
+			if(i>0)
+				userMessage.append(",");
+			
+			User user = this.users.get(i);
+			userMessage.append(user.getName());
+		}
+		StringBuilder appMessage = new StringBuilder();
+		for (int i = 0; i < this.apps.size(); i++) {
+			if(i>0)
+				appMessage.append(",");
+			
+			JDApp app = this.apps.get(i);
+			appMessage.append(app.getName());
+		}
+		
+		StringBuilder message = new StringBuilder();
+		message.append("确定要删除选中的");
+		if(userMessage.length()>0){
+			message.append("用户\"");
+			message.append(userMessage.toString());
+			message.append("\"");
+			
+			if(appMessage.length()>0)
+				message.append("及");
+		}
+		
+		if(appMessage.length()>0){
+			message.append("应用\"");
+			message.append(appMessage.toString());
+			message.append("\"");
+		}
+		message.append("吗?");
+		if(!MessageDialog.openConfirm(viewer.getControl().getShell(), "确认", message.toString())){
 			return;
 		}
 		
