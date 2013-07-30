@@ -20,6 +20,7 @@ public abstract class AbstractWizard extends Wizard {
 
 	public AbstractWizard() {
 		super();
+		setHelpAvailable(true);
 	}
 
 	@Override

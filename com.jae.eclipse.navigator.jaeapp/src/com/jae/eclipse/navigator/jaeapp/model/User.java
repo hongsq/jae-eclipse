@@ -88,7 +88,8 @@ public class User extends AbstractJDElement {
 					app.setRepositoryURL(repositoryURL);
 //					app.setDisplayName(appName+" - "+repositoryURL);
 					
-					if(AppState.STOPPED != cloudApplication.getState())
+					if(AppState.STOPPED != cloudApplication.getState()
+							&& AppState.SLEEPED != cloudApplication.getState())
 						app.setStarted(true);
 
 					app.setModel(cloudApplication.getStaging().getFramework());

@@ -44,6 +44,8 @@ public class CloudFoundryClientExt implements CloudFoundryOperations {
 	private CloudControllerClient cc;
 	private CloudInfo info;
 	private RestUtilExt restUtil;
+	private URL cloudControllerUrl;
+//	private RestTemplate restTemplate;
 
 	public CloudFoundryClientExt(URL cloudControllerUrl) {
 		this(null, cloudControllerUrl, null, null);
@@ -76,12 +78,20 @@ public class CloudFoundryClientExt implements CloudFoundryOperations {
 			openError(e);
 			throw new CloudFoundryClientRuntimeException(e);
 		}
+		this.cloudControllerUrl = cloudControllerUrl;
+//		this.restTemplate = this.restUtil.createRestTemplate(httpProxyConfiguration);
 	}
 	
 	public RestUtilExt getRestUtil() {
 		return restUtil;
 	}
 
+	protected String getUrl(String path) {
+		return this.cloudControllerUrl
+				+ (path.startsWith("/") ? path : new StringBuilder()
+						.append("/").append(path).toString());
+	}
+	
 	public URL getCloudControllerUrl() {
 		try {
 			return this.cc.getCloudControllerUrl();
@@ -187,13 +197,41 @@ public class CloudFoundryClientExt implements CloudFoundryOperations {
 		}
 	}
 
+//	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<CloudApplication> getApplications() {
+//		List<Map> appsAsMap = null;
+		
 		try {
 			return this.cc.getApplications();
+//			appsAsMap = (List<Map>)this.restTemplate.getForObject(getUrl("/apps"), List.class, new Object[0]);
 		} catch (Exception e) {
 			openError(e);
 			throw new CloudFoundryClientRuntimeException(e);
 		}
+
+//		List apps = new ArrayList();
+//		final StringBuilder builder = new StringBuilder();
+//		for (Map appAsMap : appsAsMap) {
+//			try {
+//				apps.add(new CloudApplication(appAsMap));
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				builder.append(appAsMap.get("name"));
+//				builder.append(",");
+//			}
+//		}
+//
+//		if(builder.length()>0){
+//			builder.deleteCharAt(builder.length()-1);
+//			UIUtil.runInUI(new Runnable() {
+//				
+//				public void run() {
+//					Shell shell = Display.getCurrent().getActiveShell();
+//					MessageDialog.openWarning(shell, "警告", "加载应用\""+builder.toString()+"\"失败。");
+//				}
+//			}, false);
+//		}
+//	    return apps;
 	}
 
 	private void openError(final Exception e) {

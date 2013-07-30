@@ -77,6 +77,8 @@ public class ControlFactoryDialog extends TitleAreaDialog implements IValuechang
 	
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		this.setHelpAvailable(true);
+		
 		UIDescription uiDescription = this.controlFactory.getUIDescription();
 		if(null != uiDescription){
 			if(null != uiDescription.getTitle()) this.setTitle(uiDescription.getTitle());

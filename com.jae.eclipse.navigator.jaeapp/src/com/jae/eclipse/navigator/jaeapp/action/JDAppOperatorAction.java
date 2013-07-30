@@ -101,7 +101,8 @@ public class JDAppOperatorAction extends AbstractJDAction {
 						CloudApplication application = client.getApplication(app.getName());
 						
 						if(JDAppOperatorAction.this.opType == JDAppOperatorAction.OP_TYPE_START){
-							if(application.getState() == AppState.STOPPED){
+							if(application.getState() == AppState.STOPPED
+									|| application.getState() == AppState.SLEEPED){
 								client.startApplication(app.getName());
 							}
 							app.setStarted(true);
@@ -111,7 +112,8 @@ public class JDAppOperatorAction extends AbstractJDAction {
 							}
 							app.setStarted(true);
 						}else if(JDAppOperatorAction.this.opType == JDAppOperatorAction.OP_TYPE_STOP){
-							if(application.getState() != AppState.STOPPED){
+							if(application.getState() != AppState.STOPPED
+									&& application.getState() != AppState.SLEEPED){
 								client.stopApplication(app.getName());
 							}
 							app.setStarted(false);
