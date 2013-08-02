@@ -2,7 +2,7 @@
 <feature
       id="com.jae.eclipse.feature"
       label="JAE  Core"
-      version="1.0.3"
+      version="1.0.4"
       provider-name="JAE">
 
    <description>
@@ -70,41 +70,48 @@
          id="com.jae.eclipse.cloudfoundry"
          download-size="0"
          install-size="0"
-         version="1.0.3"
+         version="1.0.4"
          unpack="false"/>
 
    <plugin
          id="com.jae.eclipse.core"
          download-size="0"
          install-size="0"
-         version="1.0.3"
+         version="1.0.4"
          unpack="false"/>
 
    <plugin
          id="com.jae.eclipse.library"
          download-size="0"
          install-size="0"
-         version="1.0.3"/>
+         version="1.0.4"/>
 
    <plugin
          id="com.jae.eclipse.navigator"
          download-size="0"
          install-size="0"
-         version="1.0.3"
+         version="1.0.4"
          unpack="false"/>
 
    <plugin
          id="com.jae.eclipse.navigator.jaeapp"
          download-size="0"
          install-size="0"
-         version="1.0.3"
+         version="1.0.4"
          unpack="false"/>
 
    <plugin
          id="com.jae.eclipse.ui"
          download-size="0"
          install-size="0"
-         version="1.0.3"
+         version="1.0.4"
+         unpack="false"/>
+
+   <plugin
+         id="com.jae.eclipse.help"
+         download-size="0"
+         install-size="0"
+         version="1.0.4"
          unpack="false"/>
 
 </feature>

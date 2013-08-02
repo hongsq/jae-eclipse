@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Library
 Bundle-SymbolicName: com.jae.eclipse.library
-Bundle-Version: 1.0.3
+Bundle-Version: 1.0.4
 Bundle-Vendor: JAE
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: lib/commons-codec-1.6.jar,
