@@ -129,6 +129,7 @@ public class JDAppOperatorAction extends AbstractJDAction {
 						});
 					}
 				} catch (CloudFoundryClientRuntimeException e) {
+					e.printStackTrace();
 					return Status.OK_STATUS;
 				} catch (final Exception e) {
 					display.asyncExec(new Runnable() {

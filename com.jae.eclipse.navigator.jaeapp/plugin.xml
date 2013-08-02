@@ -100,9 +100,12 @@
                   </instanceof>
                </and>
                <and>
-                  <count
-                        value="0">
-                  </count>
+                  <adapt
+                        type="java.util.Collection">
+                     <count
+                           value="0">
+                     </count>
+                  </adapt>
                </and>
             </or>
          </enablement>

@@ -88,6 +88,7 @@ public class ConnectAction extends AbstractJDAction {
 								user.disConnect();
 							}
 						} catch (CloudFoundryClientRuntimeException e) {
+							e.printStackTrace();
 							return Status.OK_STATUS;
 						}
 

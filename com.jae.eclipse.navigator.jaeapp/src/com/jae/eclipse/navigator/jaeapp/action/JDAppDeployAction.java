@@ -102,6 +102,7 @@ public class JDAppDeployAction extends AbstractJDAction {
 						});
 						return Status.OK_STATUS;
 					} catch (CloudFoundryClientRuntimeException e) {
+						e.printStackTrace();
 						return Status.OK_STATUS;
 					} catch (final Exception e) {
 						display.asyncExec(new Runnable() {
