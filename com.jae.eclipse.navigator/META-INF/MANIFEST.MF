@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navigator
 Bundle-SymbolicName: com.jae.eclipse.navigator
-Bundle-Version: 1.0.4
+Bundle-Version: 1.1.0
 Bundle-Activator: com.jae.eclipse.navigator.Activator
 Bundle-Vendor: JAE
 Require-Bundle: org.eclipse.ui,
