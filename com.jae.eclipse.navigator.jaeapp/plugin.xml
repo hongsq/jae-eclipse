@@ -20,6 +20,7 @@
    <extension
          point="org.eclipse.ui.navigator.viewer">
       <viewer
+            helpContext="com.jae.eclipse.help.JAEView"
             viewerId="com.jae.eclipse.navigator.jaeapp.view">
          <popupMenu
                id="com.jae.eclipse.navigator.jaeapp.view#PopupMenu">

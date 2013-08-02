@@ -157,6 +157,7 @@ public class JDAppEditWizard extends AbstractWizard {
 		appInfoFactory.getUIDescription().setTitle("编辑应用");
 		appInfoFactory.getUIDescription().setDescription("编辑应用的基本信息,如果代码库地址不是默认\"https://code.jd.com/{username}/jae_{appname}.git\",则需要主动设置。");
 		appInfoFactory.getUIDescription().setWidth(150);
+		appInfoFactory.setHelpContextID(HelpContextConstants.CONTEXT_JAE_APP);
 		this.addPage(new ControlFactoryWizardPage("appInfo", appInfoFactory));
 		
 		IControlFactory envFactory = new AppEnvTableFactory();
@@ -164,6 +165,7 @@ public class JDAppEditWizard extends AbstractWizard {
 		envFactory.getUIDescription().setWinTitle("设置环境变量");
 		envFactory.getUIDescription().setTitle("设置环境变量");
 		envFactory.getUIDescription().setDescription("根据应用需要设置环境变量。");
+		envFactory.setHelpContextID(HelpContextConstants.CONTEXT_JAE_APP);
 		envFactory.getUIDescription().setWidth(150);
 		this.addPage(new ControlFactoryWizardPage("envInfo", envFactory));
 	}

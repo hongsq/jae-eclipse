@@ -206,6 +206,7 @@ public class UserAction extends AbstractJDAction {
 		factory.getUIDescription().setWinTitle(prefix+"用户");
 		factory.getUIDescription().setTitle(prefix+"用户");
 		factory.getUIDescription().setDescription(prefix+"一个用户的相关信息。");
+		factory.setHelpContextID(HelpContextConstants.CONTEXT_JAE_USER);
 		
 		CommonViewer viewer = (CommonViewer) this.getSelectionProvider();
 		

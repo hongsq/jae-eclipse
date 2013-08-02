@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="help/contexts.xml"
+            plugin="com.jae.eclipse.help">
+      </contexts>
+   </extension>
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="help/toc.xml"
+            primary="true">
+      </toc>
+      <toc
+            file="help/toc_engine.xml">
+      </toc>
+      <toc
+            file="help/toc_code.xml">
+      </toc>
+   </extension>
+
+</plugin>

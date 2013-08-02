@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contexts>
+   <context id="JAEView" title="JAE视图">
+      <description>JAE视图信息</description>
+      <topic href="help/html/jaeView.html" label="JAE视图"/>
+      <topic href="help/html/jaeView/jaeUser.html" label="用户操作"/>
+      <topic href="help/html/jaeView/jaeApp.html" label="应用操作"/>
+   </context>
+   <context id="JAEUser" title="JAE用户配置">
+      <description>JAE用户配置</description>
+      <topic href="help/html/jaeView/jaeUser.html" label="用户"/>
+   </context>
+   <context id="JAEUserKey" title="用户KEY">
+      <description>用户KEY</description>
+      <topic href="help/html/jaeUser/key.html" label="KEY"/>
+   </context>
+   <context id="JAEApp" title="JAE应用配置">
+      <description>JAE应用配置</description>
+      <topic href="help/html/jaeView/jaeApp.html" label="应用"/>
+      <topic href="help/html/jaeApp/repository.html" label="代码仓库"/>
+      <topic href="help/html/jaeApp/appDomain.html" label="域名"/>
+      <topic href="help/html/jaeApp/appEnv.html" label="环境变量"/>
+   </context>
+   <context id="JAEAppRepository" title="代码仓库发址">
+      <description>代码仓库发址</description>
+      <topic href="help/html/jaeApp/repository.html" label="代码仓库"/>
+   </context>
+</contexts>

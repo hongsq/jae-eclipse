@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="JAE Eclipse">
+   <topic href="help/html/jae.html" label="简要说明">
+   </topic>
+   <topic label="JAE视图">
+      <anchor id="jaeView"/>
+   </topic>
+   <topic label="云擎操作">
+      <anchor id="engine"/>
+   </topic>
+   <topic label="代码托管">
+      <anchor id="code"/>
+   </topic>
+</toc>

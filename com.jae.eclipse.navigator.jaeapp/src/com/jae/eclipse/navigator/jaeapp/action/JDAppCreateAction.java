@@ -18,6 +18,7 @@ import org.eclipse.jface.window.Window;
 import com.jae.eclipse.cloudfoundry.client.CloudFoundryClientExt;
 import com.jae.eclipse.navigator.jaeapp.model.User;
 import com.jae.eclipse.navigator.jaeapp.util.JAEAppHelper;
+import com.jae.eclipse.ui.HelpContextConstants;
 import com.jae.eclipse.ui.IMessageCaller;
 import com.jae.eclipse.ui.IValidator;
 import com.jae.eclipse.ui.ObjectEditor;
@@ -82,6 +83,7 @@ public class JDAppCreateAction extends AbstractJDAction {
 		factory.getUIDescription().setDescription("请选择合适的应用框架。");
 		factory.getUIDescription().setMinHeight(250);
 		factory.getUIDescription().setMinWidth(200);
+		factory.setHelpContextID(HelpContextConstants.CONTEXT_JAE_APP);
 		
 		StructuredViewer viewer = (StructuredViewer) this.getSelectionProvider();
 		ControlFactoryDialog dialog = new ControlFactoryDialog(viewer.getControl().getShell(), factory);

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Help
+Bundle-SymbolicName: com.jae.eclipse.help;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: JAE
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.help;bundle-version="3.6.0",
+ org.eclipse.help.base;bundle-version="3.6.100",
+ org.eclipse.help.ui;bundle-version="3.5.200"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy

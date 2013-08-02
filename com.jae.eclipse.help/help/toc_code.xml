@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="代码托管" link_to="help/toc.xml#code">
+   <topic href="help/html/code.html" label="源码管理说明">
+   </topic>
+      <topic href="help/html/code/codeManager.html" label="使用方法">
+      </topic>
+</toc>

@@ -24,6 +24,7 @@ import com.jae.eclipse.cloudfoundry.exception.CloudFoundryClientRuntimeException
 import com.jae.eclipse.navigator.jaeapp.model.JDApp;
 import com.jae.eclipse.navigator.jaeapp.model.User;
 import com.jae.eclipse.navigator.jaeapp.util.JDModelUtil;
+import com.jae.eclipse.ui.HelpContextConstants;
 import com.jae.eclipse.ui.ObjectEditor;
 import com.jae.eclipse.ui.control.FileSelectionPropertyEditor;
 import com.jae.eclipse.ui.dialog.DetailMessageDialog;
@@ -58,6 +59,7 @@ public class JDAppDeployAction extends AbstractJDAction {
 		factory.getUIDescription().setWinTitle("部署");
 		factory.getUIDescription().setTitle("应用部署");
 		factory.getUIDescription().setDescription("选择要部署的资源。");
+		factory.setHelpContextID(HelpContextConstants.CONTEXT_JAE_APP);
 		
 		Map<String, String> map = new HashMap<String, String>();
 		factory.setValue(map);

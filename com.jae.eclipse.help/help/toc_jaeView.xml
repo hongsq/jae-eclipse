@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="JAE视图" link_to="help/toc.xml#jaeView" topic="help/html/jaeView.html">
+   <topic href="help/html/jaeView.html" label="视图说明">
+   </topic>
+      <topic href="help/html/jaeView/jaeUser.html" label="用户操作">
+      </topic>
+      <topic href="help/html/jaeView/jaeApp.html" label="应用操作">
+      </topic>
+</toc>
